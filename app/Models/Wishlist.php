@@ -38,10 +38,10 @@ class Wishlist extends Model
     protected function casts(): array
     {
         return [
-            'name' => 'string',
-            'is_shared' => 'boolean',
+            'name'            => 'string',
+            'is_shared'       => 'boolean',
             'expiration_date' => 'date',
-            'user_id' => 'integer',
+            'user_id'         => 'integer',
         ];
     }
 

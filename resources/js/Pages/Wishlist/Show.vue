@@ -9,7 +9,7 @@ import {ref} from "vue";
 const props = defineProps({
     wishlist: {
         type: Object,
-        required: false
+        required: true
     },
     wishlistItems: {
         type: Array,

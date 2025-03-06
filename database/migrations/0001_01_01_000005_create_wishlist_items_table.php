@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('priority');
             $table->boolean('is_bought')->default(false);
             $table->foreignIdFor(Wishlist::class);
-            $table->foreignIdFor(User::class)->nullable()->constrained();//User who will buy the item
+            $table->foreignIdFor(User::class)->nullable();//User who will buy the item
             $table->timestamps();
         });
     }

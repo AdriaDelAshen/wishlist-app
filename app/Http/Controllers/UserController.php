@@ -2,9 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\UserDeleteRequest;
+use App\Http\Requests\User\UserPasswordUpdateRequest;
+use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
+use App\Notifications\SendNewAccountNotification;
+use App\Notifications\SendNewAccountSetupPasswordNotification;
+use App\Utils\StringUtils;
+use Exception;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -21,7 +31,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         return Inertia::render('User/Show', [
-            'wishlist' => $user
+            'user' => $user
         ]);
     }
 
@@ -30,42 +40,65 @@ class UserController extends Controller
         return Inertia::render('User/Create');
     }
 
-//    public function store(WishlistStoreRequest $request): RedirectResponse
-//    {
-//        Wishlist::create([
-//            'name' => $request->name,
-//            'expiration_date' => $request->expiration_date,
-//            'user_id' => Auth::id()
-//        ]);
-//
-////        event(new WishlistShared($wishlist));
-//
-//        return redirect('/wishlists');
-//    }
-//
-//    public function edit(Wishlist $wishlist)
-//    {
-//        return Inertia::render('Wishlist/Edit', [
-//            'wishlist' => $wishlist->toDisplayData(),
-//            'wishlistItems' => $wishlist->wishlistItems()->orderBy('priority')->get(),
-//        ]);
-//    }
-//
-//    public function update(WishlistUpdateRequest $request, Wishlist $wishlist): RedirectResponse
-//    {
-//        $wishlist->update([
-//            'name' => $request->name,
-//            'expiration_date' => $request->expiration_date,
-//            'is_shared' => $request->is_shared
-//        ]);
-//
-//        return Redirect::route('wishlists.index');
-//    }
-//
-//    public function destroy(WishlistDeleteRequest $request, Wishlist $wishlist): RedirectResponse
-//    {
-//        $wishlist->delete();
-//
-//        return Redirect::route('wishlists.index');
-//    }
+    public function edit(User $user)
+    {
+        return Inertia::render('User/Edit', [
+            'user' => $user,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function store(UserStoreRequest $request): RedirectResponse
+    {
+        $password = $request->password;
+        if(!$password) {
+            $password = StringUtils::randomString(8);
+        }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($password),
+            'is_active' => $request->is_active
+        ]);
+        if ($request->password) {
+            $user->notify(new SendNewAccountNotification());
+        } else {
+            $user->notify(new SendNewAccountSetupPasswordNotification());
+        }
+
+        return redirect('/users');
+    }
+
+    public function update(UserUpdateRequest $request, User $user): RedirectResponse
+    {
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('users.index');
+    }
+
+    public function destroy(UserDeleteRequest $request, User $user): RedirectResponse
+    {
+        $user->delete();
+
+        return Redirect::route('users.index');
+    }
+
+    public function updatePassword(UserPasswordUpdateRequest $request, User $user): RedirectResponse
+    {
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return Redirect::route('users.index');
+    }
 }

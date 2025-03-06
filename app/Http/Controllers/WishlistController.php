@@ -20,7 +20,7 @@ class WishlistController extends Controller
             'wishlists' => Wishlist::query()
                 ->where('user_id', Auth::user()->id)
                 ->orWhere('is_shared', true)->get()
-                ->load('user')
+                ->load('user')//todo do not show from deactivated users
             ->map(fn (Wishlist $wishlist) => $wishlist->toDisplayData())
         ]);
     }
@@ -38,6 +38,14 @@ class WishlistController extends Controller
         return Inertia::render('Wishlist/Create');
     }
 
+    public function edit(Wishlist $wishlist)
+    {
+        return Inertia::render('Wishlist/Edit', [
+            'wishlist' => $wishlist->toDisplayData(),
+            'wishlistItems' => $wishlist->wishlistItems()->orderBy('priority')->get(),
+        ]);
+    }
+
     public function store(WishlistStoreRequest $request): RedirectResponse
     {
         Wishlist::create([
@@ -46,17 +54,9 @@ class WishlistController extends Controller
             'user_id' => Auth::id()
         ]);
 
-//        event(new WishlistShared($wishlist));
+//        event(new WishlistShared($wishlist));todo send notif to ppl in the same groups
 
         return redirect('/wishlists');
-    }
-
-    public function edit(Wishlist $wishlist)
-    {
-        return Inertia::render('Wishlist/Edit', [
-            'wishlist' => $wishlist->toDisplayData(),
-            'wishlistItems' => $wishlist->wishlistItems()->orderBy('priority')->get(),
-        ]);
     }
 
     public function update(WishlistUpdateRequest $request, Wishlist $wishlist): RedirectResponse

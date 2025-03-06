@@ -15,13 +15,6 @@ const props = defineProps({
     },
 });
 
-const form = useForm({});
-const destroyUser = (id) => {
-    if(confirm("Are you sure you want to delete this user?")){
-        form.delete(route('users.destroy', {user: id}));
-    }
-};
-
 </script>
 
 <template>
@@ -50,7 +43,7 @@ const destroyUser = (id) => {
                 <div
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
                 >
-                    <table-component :headers="['Name', 'Email', 'Is admin', null, null]" :data="users">
+                    <table-component :headers="['Name', 'Email', 'Is active', 'Is admin', null]" :data="users">
                         <template #column0="{ entity }">
                             <NavLink
                                 :href="route('users.show', {user: entity})"
@@ -63,9 +56,12 @@ const destroyUser = (id) => {
                             {{ entity.email }}
                         </template>
                         <template #column2="{ entity }">
-                            {{ entity.id }}
+                            {{ entity.is_active?'Yes':'No' }}
                         </template>
                         <template #column3="{ entity }">
+                            {{ entity.is_admin?'Yes':'No' }}
+                        </template>
+                        <template #column4="{ entity }">
                             <NavLink
                                 class="nav-button"
                                 :href="route('users.edit', {user: entity})"
@@ -75,16 +71,6 @@ const destroyUser = (id) => {
                                     <icon-write />
                                 </icon-base>
                             </NavLink>
-                        </template>
-                        <template #column4="{ entity }">
-                            <button
-                                v-if="user.id !== entity.id"
-                                @click="destroyUser(entity.id)"
-                                class="nav-button delete">
-                                <icon-base icon-name="write">
-                                    <icon-trash />
-                                </icon-base>
-                            </button>
                         </template>
                     </table-component>
                 </div>

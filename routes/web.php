@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('/users', UserController::class);
+    Route::patch('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update_password');
+    Route::resource('/users', UserController::class);
     Route::resource('/wishlists', WishlistController::class);
     Route::resource('/wishlist_items', WishlistItemController::class);
     Route::patch('/wishlist_link_item_user/{wishlist_item}', [WishlistItemController::class, 'linkItemToUser'])->name('wishlist_items.linkItemToUser');
