@@ -6,14 +6,23 @@ use App\Http\Requests\Wishlist\WishlistDeleteRequest;
 use App\Http\Requests\Wishlist\WishlistStoreRequest;
 use App\Http\Requests\Wishlist\WishlistUpdateRequest;
 use App\Models\Wishlist;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class WishlistController extends Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Wishlist::class, 'wishlist');
+    }
+
     public function index(): Response
     {
         return Inertia::render('Wishlist/Index', [
@@ -40,6 +49,7 @@ class WishlistController extends Controller
 
     public function edit(Wishlist $wishlist)
     {
+        Gate::authorize('update', $wishlist);
         return Inertia::render('Wishlist/Edit', [
             'wishlist' => $wishlist->toDisplayData(),
             'wishlistItems' => $wishlist->wishlistItems()->orderBy('priority')->get(),

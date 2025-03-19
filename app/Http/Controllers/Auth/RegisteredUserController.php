@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\SendRegistrationNeedsApprovalNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,10 +43,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        if($user->is_active) {
+            event(new Registered($user));
+            Auth::login($user);
+            return redirect(route('dashboard', absolute: false));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        } else {
+            $user->notify(new SendRegistrationNeedsApprovalNotification());
+        }
+        return redirect(route('login'))->with(['email' => 'This new account must be approved.']);
     }
 }
