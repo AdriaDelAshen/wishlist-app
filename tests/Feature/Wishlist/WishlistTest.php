@@ -38,9 +38,11 @@ class WishlistTest extends TestCase
                 'name' => 'My wishlist',
                 'expiration_date' => $expirationDate->format('Y-m-d'),
             ]);
-        //dd($response->json());
 
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/wishlists');
+
         $wishlists = Wishlist::all();
         $wishlist = $wishlists->first();
         $this->assertCount(1, $wishlists);
@@ -53,7 +55,9 @@ class WishlistTest extends TestCase
     {
         // ARRANGE
         $user = User::factory()->create();
-        $wishlist = Wishlist::factory()->create();
+        $wishlist = Wishlist::factory()->create([
+            'user_id' => $user->id,
+        ]);
         $expirationDate = Carbon::today()->addDays(30);
 
         // ACT
@@ -63,10 +67,13 @@ class WishlistTest extends TestCase
                 'name' => 'My wishlist',
                 'expiration_date' => $expirationDate->format('Y-m-d'),
                 'is_shared' => true,
-            ]);
+            ])->assertSessionHasNoErrors()->assertRedirect('/wishlists');
 
         // ASSERT
         $wishlist->refresh();
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/wishlists');
 
         $wishlists = Wishlist::all();
         $this->assertCount(1, $wishlists);
@@ -89,6 +96,9 @@ class WishlistTest extends TestCase
             ->delete('/wishlists/' . $wishlist->id);
 
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/wishlists');
+
         $this->assertCount(0, Wishlist::all());
     }
 
@@ -106,9 +116,9 @@ class WishlistTest extends TestCase
             ->actingAs($userA)
             ->delete('/wishlists/' . $wishlist->id);
 
+        // ASSERT
         $response->assertSessionHasErrors('wishlist');
 
-        // ASSERT
         $this->assertCount(1, Wishlist::all());
     }
 }

@@ -20,7 +20,7 @@ class WishlistController extends Controller
 
     public function __construct()
     {
-        $this->authorizeResource(Wishlist::class, 'wishlist');
+        //$this->authorizeResource(Wishlist::class, 'wishlist');
     }
 
     public function index(): Response
@@ -59,8 +59,7 @@ class WishlistController extends Controller
     public function store(WishlistStoreRequest $request): RedirectResponse
     {
         Wishlist::create([
-            'name' => $request->name,
-            'expiration_date' => $request->expiration_date,
+            ...$request->validated(),
             'user_id' => Auth::id()
         ]);
 
@@ -71,11 +70,7 @@ class WishlistController extends Controller
 
     public function update(WishlistUpdateRequest $request, Wishlist $wishlist): RedirectResponse
     {
-        $wishlist->update([
-            'name' => $request->name,
-            'expiration_date' => $request->expiration_date,
-            'is_shared' => $request->is_shared
-        ]);
+        $wishlist->update($request->validated());
 
         return Redirect::route('wishlists.index');
     }

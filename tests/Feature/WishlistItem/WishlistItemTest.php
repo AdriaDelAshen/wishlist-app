@@ -46,9 +46,10 @@ class WishlistItemTest extends TestCase
                 'item_wishlist_id' => $wishlist->id,
             ]);
 
-//        dd($response->json());
-
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+
         $wishlistItems = WishlistItem::all();
         $wishlistItem = $wishlistItems->first();
         $this->assertCount(1, $wishlistItems);
@@ -84,9 +85,10 @@ class WishlistItemTest extends TestCase
                 'item_priority' => 0,
             ]);
 
-//        dd($response->json());
-
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+
         $wishlistItem->refresh();
 
         $WishlistItem = WishlistItem::all();
@@ -108,8 +110,10 @@ class WishlistItemTest extends TestCase
             ->actingAs($user)
             ->delete('/wishlist_items/' . $wishlistItem->id);
 
-//        dd($response->json());
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+
         $this->assertCount(0, WishlistItem::all());
     }
 
@@ -128,9 +132,10 @@ class WishlistItemTest extends TestCase
             ->actingAs($userA)
             ->delete('/wishlist_items/' . $wishlistItem->id);
 
-        $response->assertSessionHasErrors('wishlist_item');
-
         // ASSERT
+        $response->assertSessionHasErrors('wishlist_item');
+        $response->assertRedirect();
+
         $this->assertCount(1, Wishlist::all());
     }
 
@@ -156,9 +161,10 @@ class WishlistItemTest extends TestCase
                 'id' => $wishlistItem->id,
             ]);
 
-//        dd($response->json());
-
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertOk();
+
         $wishlistItem->refresh();
         $this->assertEquals($user->id, $wishlistItem->user_id);
         $this->assertTrue($wishlistItem->is_bought);
@@ -187,9 +193,11 @@ class WishlistItemTest extends TestCase
                 'id' => $wishlistItem->id,
             ]);
 
-//        dd($response->json());
 
         // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertOk();
+
         $wishlistItem->refresh();
         $this->assertNull($wishlistItem->user_id);
         $this->assertFalse($wishlistItem->is_bought);

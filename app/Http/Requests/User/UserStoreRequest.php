@@ -31,11 +31,11 @@ class UserStoreRequest extends FormRequest
                 Rule::unique(User::class),
             ],
             'is_active' => [
-                'required',
+                'sometimes',
                 'boolean',
             ],
             'is_admin' => [
-                'required',
+                'sometimes',
                 'boolean',
             ],
             'password' => [

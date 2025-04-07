@@ -14,11 +14,6 @@ class WishlistUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => [
-                'required',
-                'integer',
-                'exists:wishlists,id'
-            ],
             'name' => [
                 'required',
                 'string',

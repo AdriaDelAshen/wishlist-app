@@ -18,7 +18,6 @@ const props = defineProps({
 });
 
 const form = useForm({
-    id: props.wishlist?.id || null,
     name: props.wishlist?.name || '',
     is_shared: props.wishlist?.is_shared || false,
     expiration_date: props.wishlist?.expiration_date || '',

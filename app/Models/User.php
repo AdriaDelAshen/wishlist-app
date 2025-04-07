@@ -64,4 +64,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Wishlist::class);
     }
+
+    public function isAnActiveAdmin(): bool
+    {
+        return $this->is_active && $this->is_admin;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -25,7 +26,13 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        //$this->assertAuthenticated();
+        $response->assertRedirect(route('login', absolute: false));
+
+        $users = User::all();
+        $user = $users->first();
+        $this->assertCount(1, $users);
+        $this->assertFalse($user->is_active);
+        $this->assertEquals('test@example.com', $user->email);
     }
 }
