@@ -24,27 +24,14 @@ class WishlistItemController extends Controller
 
     public function store(WishlistItemStoreRequest $request): RedirectResponse
     {
-        WishlistItem::create([
-            'name'        => $request->item_name,
-            'description' => $request->item_description,
-            'url_link'    => $request->item_url_link,
-            'price'       => $request->item_price,
-            'priority'    => $request->item_priority,
-            'wishlist_id' => $request->item_wishlist_id,
-        ]);
+        WishlistItem::create($request->validated());
 
         return back();
     }
 
     public function update(WishlistItemUpdateRequest $request, WishlistItem $wishlistItem): RedirectResponse
     {
-        $wishlistItem->update([
-            'name'        => $request->item_name,
-            'description' => $request->item_description,
-            'url_link'    => $request->item_url_link,
-            'price'       => $request->item_price,
-            'priority'    => $request->item_priority,
-        ]);
+        $wishlistItem->update($request->validated());
 
         return back();
     }

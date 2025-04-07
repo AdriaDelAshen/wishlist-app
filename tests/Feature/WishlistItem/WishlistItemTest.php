@@ -38,12 +38,12 @@ class WishlistItemTest extends TestCase
         // ACT
         $response = $this->actingAs($user)
             ->post('/wishlist_items', [
-                'item_name' => 'Pink unicorn',
-                'item_description' => 'The pinkest unicorn ever made.',
-                'item_url_link' => 'https://www.google.com',
-                'item_price' => 13.99,
-                'item_priority' => 1,
-                'item_wishlist_id' => $wishlist->id,
+                'name' => 'Pink unicorn',
+                'description' => 'The pinkest unicorn ever made.',
+                'url_link' => 'https://www.google.com',
+                'price' => 13.99,
+                'priority' => 1,
+                'wishlist_id' => $wishlist->id,
             ]);
 
         // ASSERT
@@ -79,10 +79,10 @@ class WishlistItemTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/wishlist_items/' . $wishlistItem->id, [
-                'item_id' => $wishlistItem->id,
-                'item_name' => 'Blue unicorn',
-                'item_price' => 10.99,
-                'item_priority' => 0,
+                'id' => $wishlistItem->id,
+                'name' => 'Blue unicorn',
+                'price' => 10.99,
+                'priority' => 0,
             ]);
 
         // ASSERT

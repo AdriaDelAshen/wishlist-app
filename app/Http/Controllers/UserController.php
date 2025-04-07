@@ -59,10 +59,8 @@ class UserController extends Controller
             $password = StringUtils::randomString(8);
         }
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            ...$request->validated(),
             'password' => Hash::make($password),
-            'is_active' => $request->is_active
         ]);
         if ($request->password) {
             $user->notify(new SendNewAccountNotification());

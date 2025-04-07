@@ -15,31 +15,31 @@ class WishlistItemUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'item_id' => [
+            'id' => [
                 'required',
                 'integer',
                 'exists:wishlist_items,id'
             ],
-            'item_name' => [
+            'name' => [
                 'required',
                 'string',
                 'max:255'
             ],
-            'item_description' => [
+            'description' => [
                 'nullable',
                 'string',
                 'max:255'
             ],
-            'item_url_link' => [
+            'url_link' => [
                 'nullable',
                 'string',
                 'max:255'
             ],
-            'item_price' => [
+            'price' => [
                 'nullable',
                 'decimal:2',
             ],
-            'item_priority' => [
+            'priority' => [
                 'nullable',
                 'integer',
             ],

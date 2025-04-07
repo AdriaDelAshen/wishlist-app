@@ -29,30 +29,30 @@ const props = defineProps({
 const user = usePage().props.auth.user;
 
 const wishlistItemForm = useForm({
-    item_id: null,
-    item_name: '',
-    item_description: '',
-    item_url_link: '',
-    item_price: 0,
-    item_priority: 0,
-    item_wishlist_id: props.wishlist.id,
+    id: null,
+    name: '',
+    description: '',
+    url_link: '',
+    price: 0,
+    priority: 0,
+    wishlist_id: props.wishlist.id,
 });
 
 const showModalForWishlistItem = (entity) => {
     if(entity) {
-        wishlistItemForm.item_id = entity.id;
-        wishlistItemForm.item_name = entity.name;
-        wishlistItemForm.item_description = entity.description?entity.description:'';
-        wishlistItemForm.item_url_link = entity.url_link?entity.url_link:'';
-        wishlistItemForm.item_price = entity.price;
-        wishlistItemForm.item_priority = entity.priority;
+        wishlistItemForm.id = entity.id;
+        wishlistItemForm.name = entity.name;
+        wishlistItemForm.description = entity.description?entity.description:'';
+        wishlistItemForm.url_link = entity.url_link?entity.url_link:'';
+        wishlistItemForm.price = entity.price;
+        wishlistItemForm.priority = entity.priority;
     } else {
-        wishlistItemForm.item_id = null;
-        wishlistItemForm.item_name = '';
-        wishlistItemForm.item_description = '';
-        wishlistItemForm.item_url_link = '';
-        wishlistItemForm.item_price = 0;
-        wishlistItemForm.item_priority = 0;
+        wishlistItemForm.id = null;
+        wishlistItemForm.name = '';
+        wishlistItemForm.description = '';
+        wishlistItemForm.url_link = '';
+        wishlistItemForm.price = 0;
+        wishlistItemForm.priority = 0;
     }
 };
 const destroyWishlistItem = (id) => {
@@ -166,64 +166,64 @@ const closeModal = () => {
                                         id="item_name"
                                         type="text"
                                         class="mt-1 block w-full"
-                                        v-model="wishlistItemForm.item_name"
+                                        v-model="wishlistItemForm.name"
                                         required
-                                        autocomplete="item_name"
+                                        autocomplete="name"
                                     />
 
-                                    <InputError class="mt-2" :message="wishlistItemForm.errors.item_name" />
+                                    <InputError class="mt-2" :message="wishlistItemForm.errors.name" />
                                 </div>
 
                                 <div>
-                                    <InputLabel for="item_description" value="Description" />
+                                    <InputLabel for="description" value="Description" />
 
                                     <TextInput
-                                        id="item_description"
+                                        id="description"
                                         type="text"
                                         class="mt-1 block w-full"
-                                        v-model="wishlistItemForm.item_description"
-                                        autocomplete="item_description"
+                                        v-model="wishlistItemForm.description"
+                                        autocomplete="description"
                                     />
 
-                                    <InputError class="mt-2" :message="wishlistItemForm.errors.item_description" />
+                                    <InputError class="mt-2" :message="wishlistItemForm.errors.description" />
                                 </div>
 
                                 <div>
-                                    <InputLabel for="item_url_link" value="Url Link" />
+                                    <InputLabel for="url_link" value="Url Link" />
 
                                     <TextInput
-                                        id="item_url_link"
+                                        id="url_link"
                                         type="text"
                                         class="mt-1 block w-full"
-                                        v-model="wishlistItemForm.item_url_link"
-                                        autocomplete="item_url_link"
+                                        v-model="wishlistItemForm.url_link"
+                                        autocomplete="url_link"
                                     />
 
-                                    <InputError class="mt-2" :message="wishlistItemForm.errors.item_url_link" />
+                                    <InputError class="mt-2" :message="wishlistItemForm.errors.url_link" />
                                 </div>
 
                                 <div>
-                                    <InputLabel for="item_price" value="Price" />
+                                    <InputLabel for="price" value="Price" />
 
                                     <PriceInput
-                                        id="item_price"
+                                        id="price"
                                         class="mt-1 block w-full"
-                                        v-model="wishlistItemForm.item_price"
+                                        v-model="wishlistItemForm.price"
                                     />
 
-                                    <InputError class="mt-2" :message="wishlistItemForm.errors.item_price" />
+                                    <InputError class="mt-2" :message="wishlistItemForm.errors.price" />
                                 </div>
 
                                 <div>
-                                    <InputLabel for="item_priority" value="Priority" />
+                                    <InputLabel for="priority" value="Priority" />
 
                                     <NumberInput
-                                        id="item_priority"
+                                        id="priority"
                                         class="mt-1 block w-full"
-                                        v-model="wishlistItemForm.item_priority"
+                                        v-model="wishlistItemForm.priority"
                                     />
 
-                                    <InputError class="mt-2" :message="wishlistItemForm.errors.item_priority" />
+                                    <InputError class="mt-2" :message="wishlistItemForm.errors.priority" />
                                 </div>
 
 
@@ -232,7 +232,7 @@ const closeModal = () => {
                             <PrimaryButton data-bs-dismiss="modal">Close</PrimaryButton>
                             <div class="flex items-center gap-4">
                                 <PrimaryButton :disabled="wishlistItemForm.processing">
-                                    {{ wishlistItemForm.item_id?'Save':'Add' }}
+                                    {{ wishlistItemForm.id?'Save':'Add' }}
                                 </PrimaryButton>
                             </div>
                         </div>

@@ -15,30 +15,30 @@ class WishlistItemStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'item_name' => [
+            'name' => [
                 'required',
                 'string',
                 'max:255'
             ],
-            'item_description' => [
+            'description' => [
                 'nullable',
                 'string',
                 'max:255'
             ],
-            'item_url_link' => [
+            'url_link' => [
                 'nullable',
                 'string',
                 'max:255'
             ],
-            'item_price' => [
+            'price' => [
                 'nullable',
                 'decimal:2',
             ],
-            'item_priority' => [
+            'priority' => [
                 'required',
                 'integer',
             ],
-            'item_wishlist_id' => [
+            'wishlist_id' => [
                 'required',
                 'integer',
             ],
@@ -47,8 +47,8 @@ class WishlistItemStoreRequest extends FormRequest
 
     public function withValidator($validator) {
         $validator->after(function ($validator) {
-            if($this->item_wishlist_id) {
-                if($this->user()->id != Wishlist::find($this->item_wishlist_id)->user_id) {
+            if($this->wishlist_id) {
+                if($this->user()->id != Wishlist::find($this->wishlist_id)->user_id) {
                     $validator->errors()->add('wishlist_item', 'You cannot create this item.');
                 }
             }
