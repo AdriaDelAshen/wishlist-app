@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'user' => 'Utilisateur',
+    'users' => 'Utilisateurs',
+    'name' => 'Nom',
+    'email_address' => 'Adresse courriel',
+    'active' => 'Actif',
+    'is_active' => 'Est actif',
+    'is_admin' => 'Est admin',
+    'is_administrator' => 'Est administrateur',
+    'setup_password' => 'Configurer le mot de passe',
+    'update_password' => 'Modifier le mot de passe',
+    'password' => 'Mot de passe',
+    'new_password' => 'Nouveau mot de passe',
+    'confirm_password' => 'Confirmer le nouveau mot de passe',
+    'new_user' => 'Nouvel utilisateur',
+    'user_information' => 'Informations de l\'utilisateur',
+    'update_the_user_information_and_email_address' => 'Modifier les informations de l\'utilisateur.',
+    'your_email_address_is_unverified' => 'Votre adresse courriel n\'a pas été vérifié.',
+    'click_here_to_resend_the_verification_email' => 'Cliquer ce lien pour ré-envoyer le courriel de vérification.',
+    'a_new_verification_link_has_been_sent' => 'Un nouveau lien de vérification a été envoyé à l\'adresse courriel.',
+    'editing_user' => 'Modification de l\'utilisateur',
+    'delete_user' => 'Suppression de l\'utilisateur',
+    'are_you_sure_you_want_to_delete_this_user' => 'Êtes-vous certain de vouloir supprimer cet utilisateur?',
+    'ensure_to_use_a_secure_password' => 'Assurez-vous d\'utiliser un mot de passe long et aléatoire pour rester sécuritaire.',
+    'delete_user_warning' => 'Dès que l\'utilisateur est supprimé, toutes les données vont être supprimées permanemment. Avant de le supprimer, vérifier les données que vous voulez garder.',
+];

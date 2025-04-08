@@ -10,7 +10,7 @@ import Form from "@/Pages/Wishlist/Partials/Form.vue";
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                New Wishlist
+                {{ $t('wishlist.new_wishlist') }}
             </h2>
         </template>
 

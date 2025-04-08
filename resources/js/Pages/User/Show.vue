@@ -18,7 +18,7 @@ const props = defineProps({
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Showing user: {{ user.name }}
+                {{ $t('user.user') }}: {{ user.name }}
             </h2>
         </template>
 
@@ -27,13 +27,13 @@ const props = defineProps({
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>
-                            <InputLabel for="name" value="Name" />
+                            <InputLabel for="name" :value="$t('user.name')" />
                             <p
                                 class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input"
                             >{{ user.name }}</p>
                         </div>
                         <div>
-                            <InputLabel for="email" value="Email" />
+                            <InputLabel for="email" :value="$t('user.email_address')" />
                             <p
                                 class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input"
                             >{{ user.email }}</p>

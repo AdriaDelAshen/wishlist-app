@@ -26,7 +26,7 @@ class WishlistUnlinkItemToUserRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if(Auth::user()->id != $this->wishlist_item->user_id) {
-                $validator->errors()->add('wishlist_item', 'Cannot remove this item since it is not in your shopping list.');
+                $validator->errors()->add('wishlist_item', __('validation.custom.wishlist_item.cannot_be_removed_from_someone_else_shopping_list'));
             }
         });
     }

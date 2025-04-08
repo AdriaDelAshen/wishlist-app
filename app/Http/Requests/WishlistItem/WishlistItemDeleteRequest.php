@@ -10,11 +10,11 @@ class WishlistItemDeleteRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if(!$this->wishlist_item) {
-                $validator->errors()->add('wishlist_item', 'Something went wrong.');
+                $validator->errors()->add('wishlist_item', __('validation.custom.generic.an_error_occurred'));
             }
 
             if($this->user()->id != Wishlist::find($this->wishlist_item->wishlist_id)->user_id) {
-                $validator->errors()->add('wishlist_item', 'You cannot delete this item.');
+                $validator->errors()->add('wishlist_item', __('validation.custom.wishlist_item.cannot_be_deleted'));
             }
         });
     }

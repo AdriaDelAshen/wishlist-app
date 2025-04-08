@@ -43,12 +43,8 @@ class UserUpdateRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if(!$this->user) {
-                $validator->errors()->add('user', 'Account does not exist.');
+                $validator->errors()->add('user', __('validation.custom.user.does_not_exist'));
             }
-
-//            if($this->user()->id == $this->user->id) {
-//                $validator->errors()->add('user', 'You cannot delete your own account.');
-//            }
         });
     }
 }

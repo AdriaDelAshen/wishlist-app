@@ -49,7 +49,7 @@ class WishlistItemStoreRequest extends FormRequest
         $validator->after(function ($validator) {
             if($this->wishlist_id) {
                 if($this->user()->id != Wishlist::find($this->wishlist_id)->user_id) {
-                    $validator->errors()->add('wishlist_item', 'You cannot create this item.');
+                    $validator->errors()->add('wishlist_item', __('validation.custom.wishlist_item.cannot_be_created'));
                 }
             }
         });

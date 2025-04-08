@@ -14,6 +14,7 @@ import PriceInput from "@/Components/PriceInput.vue";
 import NumberInput from "@/Components/NumberInput.vue";
 import * as bootstrap from "bootstrap";
 import NavLink from "@/Components/NavLink.vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     wishlist: {
@@ -56,7 +57,7 @@ const showModalForWishlistItem = (entity) => {
     }
 };
 const destroyWishlistItem = (id) => {
-    if(confirm("Are you sure you want to delete this wishlist item?")){
+    if(confirm(trans('wishlist_item.are_you_sure_you_want_to_delete_this_item'))){
         wishlistItemForm.delete(route('wishlist_items.destroy', {wishlist_item: id}),
             {
                 preserveScroll: true,
@@ -77,7 +78,7 @@ const closeModal = () => {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Editing wishlist: {{ wishlist.name }}
+                {{ $t('wishlist.editing_wishlist') }}: {{ wishlist.name }}
             </h2>
         </template>
 
@@ -101,12 +102,12 @@ const closeModal = () => {
                              data-bs-target="#wishlist_item_form_modal"
                              @click="showModalForWishlistItem(null)"
                              style="float: right;">
-                        Add item
+                        {{ $t('wishlist_item.add_item') }}
                     </PrimaryButton>
                 </div>
 
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="['Name', 'Price', 'Priority', 'Is in someone\'s shopping list', null, null]" :data="wishlistItems">
+                    <table-component :headers="[$t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.is_in_someone_else_shopping_list'), null, null]" :data="wishlistItems">
                         <template #column0="{ entity }">
                             <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
                                 {{ entity.name }}
@@ -119,7 +120,7 @@ const closeModal = () => {
                             {{ entity.priority }}
                         </template>
                         <template #column3="{ entity }">
-                            {{ user.id == wishlist.user_id?'Hidden':entity.is_bought?'Yes':'No' }}
+                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.is_bought?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column4="{ entity }">
                             <button v-if="user.id == wishlist.user_id && !wishlist.is_shared"
@@ -154,13 +155,13 @@ const closeModal = () => {
                 <div class="modal-content">
                     <form @submit.prevent="wishlistItemForm.item_id?wishlistItemForm.put(route('wishlist_items.update', {wishlist_item: wishlistItemForm.item_id}),{onSuccess: () => closeModal(),preserveScroll: true}):wishlistItemForm.post(route('wishlist_items.store'),{onSuccess: () => closeModal()})" class="mt-6 space-y-6">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Add a wishlist item</h5>
+                            <h5 class="modal-title" id="modalLabel">{{ $t('wishlist_item.add_a_wishlist_item') }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
 
                                 <div>
-                                    <InputLabel for="item_name" value="Name" />
+                                    <InputLabel for="item_name" :value="$t('wishlist_item.name')" />
 
                                     <TextInput
                                         id="item_name"
@@ -189,7 +190,7 @@ const closeModal = () => {
                                 </div>
 
                                 <div>
-                                    <InputLabel for="url_link" value="Url Link" />
+                                    <InputLabel for="url_link" :value="$t('wishlist_item.url_link')" />
 
                                     <TextInput
                                         id="url_link"
@@ -203,7 +204,7 @@ const closeModal = () => {
                                 </div>
 
                                 <div>
-                                    <InputLabel for="price" value="Price" />
+                                    <InputLabel for="price" :value="$t('wishlist_item.price')" />
 
                                     <PriceInput
                                         id="price"
@@ -215,7 +216,7 @@ const closeModal = () => {
                                 </div>
 
                                 <div>
-                                    <InputLabel for="priority" value="Priority" />
+                                    <InputLabel for="priority" :value="$t('wishlist_item.priority')" />
 
                                     <NumberInput
                                         id="priority"
@@ -229,10 +230,10 @@ const closeModal = () => {
 
                         </div>
                         <div class="modal-footer">
-                            <PrimaryButton data-bs-dismiss="modal">Close</PrimaryButton>
+                            <PrimaryButton data-bs-dismiss="modal">{{ $t('messages.close') }}</PrimaryButton>
                             <div class="flex items-center gap-4">
                                 <PrimaryButton :disabled="wishlistItemForm.processing">
-                                    {{ wishlistItemForm.id?'Save':'Add' }}
+                                    {{ wishlistItemForm.id?$t('messages.save'):$t('messages.add') }}
                                 </PrimaryButton>
                             </div>
                         </div>

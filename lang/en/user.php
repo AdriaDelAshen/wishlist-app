@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'user' => 'User',
+    'users' => 'Users',
+    'name' => 'Name',
+    'email_address' => 'Email',
+    'active' => 'Active',
+    'is_active' => 'Is active',
+    'is_admin' => 'Is admin',
+    'is_administrator' => 'Is administrator',
+    'setup_password' => 'Setup password',
+    'update_password' => 'Update Password',
+    'password' => 'Password',
+    'new_password' => 'New password',
+    'confirm_password' => 'Confirm password',
+    'new_user' => 'New user',
+    'user_information' => 'User Information',
+    'update_the_user_information_and_email_address' => 'Update user\'s information and email address.',
+    'your_email_address_is_unverified' => 'Your email address is unverified.',
+    'click_here_to_resend_the_verification_email' => 'Click here to re-send the verification email.',
+    'a_new_verification_link_has_been_sent' => 'A new verification link has been sent to the email address.',
+    'editing_user' => 'Editing user',
+    'delete_user' => 'Delete user',
+    'are_you_sure_you_want_to_delete_this_user' => 'Are you sure you want to delete this user?',
+    'ensure_to_use_a_secure_password' => 'Ensure your account is using a long, random password to stay secure.',
+    'delete_user_warning' => 'Once this user is deleted, all of its resources and data will be permanently deleted. Before deleting it, please download any data or information that you wish to retain.',
+];

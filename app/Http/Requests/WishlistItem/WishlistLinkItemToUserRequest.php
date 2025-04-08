@@ -25,7 +25,7 @@ class WishlistLinkItemToUserRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if($this->wishlist_item->user_id) {
-                $validator->errors()->add('wishlist_item', 'This item is already in someone\'s else shopping list.');
+                $validator->errors()->add('wishlist_item', __('validation.custom.wishlist_item.is_already_in_someone_shopping_list'));
             }
         });
     }

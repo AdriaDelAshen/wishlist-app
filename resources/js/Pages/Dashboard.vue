@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import TableComponent from "@/Components/Table.vue";
 import NavLink from "@/Components/NavLink.vue";
 import {ref} from "vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     wishlistItems: {
@@ -14,7 +15,7 @@ const props = defineProps({
 let wishlistItems = ref(props.wishlistItems);
 
 const removeFromShoppingList = (wishlistItem) => {
-    if(confirm("Are you sure you want to remove this item from your shopping list?")){
+    if(confirm(trans('messages.are_you_sure_you_want_to_remove_this_item'))){
         axios
             .patch(route('wishlist_items.unlinkItemToUser', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
             .catch(error => console.log(error))
@@ -41,7 +42,7 @@ window.Echo.private("wishlistItem")
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Dashboard
+                {{ $t('messages.dashboard') }}
             </h2>
         </template>
 
@@ -51,7 +52,7 @@ window.Echo.private("wishlistItem")
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        Welcome! Here is your shopping list with every wishlist items you selected among every wishlist.
+                        {{ $t('messages.welcome_message') }}
                     </div>
                 </div>
             </div>
@@ -59,7 +60,7 @@ window.Echo.private("wishlistItem")
         <div class="py-12" style="padding-top:0;">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="['Name', 'Price', 'Priority', 'Wishlist', 'Wishlist Owner', null]" :data="wishlistItems">
+                    <table-component :headers="[$t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.wishlist'), $t('wishlist_item.wishlist_owner'), null]" :data="wishlistItems">
                         <template #column0="{ entity }">
                             <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
                                 {{ entity.name }}
@@ -81,7 +82,7 @@ window.Echo.private("wishlistItem")
                             <button
                                 @click="removeFromShoppingList(entity)"
                                 class="nav-button">
-                                {{ 'Not buying anymore' }}
+                                {{ $t('wishlist_item.not_buying_anymore') }}
                             </button>
                         </template>
                     </table-component>

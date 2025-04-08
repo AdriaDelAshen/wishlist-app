@@ -32,11 +32,11 @@ const form = useForm({
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900">
-                User Information
+                {{ $t('user.user_information') }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Update the account's profile information and email address.
+                {{ $t('user.update_the_user_information_and_email_address') }}
             </p>
         </header>
 
@@ -45,7 +45,7 @@ const form = useForm({
             class="mt-6 space-y-6"
         >
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" :value="$t('user.name')" />
                 <TextInput
                     id="name"
                     type="text"
@@ -59,7 +59,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="$t('user.email_address')" />
                 <TextInput
                     id="email"
                     type="email"
@@ -73,14 +73,14 @@ const form = useForm({
 
             <div v-if="currentUser.id === user.id && mustVerifyEmail && user.email_verified_at === null">
                 <p class="mt-2 text-sm text-gray-800">
-                    Your email address is unverified.
+                    {{ $t('user.your_email_address_is_unverified') }}
                     <Link
                         :href="route('verification.send')"
                         method="post"
                         as="button"
                         class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        Click here to re-send the verification email.
+                        {{ $t('user.click_here_to_resend_the_verification_email') }}
                     </Link>
                 </p>
 
@@ -88,13 +88,13 @@ const form = useForm({
                     v-show="status === 'verification-link-sent'"
                     class="mt-2 text-sm font-medium text-green-600"
                 >
-                    A new verification link has been sent to the email address.
+                    {{ $t('user.a_new_verification_link_has_been_sent') }}
                 </div>
             </div>
 
 
             <div>
-                <InputLabel for="is_active" value="Active" />
+                <InputLabel for="is_active" :value="$t('user.active')" />
                 <Checkbox
                     id="is_active"
                     v-model="form.is_active"
@@ -104,7 +104,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="is_admin" value="Is administrator" />
+                <InputLabel for="is_admin" :value="$t('user.is_administrator')" />
                 <Checkbox
                     id="is_admin"
                     v-model="form.is_admin"
@@ -114,7 +114,7 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">{{ $t('messages.save') }}</PrimaryButton>
                 <Transition
                     enter-active-class="transition ease-in-out"
                     enter-from-class="opacity-0"
@@ -125,7 +125,7 @@ const form = useForm({
                         v-if="form.recentlySuccessful"
                         class="text-sm text-gray-600"
                     >
-                        Saved.
+                        {{ $t('messages.saved') }}
                     </p>
                 </Transition>
             </div>

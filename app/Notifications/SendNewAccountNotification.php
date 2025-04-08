@@ -34,10 +34,10 @@ class SendNewAccountNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New account for Wishlist app')
-            ->greeting('Hello '.$notifiable->name. ',')
-            ->line('An administrator has created an account for you.')
-            ->action('Go to website', route('login'))
+            ->subject(__('notifications.new_account_for_wishlist_app'))
+            ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
+            ->line(__('notifications.an_admin_has_created_your_account'))
+            ->action(__('notifications.go_to_website'), route('login'))
             ->from('yzi_ger@hotmail.com');
     }
 

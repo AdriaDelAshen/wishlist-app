@@ -5,6 +5,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TableComponent from "@/Components/Table.vue";
 import NavLink from "@/Components/NavLink.vue";
 import {ref} from "vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     wishlist: {
@@ -21,7 +22,7 @@ const user = usePage().props.auth.user;
 let wishlistItems = ref(props.wishlistItems);
 
 const addToShoppingList = (wishlistItem) => {
-    if(confirm("Are you sure you want to add this item to your shopping list?")){
+    if(confirm(trans('wishlist_item.are_you_sure_you_want_to_add_this_item'))){
         axios
             .patch(route('wishlist_items.linkItemToUser', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
             .catch(error => console.log(error))
@@ -29,7 +30,7 @@ const addToShoppingList = (wishlistItem) => {
 };
 
 const removeFromShoppingList = (wishlistItem) => {
-    if(confirm("Are you sure you want to remove this item from your shopping list?")){
+    if(confirm(trans('wishlist_item.are_you_sure_you_want_to_remove_this_item'))){
         axios
             .patch(route('wishlist_items.unlinkItemToUser', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
             .catch(error => console.log(error))
@@ -51,7 +52,7 @@ window.Echo.private("wishlistItem")
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Showing wishlist: {{ wishlist.name }}
+                {{ $t('wishlist.wishlist') }}: {{ wishlist.name }}
             </h2>
         </template>
 
@@ -60,15 +61,14 @@ window.Echo.private("wishlistItem")
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>
-                            <InputLabel for="name" value="Name" />
-
+                            <InputLabel for="name" :value="$t('wishlist.name')" />
                             <p
                                 class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input"
                             >{{ wishlist.name }}</p>
                         </div>
 
                         <div>
-                            <InputLabel for="expiration_date" value="Expiration date" />
+                            <InputLabel for="expiration_date" :value="$t('wishlist.expiration_date')" />
 
                             <p
                                 class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input"
@@ -76,11 +76,11 @@ window.Echo.private("wishlistItem")
                         </div>
 
                         <div v-if="user.id == wishlist.user_id">
-                            <InputLabel for="is_shared" value="Is shared" />
+                            <InputLabel for="is_shared" :value="$t('wishlist.is_shared')" />
 
                             <p
                                 class="disabled-input"
-                            >{{ wishlist.is_shared?'Yes':'No' }}</p>
+                            >{{ wishlist.is_shared?$t('messages.yes'):$t('messages.no') }}</p>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ window.Echo.private("wishlistItem")
                     Items
                 </h3>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="['Name', 'Price', 'Priority', 'Is in someone\'s shopping list', null]" :data="wishlistItems">
+                    <table-component :headers="[$t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.is_in_someone_else_shopping_list'), null]" :data="wishlistItems">
                         <template #column0="{ entity }">
                             <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
                                 {{ entity.name }}
@@ -107,20 +107,20 @@ window.Echo.private("wishlistItem")
                             {{ entity.priority }}
                         </template>
                         <template #column3="{ entity }">
-                            {{ user.id == wishlist.user_id?'Hidden':entity.is_bought?'Yes':'No' }}
+                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.is_bought?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column4="{ entity }">
                             <button
                                 v-if="user.id != wishlist.user_id && wishlist.is_shared && !entity.user_id"
                                 @click="addToShoppingList(entity)"
                                 class="nav-button">
-                                {{ 'Going to buy' }}
+                                {{ $t('wishlist_item.going_to_buy') }}
                             </button>
                             <button
                                 v-if="user.id != wishlist.user_id && wishlist.is_shared && user.id == entity.user_id"
                                 @click="removeFromShoppingList(entity)"
                                 class="nav-button">
-                                {{ 'Not buying anymore' }}
+                                {{ $t('wishlist_item.not_buying_anymore') }}
                             </button>
                         </template>
                     </table-component>

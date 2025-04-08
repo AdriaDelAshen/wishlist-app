@@ -26,9 +26,7 @@ const submit = () => {
         <Head title="Forgot Password" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
+            {{ $t('auth.forgot_your_password_message') }}
         </div>
 
         <div
@@ -40,8 +38,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
+                <InputLabel for="email" :value="$t('user.email_address')" />
                 <TextInput
                     id="email"
                     type="email"
@@ -51,7 +48,6 @@ const submit = () => {
                     autofocus
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
@@ -60,7 +56,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Email Password Reset Link
+                    {{ $t('auth.email_password_reset_link') }}
                 </PrimaryButton>
             </div>
         </form>

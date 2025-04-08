@@ -24,6 +24,6 @@ class ActiveUserRequests
 
         Auth::logout();
 
-        return redirect('/login');//->with(['errors' => 'Account is not activated or not found.']);
+        return redirect('/login');//->with(['errors' => __('Account is not activated or not found.')]);
     }
 }

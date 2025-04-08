@@ -34,10 +34,10 @@ class SendRegistrationNeedsApprovalNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New account for Wishlist app')
-            ->greeting('Hello '.$notifiable->name. ',')
-            ->line('Thank you for showing interest for our project.')
-            ->line('Your account needs to be approved by an administrator before you can login.')
+            ->subject(__('notifications.new_account_for_wishlist_app'))
+            ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
+            ->line(__('notifications.thank_you_for_showing_interest_in_our_project'))
+            ->line(__('notifications.your_account_needs_to_be_approved'))
             ->from('yzi_ger@hotmail.com');
     }
 

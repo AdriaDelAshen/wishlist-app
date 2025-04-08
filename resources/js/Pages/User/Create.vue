@@ -10,7 +10,7 @@ import CreateUserForm from "@/Pages/User/Partials/CreateUserForm.vue";
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                New User
+                {{ $t('user.new_user') }}
             </h2>
         </template>
 

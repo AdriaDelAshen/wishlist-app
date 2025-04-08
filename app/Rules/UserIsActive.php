@@ -15,8 +15,9 @@ class UserIsActive implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        //The message contains 'approved or does not exist' to be more secured and avoid giving out more information.
         if(User::query()->where('email', $value)->where('is_active', 0)->exists()) {
-            $fail('The account must be approved or does not exist.');//todo comment to explain why both message
+            $fail(__('validation.custom.user.must_be_approved_or_does_not_exist'));
         }
     }
 }

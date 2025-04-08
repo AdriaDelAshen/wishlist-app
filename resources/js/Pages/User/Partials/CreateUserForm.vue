@@ -31,7 +31,7 @@ const form = useForm({
     <section>
         <form @submit.prevent="user?form.put(route('users.update',{user: user})):form.post(route('users.store'))" class="mt-6 space-y-6">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" :value="$t('user.name')" />
                 <TextInput
                     id="name"
                     type="text"
@@ -43,7 +43,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="$t('user.email_address')" />
                 <TextInput
                     id="email"
                     type="email"
@@ -55,7 +55,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="is_active" value="Active" />
+                <InputLabel for="is_active" :value="$t('user.active')" />
                 <Checkbox
                     id="is_active"
                     v-model="form.is_active"
@@ -65,7 +65,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="is_admin" value="Is administrator" />
+                <InputLabel for="is_admin" :value="$t('user.is_administrator')" />
                 <Checkbox
                     id="is_admin"
                     v-model="form.is_admin"
@@ -75,7 +75,7 @@ const form = useForm({
             </div>
 
             <div v-if="! user">
-                <InputLabel for="setup_password" value="Setup password" />
+                <InputLabel for="setup_password" :value="$t('user.setup_password')" />
                 <Checkbox
                     id="setup_password"
                     v-model="form.setup_password"
@@ -84,7 +84,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.setup_password" />
             </div>
             <div v-if="! user && form.setup_password">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" :value="$t('user.password')" />
                 <TextInput
                     id="password"
                     type="password"
@@ -95,7 +95,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
             <div v-if="! user && form.setup_password">
-                <InputLabel for="password_confirmation" value="Confirm password" />
+                <InputLabel for="password_confirmation" :value="$t('user.confirm_password')" />
                 <TextInput
                     id="password_confirmation"
                     type="password"
@@ -107,7 +107,7 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">{{ $t('messages.save') }}</PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"
@@ -119,7 +119,7 @@ const form = useForm({
                         v-if="form.recentlySuccessful"
                         class="text-sm text-gray-600"
                     >
-                        Saved.
+                        {{ $t('messages.saved') }}
                     </p>
                 </Transition>
             </div>

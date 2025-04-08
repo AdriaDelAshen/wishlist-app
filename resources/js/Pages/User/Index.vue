@@ -5,7 +5,6 @@ import {Head, useForm, usePage} from '@inertiajs/vue3';
 import NavLink from "@/Components/NavLink.vue";
 import IconBase from "@/Components/Icons/IconBase.vue";
 import IconWrite from "@/Components/Icons/IconWrite.vue";
-import IconTrash from "@/Components/Icons/IconTrash.vue";
 
 const user = usePage().props.auth.user;
 
@@ -25,7 +24,7 @@ const props = defineProps({
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Users
+                {{ $t('user.users') }}
             </h2>
         </template>
         <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
@@ -35,7 +34,7 @@ const props = defineProps({
                 :active="route().current('users.index')"
                 style="float:right;"
             >
-                Create
+                {{ $t('messages.create') }}
             </NavLink>
         </div>
         <div class="py-12">
@@ -43,7 +42,7 @@ const props = defineProps({
                 <div
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
                 >
-                    <table-component :headers="['Name', 'Email', 'Is active', 'Is admin', null]" :data="users">
+                    <table-component :headers="[$t('user.name'), $t('user.email_address'), $t('user.is_active'), $t('user.is_admin'), null]" :data="users">
                         <template #column0="{ entity }">
                             <NavLink
                                 :href="route('users.show', {user: entity})"
@@ -56,10 +55,10 @@ const props = defineProps({
                             {{ entity.email }}
                         </template>
                         <template #column2="{ entity }">
-                            {{ entity.is_active?'Yes':'No' }}
+                            {{ entity.is_active?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column3="{ entity }">
-                            {{ entity.is_admin?'Yes':'No' }}
+                            {{ entity.is_admin?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column4="{ entity }">
                             <NavLink

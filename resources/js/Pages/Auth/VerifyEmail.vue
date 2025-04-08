@@ -26,26 +26,17 @@ const verificationLinkSent = computed(
         <Head title="Email Verification" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
+            {{ $t('auth.thanks_for_signing_up') }}
         </div>
 
-        <div
-            class="mb-4 text-sm font-medium text-green-600"
-            v-if="verificationLinkSent"
-        >
-            A new verification link has been sent to the email address you
-            provided during registration.
+        <div class="mb-4 text-sm font-medium text-green-600"  v-if="verificationLinkSent" >
+            {{ $t('auth.a_new_verification_link_has_been_sent') }}
         </div>
 
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Resend Verification Email
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" >
+                    {{ $t('auth.resend_verification_email') }}
                 </PrimaryButton>
 
                 <Link
@@ -53,7 +44,7 @@ const verificationLinkSent = computed(
                     method="post"
                     as="button"
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >Log Out</Link
+                    >{{ $t('profile.logout') }}</Link
                 >
             </div>
         </form>

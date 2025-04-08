@@ -49,7 +49,7 @@ class WishlistItemUpdateRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if($this->user()->id != Wishlist::find($this->wishlist_item->wishlist_id)->user_id) {
-                $validator->errors()->add('wishlist_item', 'You cannot update this item.');
+                $validator->errors()->add('wishlist_item', __('validation.custom.wishlist_item.cannot_be_updated'));
             }
 
         });

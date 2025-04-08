@@ -6,6 +6,7 @@ import NavLink from "@/Components/NavLink.vue";
 import IconBase from "@/Components/Icons/IconBase.vue";
 import IconWrite from "@/Components/Icons/IconWrite.vue";
 import IconTrash from "@/Components/Icons/IconTrash.vue";
+import {trans} from "laravel-vue-i18n";
 
 const user = usePage().props.auth.user;
 
@@ -17,7 +18,7 @@ const props = defineProps({
 
 const form = useForm({});
 const destroyWishlist = (id) => {
-    if(confirm("Are you sure you want to delete this wishlist?")){
+    if(confirm(trans('wishlist.are_you_sure_you_want_to_delete_this_wishlist'))){
         form.delete(route('wishlists.destroy', {wishlist: id}));
     }
 };
@@ -32,7 +33,7 @@ const destroyWishlist = (id) => {
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Wishlists
+                {{ $t('wishlist.wishlists') }}
             </h2>
         </template>
         <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
@@ -42,7 +43,7 @@ const destroyWishlist = (id) => {
                 :active="route().current('wishlists.index')"
                 style="float:right;"
             >
-                Create
+                {{ $t('messages.create') }}
             </NavLink>
         </div>
         <div class="py-12">
@@ -50,7 +51,7 @@ const destroyWishlist = (id) => {
                 <div
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
                 >
-                    <table-component :headers="['Name', 'Author', 'Is shared', 'Expiration date', null, null]" :data="wishlists">
+                    <table-component :headers="[$t('wishlist.name'), $t('wishlist.owner'), $t('wishlist.is_shared'), $t('wishlist.expiration_date'), null, null]" :data="wishlists">
                         <template #column0="{ entity }">
                             <NavLink
                                 :href="route('wishlists.show', {wishlist: entity})"
@@ -63,7 +64,7 @@ const destroyWishlist = (id) => {
                             {{ entity.user.name }}
                         </template>
                         <template #column2="{ entity }">
-                            {{ entity.is_shared?'Yes':'No' }}
+                            {{ entity.is_shared?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column3="{ entity }">
                             {{ entity.expiration_date }}

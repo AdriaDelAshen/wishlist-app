@@ -37,8 +37,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
+                <InputLabel for="email" :value="$t('user.email_address')" />
                 <TextInput
                     id="email"
                     type="email"
@@ -48,13 +47,11 @@ const submit = () => {
                     autofocus
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
+                <InputLabel for="password" :value="$t('user.password')" />
                 <TextInput
                     id="password"
                     type="password"
@@ -63,16 +60,11 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
+                <InputLabel for="password_confirmation" :value="$t('user.confirm_password')" />
                 <TextInput
                     id="password_confirmation"
                     type="password"
@@ -81,11 +73,7 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
@@ -93,7 +81,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Reset Password
+                    {{ $t('user.reset_password') }}
                 </PrimaryButton>
             </div>
         </form>

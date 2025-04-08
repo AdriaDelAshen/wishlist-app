@@ -52,7 +52,7 @@ class WishlistItemController extends Controller
         WishlistItemUserHasChanged::dispatch($wishlistItem);
         return [
             'status' => 200,
-            'message' => 'Wishlist item linked successfully.',
+            'message' => __('messages.wishlist_item_linked_successfully'),
         ];
     }
 
@@ -65,7 +65,7 @@ class WishlistItemController extends Controller
         WishlistItemUserHasChanged::dispatch($wishlistItem);
         return [
             'status' => 200,
-            'message' => 'Wishlist item unlinked successfully.',
+            'message' => __('messages.wishlist_item_unlinked_successfully'),
         ];
     }
 }

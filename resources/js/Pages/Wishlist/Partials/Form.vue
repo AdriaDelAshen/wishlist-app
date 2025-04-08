@@ -30,7 +30,7 @@ const form = useForm({
     <section>
         <form @submit.prevent="wishlist?form.put(route('wishlists.update',{wishlist: wishlist})):form.post(route('wishlists.store'))" class="mt-6 space-y-6">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" :value="$t('wishlist.name')" />
                 <TextInput
                     id="name"
                     type="text"
@@ -43,7 +43,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="expiration_date" value="Expiration date" />
+                <InputLabel for="expiration_date" :value="$t('wishlist.expiration_date')" />
                 <TextInput
                     id="expiration_date"
                     type="date"
@@ -55,7 +55,7 @@ const form = useForm({
             </div>
 
             <div v-if="wishlistItems && wishlistItems.length">
-                <InputLabel for="is_shared" value="Is shared" />
+                <InputLabel for="is_shared" :value="$t('wishlist.is_shared')" />
                 <Checkbox
                     id="is_shared"
                     v-model="form.is_shared"
@@ -64,7 +64,7 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">{{ $t('messages.save') }}</PrimaryButton>
                 <Transition
                     enter-active-class="transition ease-in-out"
                     enter-from-class="opacity-0"
@@ -75,7 +75,7 @@ const form = useForm({
                         v-if="form.recentlySuccessful"
                         class="text-sm text-gray-600"
                     >
-                        Saved.
+                        {{ $t('messages.saved') }}
                     </p>
                 </Transition>
             </div>

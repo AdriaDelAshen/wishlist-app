@@ -24,7 +24,7 @@ class UserPasswordUpdateRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if(!$this->user) {
-                $validator->errors()->add('user', 'Account does not exist.');
+                $validator->errors()->add('user', __('validation.custom.user.does_not_exist'));
             }
         });
     }

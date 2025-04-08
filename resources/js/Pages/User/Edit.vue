@@ -28,7 +28,7 @@ const connectedUser = usePage().props.auth.user;
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Editing user: {{ user.name }}
+                {{ $t('user.editing_user') }}: {{ user.name }}
             </h2>
         </template>
 

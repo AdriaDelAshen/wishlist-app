@@ -33,12 +33,13 @@ class SendAccountStateChangedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $state = 'deactivated';
-        if($notifiable->is_active) $state = 'activated';
+        $state = __('notifications.deactivated');
+        if($notifiable->is_active) $state = __('notifications.activated');
+
         return (new MailMessage)
-            ->subject('Your account has been '.$state)
-            ->greeting('Hello '.$notifiable->name. ',')
-            ->line('Your account has been '.$state.'.')
+            ->subject(__('notifications.your_account_has_been', ['state' => $state]))
+            ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
+            ->line(__('notifications.your_account_has_been', ['state' => $state]).'.')
             ->from('yzi_ger@hotmail.com');
     }
 

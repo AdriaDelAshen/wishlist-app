@@ -51,6 +51,6 @@ class RegisteredUserController extends Controller
         } else {
             $user->notify(new SendRegistrationNeedsApprovalNotification());
         }
-        return redirect(route('login'))->with(['email' => 'This new account must be approved.']);
+        return redirect(route('login'))->with(['email' => __('messages.new_account_must_be_approved')]);
     }
 }

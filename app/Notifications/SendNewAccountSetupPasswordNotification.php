@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -38,10 +37,10 @@ class SendNewAccountSetupPasswordNotification extends Notification
         $token = app(PasswordBroker::class)->createToken($notifiable);
 
         return (new MailMessage)
-            ->subject('New account for Wishlist app')
-            ->greeting('Hello '.$notifiable->name. ',')
-            ->line('An administrator created your account without a password and it\'s time to set it up.')
-            ->action('Setup Password', route('password.reset', [
+            ->subject(__('notifications.new_account_for_wishlist_app'))
+            ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
+            ->line(__('notifications.an_admin_has_created_your_account_without_password'))
+            ->action(__('notifications.setup_password'), route('password.reset', [
                 'token' => $token,
                 'email' => $notifiable->email,
             ]))

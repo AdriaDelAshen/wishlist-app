@@ -38,20 +38,20 @@ const user = usePage().props.auth.user;
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Dashboard
+                                    {{ $t('messages.dashboard') }}
                                 </NavLink>
                                 <NavLink
                                     v-if="user.is_admin"
                                     :href="route('users.index')"
                                     :active="route().current('users.index')"
                                 >
-                                    Users
+                                    {{ $t('user.users') }}
                                 </NavLink>
                                 <NavLink
                                     :href="route('wishlists.index')"
                                     :active="route().current('wishlists.index')"
                                 >
-                                    Wishlists
+                                    {{ $t('wishlist.wishlists') }}
                                 </NavLink>
                             </div>
                         </div>
@@ -95,7 +95,7 @@ const user = usePage().props.auth.user;
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            {{ $t('profile.logout') }}
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -158,7 +158,7 @@ const user = usePage().props.auth.user;
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
-                            Dashboard
+                            {{ $t('messages.dashboard') }}
                         </ResponsiveNavLink>
                     </div>
 
@@ -186,7 +186,7 @@ const user = usePage().props.auth.user;
                                 method="post"
                                 as="button"
                             >
-                                Log Out
+                                {{ $t('profile.logout') }}
                             </ResponsiveNavLink>
                         </div>
                     </div>
