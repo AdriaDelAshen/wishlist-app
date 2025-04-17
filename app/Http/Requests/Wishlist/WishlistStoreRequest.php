@@ -21,7 +21,8 @@ class WishlistStoreRequest extends FormRequest
             ],
             'expiration_date' => [
                 'required',
-                'date_format:Y-m-d',//in the future
+                'date_format:Y-m-d',
+                'after:today',
             ],
         ];
     }

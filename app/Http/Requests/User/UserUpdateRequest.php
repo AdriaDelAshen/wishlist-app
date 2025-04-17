@@ -30,7 +30,7 @@ class UserUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user->id),
             ],
             'preferred_locale' => [
-                'required',
+                'sometimes',
                 'string',
                 'max:2'
             ],

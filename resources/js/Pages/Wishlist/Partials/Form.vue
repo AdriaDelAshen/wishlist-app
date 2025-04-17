@@ -17,6 +17,9 @@ const props = defineProps({
     }
 });
 
+var tomorrow = new Date(+new Date() + 86400000);
+tomorrow = tomorrow.toISOString().split('T')[0];
+console.log(tomorrow);
 const form = useForm({
     name: props.wishlist?.name || '',
     is_shared: props.wishlist?.is_shared || false,
@@ -25,8 +28,6 @@ const form = useForm({
 </script>
 
 <template>
-
-
     <section>
         <form @submit.prevent="wishlist?form.put(route('wishlists.update',{wishlist: wishlist})):form.post(route('wishlists.store'))" class="mt-6 space-y-6">
             <div>
@@ -49,6 +50,7 @@ const form = useForm({
                     type="date"
                     class="mt-1 block w-full"
                     v-model="form.expiration_date"
+                    :min="tomorrow"
                     required
                 />
                 <InputError class="mt-2" :message="form.errors.expiration_date" />

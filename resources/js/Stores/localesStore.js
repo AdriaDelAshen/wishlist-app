@@ -8,7 +8,7 @@ export const useLocalesStore = defineStore('locales', () => {
     //States
     const currentUser = ref(usePage().props.auth.user);
     const appLocales = usePage().props.data.app_locales;
-    let locale = ref('en');//default locale
+    let locale = ref(usePage().props.data.default_locale);
 
     if(!localStorage.getItem('locale')) {
         if(currentUser) {

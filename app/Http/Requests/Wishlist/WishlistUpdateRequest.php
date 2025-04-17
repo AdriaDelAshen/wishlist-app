@@ -22,7 +22,7 @@ class WishlistUpdateRequest extends FormRequest
             'expiration_date' => [
                 'required',
                 'date_format:Y-m-d',
-                //todo validates that the date is in the future
+                'after:today',
             ],
             'is_shared' => [
                 'boolean',

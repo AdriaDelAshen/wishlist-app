@@ -24,6 +24,7 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'preferred_locale' => 'fr',
         ]);
 
         //$this->assertAuthenticated();
@@ -34,5 +35,6 @@ class RegistrationTest extends TestCase
         $this->assertCount(1, $users);
         $this->assertFalse($user->is_active);
         $this->assertEquals('test@example.com', $user->email);
+        $this->assertEquals('fr', $user->preferred_locale);
     }
 }

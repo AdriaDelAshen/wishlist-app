@@ -43,6 +43,7 @@ class UserTest extends TestCase
                 'email' => 'test@test.com',
                 'is_active' => false,
                 'is_admin' => false,
+                'preferred_locale' => 'fr',
             ]);
 
         // ASSERT
@@ -56,6 +57,7 @@ class UserTest extends TestCase
         $this->assertEquals('test@test.com', $user->email);
         $this->assertFalse($user->is_admin);
         $this->assertFalse($user->is_active);
+        $this->assertEquals('fr', $user->preferred_locale);
     }
 
     public function test_non_admin_user_cannot_create_another_user(): void
@@ -105,7 +107,7 @@ class UserTest extends TestCase
 
         // ASSERT
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect('/users');
+        $response->assertRedirect('/users/'.$user->id.'/edit');
 
         $users = User::all();
         $user = $users->where('email', 'test@test.com')->first();

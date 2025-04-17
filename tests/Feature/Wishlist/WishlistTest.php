@@ -51,6 +51,26 @@ class WishlistTest extends TestCase
         $this->assertFalse($wishlist->is_shared);
     }
 
+    public function test_user_cannot_create_a_wishlist_due_in_the_past(): void
+    {
+        // ARRANGE
+        $user = User::factory()->create();
+        $expirationDate = Carbon::today();
+
+        // ACT
+        $response = $this->actingAs($user)
+            ->post('/wishlists', [
+                'name' => 'My wishlist',
+                'expiration_date' => $expirationDate->format('Y-m-d'),
+            ]);
+
+        // ASSERT
+        $response->assertSessionHasErrors('expiration_date');
+
+        $wishlists = Wishlist::all();
+        $this->assertCount(0, $wishlists);
+    }
+
     public function test_wishlist_information_can_be_updated(): void
     {
         // ARRANGE
