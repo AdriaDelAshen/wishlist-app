@@ -2,6 +2,7 @@
 
 return [
     'wishlist_item' => 'Wishlist item',
+    'wishlist' => 'Wishlist',
     'items' => 'Items',
     'name' => 'Name',
     'description' => 'Description',
@@ -9,7 +10,7 @@ return [
     'price' => 'Price',
     'priority' => 'Priority',
     'wishlist_owner' => 'Wishlist owner',
-    'is_in_someone_else_shopping_list' => 'Is in someone else\'s shopping list.',
+    'is_in_someone_else_shopping_list' => 'Is in someone else\'s shopping list',
     'add_item' => 'Add item',
     'add_a_wishlist_item' => 'Add a wishlist item',
     'going_to_buy' => 'Going to buy',

@@ -3,8 +3,11 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import {Link, useForm, usePage} from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 import Checkbox from "@/Components/Checkbox.vue";
+import SelectInput from "@/Components/SelectInput.vue";
+import { useLocalesStore } from "@/Stores/localesStore.js";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
     user: {
@@ -17,12 +20,20 @@ const props = defineProps({
     status: {
         type: String,
     },
+    options: {
+        type: Object,
+        required: true,
+    },
 });
 
-const currentUser = usePage().props.auth.user;
+const localesStore = useLocalesStore();
+const { locale, currentUser } = storeToRefs(localesStore);
+const { changeLocale } = localesStore;
+
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
+    preferred_locale: props.user.preferred_locale,
     is_active: props.user?.is_active || false,
     is_admin: props.user?.is_admin || false,
 });
@@ -41,7 +52,13 @@ const form = useForm({
         </header>
 
         <form
-            @submit.prevent="form.patch(route('users.update', {user: user.id}))"
+            @submit.prevent="form.patch(route('users.update', {user: user.id}), {
+                onSuccess: () => {
+                    if(currentUser.id === user.id) {
+                        changeLocale(form.preferred_locale);
+                    }
+                }
+            })"
             class="mt-6 space-y-6"
         >
             <div>
@@ -69,6 +86,18 @@ const form = useForm({
                     autocomplete="username"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="preferred_locale" :value="$t('user.preferred_locale')" />
+                <SelectInput
+                    id="preferred_locale"
+                    class="mt-1 block w-full"
+                    v-model="form.preferred_locale"
+                    :options="options"
+                    :must-translate-option="true"
+                />
+                <InputError class="mt-2" :message="form.errors.preferred_locale" />
             </div>
 
             <div v-if="currentUser.id === user.id && mustVerifyEmail && user.email_verified_at === null">

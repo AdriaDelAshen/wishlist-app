@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\WishlistItemController;
 use App\Http\Middleware\ActiveUserRequests;
+use App\Http\Middleware\LocaleMiddleware;
 use App\Http\Middleware\OnlyForAdminRequests;
 use App\Models\WishlistItem;
 use Illuminate\Support\Facades\Auth;
@@ -21,9 +22,9 @@ Route::get('/dashboard', function () {
              ->load('wishlist')
              ->load('wishlist.user')
      ]);
-})->middleware(['auth', 'verified', ActiveUserRequests::class])->name('dashboard');
+})->middleware(['auth', 'verified', ActiveUserRequests::class, LocaleMiddleware::class])->name('dashboard');
 
-Route::middleware(['auth', ActiveUserRequests::class])->group(function () {
+Route::middleware(['auth', ActiveUserRequests::class, LocaleMiddleware::class])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

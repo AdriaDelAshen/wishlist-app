@@ -16,6 +16,10 @@ const props = defineProps({
     status: {
         type: String,
     },
+    options: {
+        type: Object,
+        required: true,
+    },
 });
 
 const connectedUser = usePage().props.auth.user;
@@ -39,6 +43,7 @@ const connectedUser = usePage().props.auth.user;
                         :user="user"
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
+                        :options="options"
                         class="max-w-xl"
                     />
                 </div>

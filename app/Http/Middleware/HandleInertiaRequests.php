@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
+use App\Enums\LocaleEnum;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -36,6 +36,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'data' => [
+                'default_locale' => LocaleEnum::getDefaultLocale(),
+                'app_locales' => LocaleEnum::getAvailableLocales(),
+            ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
@@ -43,7 +47,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => function () {
                 return [
                     'success' => session('success'),
-                    'error' => session('error'),
+                    'error'   => session('error'),
                 ];
             },
         ];

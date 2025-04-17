@@ -29,6 +29,11 @@ class UserUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user->id),
             ],
+            'preferred_locale' => [
+                'required',
+                'string',
+                'max:2'
+            ],
             'is_active' => [
                 'sometimes',
                 'boolean',

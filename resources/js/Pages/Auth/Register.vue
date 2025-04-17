@@ -5,12 +5,19 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { useLocalesStore } from "@/Stores/localesStore.js";
+import {watch} from "vue";
+
+const localesStore = useLocalesStore();
+
+watch(() => localesStore.locale, (newLocale) => form.preferred_locale = newLocale);
 
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    preferred_locale: localesStore.locale,
 });
 
 const submit = () => {

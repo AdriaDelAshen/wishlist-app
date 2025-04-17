@@ -5,6 +5,7 @@ return [
     'users' => 'Utilisateurs',
     'name' => 'Nom',
     'email_address' => 'Adresse courriel',
+    'preferred_locale' => 'Langue de préférence',
     'active' => 'Actif',
     'is_active' => 'Est actif',
     'is_admin' => 'Est admin',

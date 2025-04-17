@@ -3,7 +3,10 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
+import SelectInput from "@/Components/SelectInput.vue";
+import { useLocalesStore } from '@/Stores/localesStore.js';
+import { storeToRefs } from "pinia";
 
 defineProps({
     mustVerifyEmail: {
@@ -12,14 +15,22 @@ defineProps({
     status: {
         type: String,
     },
+    options: {
+        type: Object,
+        required: true,
+    },
 });
 
-const user = usePage().props.auth.user;
+const localesStore = useLocalesStore();
+const { locale, currentUser } = storeToRefs(localesStore);
+const { changeLocale } = localesStore;
 
 const form = useForm({
-    name: user.name,
-    email: user.email,
+    name: currentUser.value.name,
+    email: currentUser.value.email,
+    preferred_locale: currentUser.value.preferred_locale,
 });
+
 </script>
 
 <template>
@@ -35,12 +46,15 @@ const form = useForm({
         </header>
 
         <form
-            @submit.prevent="form.patch(route('profile.update'))"
+            @submit.prevent="form.patch(route('profile.update'), {
+                onSuccess: () => {
+                    changeLocale(form.preferred_locale);
+                }
+            })"
             class="mt-6 space-y-6"
         >
             <div>
                 <InputLabel for="name" :value="$t('profile.name')" />
-
                 <TextInput
                     id="name"
                     type="text"
@@ -50,13 +64,11 @@ const form = useForm({
                     autofocus
                     autocomplete="name"
                 />
-
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div>
                 <InputLabel for="email" :value="$t('profile.email_address')" />
-
                 <TextInput
                     id="email"
                     type="email"
@@ -65,11 +77,10 @@ const form = useForm({
                     required
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
+            <div v-if="mustVerifyEmail && currentUser.email_verified_at === null">
                 <p class="mt-2 text-sm text-gray-800">
                     {{ $t('profile.your_email_address_is_unverified') }}
                     <Link
@@ -88,6 +99,18 @@ const form = useForm({
                 >
                     {{ $t('profile.a_new_verification_link_has_been_sent') }}
                 </div>
+            </div>
+
+            <div>
+                <InputLabel for="preferred_locale" :value="$t('profile.preferred_locale')" />
+                <SelectInput
+                    id="preferred_locale"
+                    class="mt-1 block w-full"
+                    v-model="form.preferred_locale"
+                    :options="options"
+                    :must-translate-option="true"
+                />
+                <InputError class="mt-2" :message="form.errors.preferred_locale" />
             </div>
 
             <div class="flex items-center gap-4">

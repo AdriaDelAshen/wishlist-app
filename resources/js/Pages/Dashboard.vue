@@ -15,7 +15,7 @@ const props = defineProps({
 let wishlistItems = ref(props.wishlistItems);
 
 const removeFromShoppingList = (wishlistItem) => {
-    if(confirm(trans('messages.are_you_sure_you_want_to_remove_this_item'))){
+    if(confirm(trans('wishlist_item.are_you_sure_you_want_to_remove_this_item'))){
         axios
             .patch(route('wishlist_items.unlinkItemToUser', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
             .catch(error => console.log(error))

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LocaleEnum;
 use App\Http\Requests\User\UserDeleteRequest;
 use App\Http\Requests\User\UserPasswordUpdateRequest;
 use App\Http\Requests\User\UserStoreRequest;
@@ -46,6 +47,7 @@ class UserController extends Controller
             'user' => $user,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
+            'options' => LocaleEnum::getAvailableLocales(),
         ]);
     }
 
@@ -85,7 +87,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return Redirect::route('users.index');
+        return Redirect::route('users.edit', $user);
     }
 
     public function destroy(UserDeleteRequest $request, User $user): RedirectResponse

@@ -30,6 +30,11 @@ class UserStoreRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class),
             ],
+            'preferred_locale' => [
+                'required',
+                'string',
+                'max:2'
+            ],
             'is_active' => [
                 'sometimes',
                 'boolean',

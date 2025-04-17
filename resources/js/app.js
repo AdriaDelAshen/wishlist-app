@@ -7,8 +7,11 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { i18nVue } from 'laravel-vue-i18n';
+import { createPinia } from 'pinia'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+const pinia = createPinia();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -27,6 +30,7 @@ createInertiaApp({
                     return await langs[`../../lang/${lang}.json`]();
                 }
             })
+            .use(pinia)
             .mount(el);
     },
     progress: {

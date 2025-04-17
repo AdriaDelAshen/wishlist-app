@@ -2,6 +2,7 @@
 
 return [
     'wishlist_item' => 'Item de liste de souhaits',
+    'wishlist' => 'Liste de souhaits',
     'items' => 'Items',
     'name' => 'Nom',
     'description' => 'Description',

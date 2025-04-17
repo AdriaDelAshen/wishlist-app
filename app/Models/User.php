@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'is_admin',
         'is_active',
+        'preferred_locale',
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password'          => 'hashed',
             'is_admin'          => 'boolean',
             'is_active'         => 'boolean',
+            'preferred_locale'  => 'string',
         ];
     }
 
