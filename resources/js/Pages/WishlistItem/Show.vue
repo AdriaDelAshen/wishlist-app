@@ -18,7 +18,7 @@ const item = ref(props.wishlistItem);
 const addToShoppingList = (wishlistItem) => {
     if(confirm(trans('messages.are_you_sure_you_want_to_add_this_item'))){
         axios
-            .patch(route('wishlist_items.linkItemToUser', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
+            .patch(route('wishlist_items.link_item_to_user', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
             .catch(error => console.log(error))
     }
 };
@@ -26,7 +26,7 @@ const addToShoppingList = (wishlistItem) => {
 const removeFromShoppingList = (wishlistItem) => {
     if(confirm(trans('messages.are_you_sure_you_want_to_remove_this_item'))){
         axios
-            .patch(route('wishlist_items.unlinkItemToUser', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
+            .patch(route('wishlist_items.unlink_item_to_user', {wishlist_item: wishlistItem.id, id: wishlistItem.id}))
             .catch(error => console.log(error))
     }
 };

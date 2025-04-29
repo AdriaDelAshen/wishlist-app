@@ -10,6 +10,7 @@ use App\Http\Requests\WishlistItem\WishlistLinkItemToUserRequest;
 use App\Http\Requests\WishlistItem\WishlistUnlinkItemToUserRequest;
 use App\Models\WishlistItem;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -66,6 +67,13 @@ class WishlistItemController extends Controller
         return [
             'status' => 200,
             'message' => __('messages.wishlist_item_unlinked_successfully'),
+        ];
+    }
+
+    public function getCurrentDataFromPage(Request $request): array
+    {
+        return [
+            'pagination' => WishlistItem::query()->paginate($request->perPage, ['*'], 'page', $request->page)
         ];
     }
 }

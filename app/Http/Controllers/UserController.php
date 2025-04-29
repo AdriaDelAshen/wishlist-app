@@ -15,6 +15,7 @@ use App\Utils\StringUtils;
 use Exception;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -24,9 +25,7 @@ class UserController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('User/Index', [
-            'users' => User::all()
-        ]);
+        return Inertia::render('User/Index');
     }
 
     public function show(User $user)
@@ -104,5 +103,12 @@ class UserController extends Controller
         ]);
 
         return Redirect::route('users.index');
+    }
+
+    public function getCurrentDataFromPage(Request $request): array
+    {
+        return [
+            'pagination' => User::query()->paginate($request->perPage, ['*'], 'page', $request->page),
+        ];
     }
 }

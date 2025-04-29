@@ -40,7 +40,7 @@ class Wishlist extends Model
         return [
             'name'            => 'string',
             'is_shared'       => 'boolean',
-            'expiration_date' => 'date',
+            'expiration_date' => 'date:Y-m-d',
             'user_id'         => 'integer',
         ];
     }
@@ -53,12 +53,5 @@ class Wishlist extends Model
     public function wishlistItems(): HasMany
     {
         return $this->hasMany(WishlistItem::class);
-    }
-
-    public function toDisplayData(): array
-    {
-        return [
-            ...$this->toArray(),
-            'expiration_date' => $this->expiration_date->format('Y-m-d')];
     }
 }

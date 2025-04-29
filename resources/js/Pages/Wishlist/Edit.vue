@@ -107,22 +107,25 @@ const closeModal = () => {
                 </div>
 
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="[$t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.is_in_someone_else_shopping_list'), null, null]" :data="wishlistItems">
+                    <table-component :headers="[$t('wishlist_item.id'), $t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.is_in_someone_else_shopping_list'), null, null]" :data="wishlistItems">
                         <template #column0="{ entity }">
                             <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
-                                {{ entity.name }}
+                                {{ entity.id }}
                             </NavLink>
                         </template>
                         <template #column1="{ entity }">
-                            {{ entity.price }}$
+                            {{ entity.name }}
                         </template>
                         <template #column2="{ entity }">
-                            {{ entity.priority }}
+                            {{ entity.price }}$
                         </template>
                         <template #column3="{ entity }">
-                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.is_bought?$t('messages.yes'):$t('messages.no') }}
+                            {{ entity.priority }}
                         </template>
                         <template #column4="{ entity }">
+                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.is_bought?$t('messages.yes'):$t('messages.no') }}
+                        </template>
+                        <template #column5="{ entity }">
                             <button v-if="user.id == wishlist.user_id && !wishlist.is_shared"
                                     type="button"
                                     class="nav-button"
@@ -134,7 +137,7 @@ const closeModal = () => {
                                 </icon-base>
                             </button>
                         </template>
-                        <template #column5="{ entity }">
+                        <template #column6="{ entity }">
                             <button
                                 v-if="user.id == wishlist.user_id && !wishlist.is_shared"
                                 @click="destroyWishlistItem(entity.id)"

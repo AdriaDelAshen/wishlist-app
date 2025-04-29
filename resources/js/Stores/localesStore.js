@@ -6,16 +6,16 @@ import { usePage } from "@inertiajs/vue3";
 export const useLocalesStore = defineStore('locales', () => {
 
     //States
-    const currentUser = ref(usePage().props.auth.user);
-    const appLocales = usePage().props.data.app_locales;
+    const appLocales = ref(usePage().props.data.app_locales);
+    let currentUser = ref(usePage().props.auth.user);
     let locale = ref(usePage().props.data.default_locale);
 
     if(!localStorage.getItem('locale')) {
-        if(currentUser) {
-            locale.value = currentUser.preferred_locale;
+        if(currentUser.value) {
+            locale.value = currentUser.value.preferred_locale;
         }
         localStorage.setItem('locale', locale.value);
-    } else {
+    } else if(localStorage.getItem('locale') !== 'undefined') {
         locale.value = localStorage.getItem('locale');
     }
 
@@ -28,5 +28,9 @@ export const useLocalesStore = defineStore('locales', () => {
         locale.value = index;
     }
 
-    return { locale, currentUser, appLocales, changeLocale };
+    function refreshCurrentUser() {
+        currentUser.value = usePage().props.auth.user;
+    }
+
+    return { locale, currentUser, appLocales, changeLocale, refreshCurrentUser };
 })

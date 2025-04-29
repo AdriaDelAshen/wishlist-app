@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'id' => 'ID',
     'wishlist_item' => 'Wishlist item',
     'wishlist' => 'Wishlist',
     'items' => 'Items',

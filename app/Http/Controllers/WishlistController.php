@@ -8,6 +8,7 @@ use App\Http\Requests\Wishlist\WishlistUpdateRequest;
 use App\Models\Wishlist;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
@@ -25,20 +26,14 @@ class WishlistController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('Wishlist/Index', [
-            'wishlists' => Wishlist::query()
-                ->where('user_id', Auth::user()->id)
-                ->orWhere('is_shared', true)->get()
-                ->load('user')//todo do not show from deactivated users
-            ->map(fn (Wishlist $wishlist) => $wishlist->toDisplayData())
-        ]);
+        return Inertia::render('Wishlist/Index');
     }
 
     public function show(Wishlist $wishlist)
     {
         return Inertia::render('Wishlist/Show', [
-            'wishlist' => $wishlist->toDisplayData(),
-            'wishlistItems' => $wishlist->wishlistItems,
+            'wishlist' => $wishlist,
+//            'wishlistItems' => $wishlist->wishlistItems,
         ]);
     }
 
@@ -51,7 +46,7 @@ class WishlistController extends Controller
     {
         Gate::authorize('update', $wishlist);
         return Inertia::render('Wishlist/Edit', [
-            'wishlist' => $wishlist->toDisplayData(),
+            'wishlist' => $wishlist,
             'wishlistItems' => $wishlist->wishlistItems()->orderBy('priority')->get(),
         ]);
     }
@@ -80,5 +75,18 @@ class WishlistController extends Controller
         $wishlist->delete();
 
         return Redirect::route('wishlists.index');
+    }
+
+    public function getCurrentDataFromPage(Request $request): array
+    {
+        return [
+            'pagination' => Wishlist::query()
+                ->where('user_id', Auth::user()->id)
+                ->orWhere('is_shared', true)
+                ->withWhereHas('user', function ($query) {
+                    $query->where('is_active', true);
+                })
+                ->paginate($request->perPage, ['*'], 'page', $request->page)
+        ];
     }
 }

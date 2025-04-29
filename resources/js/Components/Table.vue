@@ -26,7 +26,7 @@ defineProps({
             </tr>
             <tr
                 v-for="entity in data"
-                :key="`entity-${entity.name}`"
+                :key="`entity-${entity.id}`"
                 class="table-rows"
             >
                 <td

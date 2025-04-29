@@ -13,8 +13,11 @@ import { storeToRefs } from 'pinia';
 const showingNavigationDropdown = ref(false);
 
 const localesStore = useLocalesStore();
+localesStore.refreshCurrentUser();
 const { locale, currentUser, appLocales } = storeToRefs(localesStore);
 const { changeLocale } = localesStore;
+
+
 </script>
 
 <template>
