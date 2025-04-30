@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, watch } from "vue";
+import {computed, ref, watch} from "vue";
 
 const props = defineProps({
     pagination: {
@@ -8,40 +8,41 @@ const props = defineProps({
         required: true
     }
 });
-let links = ref([]);
 
-watch(() => props.pagination, (newPagination) => {
-
-    links = newPagination.links.map((link) => {
-        if(    link.label === 'Previous'
-            || link.label === 'Next'
-            || link.url === newPagination.first_page_url
-            || link.url === newPagination.last_page_url
-            || link.url === newPagination.prev_page_url
-            || link.url === newPagination.next_page_url
-            || link.active)
-        {
-            return link;
-        }
-
-        const regex = /page=(\d+)/;
-
-        if(newPagination.next_page_url) {
-            let matchesForNextUrl = newPagination.next_page_url.match(regex);
-            if(matchesForNextUrl && +link.label === +(matchesForNextUrl[1])+1) {
-                return '...';
+let links = computed(() => {
+    if(props.pagination.links) {
+        let links = props.pagination.links.map((link) => {
+            if(    link.label === 'Previous'
+                || link.label === 'Next'
+                || link.url === props.pagination.first_page_url
+                || link.url === props.pagination.last_page_url
+                || link.url === props.pagination.prev_page_url
+                || link.url === props.pagination.next_page_url
+                || link.active)
+            {
+                return link;
             }
-        }
-        if(newPagination.prev_page_url) {
-            let matchesForPreviousUrl = newPagination.prev_page_url.match(regex);
-            if(matchesForPreviousUrl && +link.label === +(matchesForPreviousUrl[1])-1) {
-                return '...';
+
+            const regex = /page=(\d+)/;
+
+            if(props.pagination.next_page_url) {
+                let matchesForNextUrl = props.pagination.next_page_url.match(regex);
+                if(matchesForNextUrl && +link.label === +(matchesForNextUrl[1])+1) {
+                    return '...';
+                }
             }
-        }
-    });
-    links = links.filter(function( element ) {
-        return element !== undefined;
-    });
+            if(props.pagination.prev_page_url) {
+                let matchesForPreviousUrl = props.pagination.prev_page_url.match(regex);
+                if(matchesForPreviousUrl && +link.label === +(matchesForPreviousUrl[1])-1) {
+                    return '...';
+                }
+            }
+        });
+        return links.filter(function( element ) {
+            return element !== undefined;
+        });
+    }
+    return [];
 });
 
 </script>
