@@ -34,7 +34,7 @@ const removeFromShoppingList = (wishlistItem) => {
 //Channel pusher
 window.Echo.private("wishlistItem")
     .listen('WishlistItemUserHasChanged', (data) => {
-        item.value.is_bought = data.is_bought;
+        item.value.in_shopping_list = data.in_shopping_list;
         item.value.user_id = data.user_id;
     });
 </script>
@@ -45,7 +45,7 @@ window.Echo.private("wishlistItem")
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ $t('messages.wishlist_item') }}: {{ item.name }}
+                {{ $t('wishlist_item.wishlist_item') }}: {{ item.name }}
             </h2>
         </template>
 
@@ -54,11 +54,11 @@ window.Echo.private("wishlistItem")
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>
-                            <InputLabel for="name" :value="$t('messages.name')" />
+                            <InputLabel for="name" :value="$t('wishlist_item.name')" />
                             <p class="disabled-input">{{ item.name }}</p>
                         </div>
                         <div>
-                            <InputLabel for="wishlist_name" :value="$t('messages.from_wishlist_owner')" />
+                            <InputLabel for="wishlist_name" :value="$t('wishlist_item.from_wishlist_owner')" />
                             <p class="disabled-input">{{ item.wishlist.name }} ({{ item.wishlist.user.name }})</p>
                         </div>
                         <div>
@@ -66,32 +66,32 @@ window.Echo.private("wishlistItem")
                             <p class="disabled-input">{{ item.description?item.description:'-' }}</p>
                         </div>
                         <div>
-                            <InputLabel for="url_link" :value="$t('messages.url_link')" />
+                            <InputLabel for="url_link" :value="$t('wishlist_item.url_link')" />
                             <p class="disabled-input">{{ item.url_link?item.url_link:'-' }}</p>
                         </div>
                         <div>
-                            <InputLabel for="price" :value="$t('messages.price')" />
+                            <InputLabel for="price" :value="$t('wishlist_item.price')" />
                             <p class="disabled-input">{{ item.price }}</p>
                         </div>
                         <div>
-                            <InputLabel for="priority" :value="$t('messages.priority')" />
+                            <InputLabel for="priority" :value="$t('wishlist_item.priority')" />
                             <p class="disabled-input">{{ item.priority }}</p>
                         </div>
                         <div>
-                            <InputLabel for="is_bought" :value="$t('messages.is_in_someone_else_shopping_list')" />
-                            <p class="disabled-input">{{ user.id == item.wishlist.user_id?$t('messages.hidden'):item.is_bought?$t('message.yes'):$t('messages.no') }}</p>
+                            <InputLabel for="in_shopping_list" :value="$t('wishlist_item.is_in_someone_else_shopping_list')" />
+                            <p class="disabled-input">{{ user.id == item.wishlist.user_id?$t('messages.hidden'):item.in_shopping_list?$t('messages.yes'):$t('messages.no') }}</p>
                         </div>
                         <button
                             v-if="user.id != item.wishlist.user_id && item.wishlist.is_shared && !item.user_id"
                             @click="addToShoppingList(wishlistItem)"
                             class="nav-button">
-                            {{ $t('messages.going_to_buy') }}
+                            {{ $t('messages.add_to_my_shopping_list') }}
                         </button>
                         <button
                             v-if="user.id != item.wishlist.user_id && item.wishlist.is_shared && user.id == item.user_id"
                             @click="removeFromShoppingList(wishlistItem)"
                             class="nav-button">
-                            {{ $t('messages.not_buying_anymore') }}
+                            {{ $t('messages.remove_from_my_shopping_list') }}
                         </button>
                     </div>
                 </div>
@@ -102,19 +102,4 @@ window.Echo.private("wishlistItem")
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
-
-.disabled-input {
-    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-    --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-    border-radius: 0.375rem;
-    width: 100%;
-    display: block;
-    margin-top: 0.25rem;
-    background-color: lightgrey;
-    padding: 9px;
-}
 </style>

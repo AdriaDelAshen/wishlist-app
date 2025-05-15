@@ -6,6 +6,7 @@ import NavLink from "@/Components/NavLink.vue";
 import {ref} from "vue";
 import {trans} from "laravel-vue-i18n";
 import Pagination from "@/Components/Pagination.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
 const removeFromShoppingList = (wishlistItem) => {
     if(confirm(trans('wishlist_item.are_you_sure_you_want_to_remove_this_item'))){
@@ -64,6 +65,19 @@ const onPageChange = (url) => {
         window.history.replaceState(null, document.title, '?page='+matches[1])
     }
 };
+
+const handleIsBoughtChange = (newValue, entity) => {
+    const isBought = newValue === 'true'
+
+    axios
+        .patch(route('wishlist_items.state_has_changed', {wishlist_item: entity.id,is_bought: isBought}))
+        .then(() => {
+            entity.is_bought = isBought
+        })
+        .catch((error) => {
+            console.error('Failed to update:', error)
+        })
+}
 </script>
 
 <template>
@@ -96,7 +110,7 @@ const onPageChange = (url) => {
                     @pageChanged="onPageChange"
                 />
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="[$t('wishlist_item.id'), $t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.wishlist'), $t('wishlist_item.wishlist_owner'), null]" :data="currentData">
+                    <table-component :headers="[$t('wishlist_item.id'), $t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.wishlist'), $t('wishlist_item.wishlist_owner'), $t('wishlist_item.is_bought'), null]" :data="currentData">
                         <template #column0="{ entity }">
                             <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
                                 {{ entity.id }}
@@ -118,10 +132,21 @@ const onPageChange = (url) => {
                             {{ entity.wishlist.user.name }}
                         </template>
                         <template #column6="{ entity }">
+                            <SelectInput
+                                id="is_bought"
+                                class="mt-1 block"
+                                v-model="entity.is_bought"
+                                :options="{'true':$t('options.yes'), 'false':$t('options.no')}"
+                                :must-translate-option="false"
+                                @update:modelValue="(value) => handleIsBoughtChange(value, entity)"
+                            />
+                        </template>
+                        <template #column7="{ entity }">
                             <button
+                                :disabled="entity.is_bought"
                                 @click="removeFromShoppingList(entity)"
                                 class="nav-button">
-                                {{ $t('wishlist_item.not_buying_anymore') }}
+                                {{ $t('wishlist_item.remove_from_my_shopping_list') }}
                             </button>
                         </template>
                     </table-component>
@@ -132,6 +157,6 @@ const onPageChange = (url) => {
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
+
 </style>
 

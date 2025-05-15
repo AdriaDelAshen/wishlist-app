@@ -62,5 +62,4 @@ const connectedUser = usePage().props.auth.user;
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
 </style>

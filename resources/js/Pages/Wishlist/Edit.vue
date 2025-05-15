@@ -123,7 +123,7 @@ const closeModal = () => {
                             {{ entity.priority }}
                         </template>
                         <template #column4="{ entity }">
-                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.is_bought?$t('messages.yes'):$t('messages.no') }}
+                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.in_shopping_list?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column5="{ entity }">
                             <button v-if="user.id == wishlist.user_id && !wishlist.is_shared"
@@ -162,10 +162,8 @@ const closeModal = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-
                                 <div>
                                     <InputLabel for="item_name" :value="$t('wishlist_item.name')" />
-
                                     <TextInput
                                         id="item_name"
                                         type="text"
@@ -174,13 +172,11 @@ const closeModal = () => {
                                         required
                                         autocomplete="name"
                                     />
-
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.name" />
                                 </div>
 
                                 <div>
                                     <InputLabel for="description" value="Description" />
-
                                     <TextInput
                                         id="description"
                                         type="text"
@@ -188,13 +184,11 @@ const closeModal = () => {
                                         v-model="wishlistItemForm.description"
                                         autocomplete="description"
                                     />
-
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.description" />
                                 </div>
 
                                 <div>
                                     <InputLabel for="url_link" :value="$t('wishlist_item.url_link')" />
-
                                     <TextInput
                                         id="url_link"
                                         type="text"
@@ -202,31 +196,26 @@ const closeModal = () => {
                                         v-model="wishlistItemForm.url_link"
                                         autocomplete="url_link"
                                     />
-
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.url_link" />
                                 </div>
 
                                 <div>
                                     <InputLabel for="price" :value="$t('wishlist_item.price')" />
-
                                     <PriceInput
                                         id="price"
                                         class="mt-1 block w-full"
                                         v-model="wishlistItemForm.price"
                                     />
-
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.price" />
                                 </div>
 
                                 <div>
                                     <InputLabel for="priority" :value="$t('wishlist_item.priority')" />
-
                                     <NumberInput
                                         id="priority"
                                         class="mt-1 block w-full"
                                         v-model="wishlistItemForm.priority"
                                     />
-
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.priority" />
                                 </div>
 
@@ -249,5 +238,4 @@ const closeModal = () => {
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
 </style>

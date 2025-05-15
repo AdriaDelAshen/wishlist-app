@@ -38,7 +38,7 @@ const removeFromShoppingList = (wishlistItem) => {
 window.Echo.private("wishlistItem")
     .listen('WishlistItemUserHasChanged', (data) => {
         let item = currentData.value.find(item => item.id === data.id);
-        item.is_bought = data.is_bought;
+        item.in_shopping_list = data.in_shopping_list;
         item.user_id = data.user_id;
     });
 
@@ -150,20 +150,20 @@ const onPageChange = (url) => {
                             {{ entity.priority }}
                         </template>
                         <template #column4="{ entity }">
-                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.is_bought?$t('messages.yes'):$t('messages.no') }}
+                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.in_shopping_list?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column5="{ entity }">
                             <button
                                 v-if="user.id != wishlist.user_id && wishlist.is_shared && !entity.user_id"
                                 @click="addToShoppingList(entity)"
                                 class="nav-button">
-                                {{ $t('wishlist_item.going_to_buy') }}
+                                {{ $t('wishlist_item.add_to_my_shopping_list') }}
                             </button>
                             <button
                                 v-if="user.id != wishlist.user_id && wishlist.is_shared && user.id == entity.user_id"
                                 @click="removeFromShoppingList(entity)"
                                 class="nav-button">
-                                {{ $t('wishlist_item.not_buying_anymore') }}
+                                {{ $t('wishlist_item.remove_from_my_shopping_list') }}
                             </button>
                         </template>
                     </table-component>
@@ -175,19 +175,4 @@ const onPageChange = (url) => {
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
-
-.disabled-input {
-    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-    --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-    border-radius: 0.375rem;
-    width: 100%;
-    display: block;
-    margin-top: 0.25rem;
-    background-color: lightgrey;
-    padding: 9px;
-}
 </style>

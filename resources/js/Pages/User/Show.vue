@@ -47,19 +47,4 @@ const props = defineProps({
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
-
-.disabled-input {
-    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-    --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-    border-radius: 0.375rem;
-    width: 100%;
-    display: block;
-    margin-top: 0.25rem;
-    background-color: lightgrey;
-    padding: 9px;
-}
 </style>

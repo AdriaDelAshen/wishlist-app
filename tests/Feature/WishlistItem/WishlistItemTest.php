@@ -59,6 +59,7 @@ class WishlistItemTest extends TestCase
         $this->assertEquals(13.99, $wishlistItem->price);
         $this->assertEquals(1, $wishlistItem->priority);
         $this->assertEquals($wishlist->id, $wishlistItem->wishlist_id);
+        $this->assertFalse($wishlistItem->in_shopping_list);
         $this->assertFalse($wishlistItem->is_bought);
         $this->assertNull($wishlistItem->user_id);
     }
@@ -150,14 +151,14 @@ class WishlistItemTest extends TestCase
         ]);
         $wishlistItem = WishlistItem::factory()->create([
             'wishlist_id' => $wishlist->id,
-            'is_bought' => false,
+            'in_shopping_list' => false,
             'user_id' => null,
         ]);
 
         // ACT
         $response = $this
             ->actingAs($user)
-            ->patch('/wishlist_link_item_user/' . $wishlistItem->id, [
+            ->patch('/wishlist_item_link_item_user/' . $wishlistItem->id, [
                 'id' => $wishlistItem->id,
             ]);
 
@@ -167,7 +168,7 @@ class WishlistItemTest extends TestCase
 
         $wishlistItem->refresh();
         $this->assertEquals($user->id, $wishlistItem->user_id);
-        $this->assertTrue($wishlistItem->is_bought);
+        $this->assertTrue($wishlistItem->in_shopping_list);
         Event::assertDispatched(WishlistItemUserHasChanged::class);
     }
 
@@ -182,17 +183,16 @@ class WishlistItemTest extends TestCase
         ]);
         $wishlistItem = WishlistItem::factory()->create([
             'wishlist_id' => $wishlist->id,
-            'is_bought' => true,
+            'in_shopping_list' => true,
             'user_id' => $user->id,
         ]);
 
         // ACT
         $response = $this
             ->actingAs($user)
-            ->patch('/wishlist_unlink_item_user/' . $wishlistItem->id, [
+            ->patch('/wishlist_item_unlink_item_user/' . $wishlistItem->id, [
                 'id' => $wishlistItem->id,
             ]);
-
 
         // ASSERT
         $response->assertSessionHasNoErrors();
@@ -200,7 +200,136 @@ class WishlistItemTest extends TestCase
 
         $wishlistItem->refresh();
         $this->assertNull($wishlistItem->user_id);
-        $this->assertFalse($wishlistItem->is_bought);
+        $this->assertFalse($wishlistItem->in_shopping_list);
         Event::assertDispatched(WishlistItemUserHasChanged::class);
+    }
+
+    public function test_user_cannot_remove_wishlist_item_from_their_shopping_list_if_item_is_bought(): void
+    {
+        // ARRANGE
+        Event::fake();
+        $user = User::factory()->create();
+        $wishlistOwner = User::factory()->create();
+        $wishlist = Wishlist::factory()->create([
+            'user_id' => $wishlistOwner->id,
+        ]);
+        $wishlistItem = WishlistItem::factory()->create([
+            'wishlist_id' => $wishlist->id,
+            'in_shopping_list' => true,
+            'is_bought' => true,
+            'user_id' => $user->id,
+        ]);
+
+        // ACT
+        $response = $this
+            ->actingAs($user)
+            ->patch('/wishlist_item_unlink_item_user/' . $wishlistItem->id, [
+                'id' => $wishlistItem->id,
+            ]);
+
+        // ASSERT
+        $response->assertSessionHasErrors();
+
+        $wishlistItem->refresh();
+        $this->assertEquals($user->id, $wishlistItem->user_id);
+        $this->assertTrue($wishlistItem->in_shopping_list);
+        $this->assertTrue($wishlistItem->is_bought);
+        Event::assertNotDispatched(WishlistItemUserHasChanged::class);
+    }
+
+    public function test_user_can_set_wishlist_item_as_bought(): void
+    {
+        // ARRANGE
+        $user = User::factory()->create();
+        $wishlistOwner = User::factory()->create();
+        $wishlist = Wishlist::factory()->create([
+            'user_id' => $wishlistOwner->id,
+        ]);
+        $wishlistItem = WishlistItem::factory()->create([
+            'wishlist_id' => $wishlist->id,
+            'in_shopping_list' => true,
+            'is_bought' => false,
+            'user_id' => $user->id,
+        ]);
+
+        // ACT
+        $response = $this
+            ->actingAs($user)
+            ->patch('/wishlist_item_state_has_changed/' . $wishlistItem->id, [
+                'is_bought' => true,
+            ]);
+
+        // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertOk();
+
+        $wishlistItem->refresh();
+        $this->assertEquals($user->id, $wishlistItem->user_id);
+        $this->assertTrue($wishlistItem->in_shopping_list);
+        $this->assertTrue($wishlistItem->is_bought);
+    }
+
+    public function test_user_can_set_wishlist_item_as_unbought(): void
+    {
+        // ARRANGE
+        $user = User::factory()->create();
+        $wishlistOwner = User::factory()->create();
+        $wishlist = Wishlist::factory()->create([
+            'user_id' => $wishlistOwner->id,
+        ]);
+        $wishlistItem = WishlistItem::factory()->create([
+            'wishlist_id' => $wishlist->id,
+            'in_shopping_list' => true,
+            'is_bought' => true,
+            'user_id' => $user->id,
+        ]);
+
+        // ACT
+        $response = $this
+            ->actingAs($user)
+            ->patch('/wishlist_item_state_has_changed/' . $wishlistItem->id, [
+                'is_bought' => false,
+            ]);
+
+        // ASSERT
+        $response->assertSessionHasNoErrors();
+        $response->assertOk();
+
+        $wishlistItem->refresh();
+        $this->assertEquals($user->id, $wishlistItem->user_id);
+        $this->assertTrue($wishlistItem->in_shopping_list);
+        $this->assertFalse($wishlistItem->is_bought);
+    }
+
+    public function test_user_cannot_set_wishlist_item_as_bought_if_item_is_not_in_their_shopping_list(): void
+    {
+        // ARRANGE
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $wishlistOwner = User::factory()->create();
+        $wishlist = Wishlist::factory()->create([
+            'user_id' => $wishlistOwner->id,
+        ]);
+        $wishlistItem = WishlistItem::factory()->create([
+            'wishlist_id' => $wishlist->id,
+            'in_shopping_list' => false,
+            'is_bought' => false,
+            'user_id' => $otherUser->id,//Item is in another user's shopping list.
+        ]);
+
+        // ACT
+        $response = $this
+            ->actingAs($user)
+            ->patch('/wishlist_item_state_has_changed/' . $wishlistItem->id, [
+                'is_bought' => true,
+            ]);
+
+        // ASSERT
+        $response->assertSessionHasErrors();
+
+        $wishlistItem->refresh();
+        $this->assertEquals($otherUser->id, $wishlistItem->user_id);
+        $this->assertFalse($wishlistItem->in_shopping_list);
+        $this->assertFalse($wishlistItem->is_bought);
     }
 }

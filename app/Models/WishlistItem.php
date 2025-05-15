@@ -24,6 +24,7 @@ class WishlistItem extends Model
         'url_link',
         'price',
         'priority',
+        'in_shopping_list',
         'is_bought',
         'wishlist_id',
         'user_id',
@@ -37,14 +38,15 @@ class WishlistItem extends Model
     protected function casts(): array
     {
         return [
-            'name'        => 'string',
-            'description' => 'string',
-            'url_link'    => 'string',
-            'price'       => 'float',
-            'priority'    => 'integer',
-            'is_bought'   => 'boolean',
-            'wishlist_id' => 'integer',
-            'user_id'     => 'integer',
+            'name'             => 'string',
+            'description'      => 'string',
+            'url_link'         => 'string',
+            'price'            => 'float',
+            'priority'         => 'integer',
+            'in_shopping_list' => 'boolean',
+            'is_bought'        => 'boolean',
+            'wishlist_id'      => 'integer',
+            'user_id'          => 'integer',
         ];
     }
 

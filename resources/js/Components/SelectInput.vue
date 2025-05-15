@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const model = defineModel({
-    type: String,
+    type: [String, Boolean, Number],
     required: true,
 });
 

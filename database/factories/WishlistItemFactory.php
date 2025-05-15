@@ -23,6 +23,7 @@ class WishlistItemFactory extends Factory
             'url_link' => fake()->url(),
             'price' => fake()->randomDigit(),
             'priority' => 0,
+            'in_shopping_list' => false,
             'is_bought' => false,
             'wishlist_id' => Wishlist::factory(),
             'user_id' => null,

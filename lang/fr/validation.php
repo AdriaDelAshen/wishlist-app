@@ -193,6 +193,8 @@ return [
             'cannot_be_deleted' => 'Vous ne pouvez pas supprimer cet item.',
             'is_already_in_someone_shopping_list' => 'Cet item est déjà dans la liste d\'achats de quelqu\'un d\'autre.',
             'cannot_be_removed_from_someone_else_shopping_list' => 'Cet item ne peut pas être retiré puisqu\'il est dans la liste d\'achats de quelqu\'un d\'autre.',
+            'cannot_be_removed_since_it_has_been_bought' => 'Cet item ne peut pas être retiré puisqu\'il a été acheté.',
+            'cannot_change_state_of_item_if_you_are_not_the_buyer' => 'L\'état de cet item ne peut être changé, car vous n\'êtes pas l\'acheteur.',
         ]
     ],
 

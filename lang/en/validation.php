@@ -193,6 +193,8 @@ return [
             'cannot_be_deleted' => 'You cannot delete this item.',
             'is_already_in_someone_shopping_list' => 'This item is already in someone\'s else shopping list.',
             'cannot_be_removed_from_someone_else_shopping_list' => 'Cannot remove this item since it is not in your shopping list.',
+            'cannot_be_removed_since_it_has_been_bought' => 'Cannot remove this item since it has been bought.',
+            'cannot_change_state_of_item_if_you_are_not_the_buyer' => 'Cannot change the state of the item since you are not the buyer.',
         ],
     ],
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\WishlistItemUserHasChanged;
+use App\Http\Requests\WishlistItem\WishlistItemChangeStateOfItemRequest;
 use App\Http\Requests\WishlistItem\WishlistItemDeleteRequest;
 use App\Http\Requests\WishlistItem\WishlistItemStoreRequest;
 use App\Http\Requests\WishlistItem\WishlistItemUpdateRequest;
@@ -47,7 +48,7 @@ class WishlistItemController extends Controller
     public function linkItemToUser(WishlistLinkItemToUserRequest $request, WishlistItem $wishlistItem): array
     {
         $wishlistItem->update([
-            'is_bought' => true,
+            'in_shopping_list' => true,
             'user_id' => Auth::user()->id,
         ]);
         WishlistItemUserHasChanged::dispatch($wishlistItem);
@@ -60,13 +61,24 @@ class WishlistItemController extends Controller
     public function unlinkItemToUser(WishlistUnlinkItemToUserRequest $request, WishlistItem $wishlistItem): array
     {
         $wishlistItem->update([
-            'is_bought' => false,
+            'in_shopping_list' => false,
             'user_id' => null,
         ]);
         WishlistItemUserHasChanged::dispatch($wishlistItem);
         return [
             'status' => 200,
             'message' => __('messages.wishlist_item_unlinked_successfully'),
+        ];
+    }
+
+    public function itemStateHasChanged(WishlistItemChangeStateOfItemRequest $request, WishlistItem $wishlistItem): array
+    {
+        $wishlistItem->update([
+            'is_bought' => $request->is_bought,
+        ]);
+        return [
+            'status' => 200,
+//            'message' => __('messages.wishlist_item_unlinked_successfully'),
         ];
     }
 

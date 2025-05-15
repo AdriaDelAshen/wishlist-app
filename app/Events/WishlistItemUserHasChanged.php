@@ -33,6 +33,7 @@ class WishlistItemUserHasChanged implements ShouldBroadcastNow
             'price' => $this->wishlistItem->price,
             'priority' => $this->wishlistItem->priority,
             'wishlist' => $this->wishlistItem->wishlist->load('user'),
+            'in_shopping_list' => $this->wishlistItem->in_shopping_list,
             'is_bought' => $this->wishlistItem->is_bought,
             'user_id' => $this->wishlistItem->user_id,
         ];

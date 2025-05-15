@@ -142,5 +142,4 @@ const onPageChange = (url) => {
 </template>
 
 <style scoped>
-@import '././resources/css/nav_button.css';
 </style>
