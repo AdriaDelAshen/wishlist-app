@@ -8,7 +8,11 @@ const props = defineProps({
     },
     mustTranslateOption: {
         type: Boolean,
-        required: true,
+        default: false
+    },
+    setDefaultValue: {
+        type: String,
+        default: ''
     },
 });
 
@@ -19,10 +23,11 @@ const model = defineModel({
 
 const select = ref(null);
 
+// Set the default value on mount if model is empty
 onMounted(() => {
-    // if (select.value.hasAttribute('autofocus')) {
-    //     select.value.focus();
-    // }
+    if (model.value === undefined || model.value === null || model.value === '') {
+        model.value = props.setDefaultValue;
+    }
 });
 
 defineExpose({ focus: () => input.value.focus() });
@@ -34,6 +39,6 @@ defineExpose({ focus: () => input.value.focus() });
         v-model="model"
         ref="input"
     >
-        <option v-for="(option, index) in options" :value="index">{{ mustTranslateOption? $t('options.'+option): option }}</option>
+        <option v-for="(option, index) in options" :key="index" :value="index">{{ mustTranslateOption? $t('options.'+option): option }}</option>
     </select>
 </template>

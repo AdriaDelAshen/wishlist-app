@@ -14,4 +14,7 @@ return [
     'setup_password' => 'Setup Password',
     'thank_you_for_showing_interest_in_our_project' => 'Thank you for showing interest in our project.',
     'your_account_needs_to_be_approved' => 'Your account needs to be approved by an administrator before you can login.',
+
+    'happy_early_birthday' => 'Happy early birthday!',
+    'your_birthday_is_coming_up' => 'Your birthday is coming up soon! Just a reminder that it’s time to create your wishlist and share among family and friends!',
 ];

@@ -4,6 +4,8 @@ namespace Tests\Feature\User;
 
 use App\Models\User;
 use App\Notifications\SendAccountStateChangedNotification;
+use App\Notifications\UpcomingBirthdayNotification;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -44,6 +46,7 @@ class UserTest extends TestCase
                 'is_active' => false,
                 'is_admin' => false,
                 'preferred_locale' => 'fr',
+                'birthday_date' => '2000-01-01',
             ]);
 
         // ASSERT
@@ -58,6 +61,7 @@ class UserTest extends TestCase
         $this->assertFalse($user->is_admin);
         $this->assertFalse($user->is_active);
         $this->assertEquals('fr', $user->preferred_locale);
+        $this->assertEquals(new Carbon('2000-01-01'), $user->birthday_date);
     }
 
     public function test_non_admin_user_cannot_create_another_user(): void
@@ -170,5 +174,56 @@ class UserTest extends TestCase
         $response->assertRedirect('/users');
 
         $this->assertCount(1, User::all());
+    }
+
+    public function it_sends_birthday_notification_to_users_with_upcoming_birthdays(): void
+    {
+        // Prevent actual notifications
+        Notification::fake();
+
+        // Create a user whose birthday is 14 days from now
+        $user = User::factory()->create([
+            'birthday_date' => now()->subYears(20)->addDays(14)->format('Y-m-d'),
+        ]);
+
+        // Run the command
+        $this->artisan('notify:upcoming-birthdays')
+            ->assertExitCode(0);
+
+        // Assert notification was sent
+        Notification::assertSentTo(
+            $user,
+            UpcomingBirthdayNotification::class
+        );
+    }
+
+    public function it_does_not_notify_users_without_upcoming_birthdays(): void
+    {
+        Notification::fake();
+
+        // User with birthday far away
+        User::factory()->create([
+            'birthday_date' => now()->subYears(20)->addDays(30)->format('Y-m-d'),
+        ]);
+
+        $this->artisan('notify:upcoming-birthdays')
+            ->assertExitCode(0);
+
+        Notification::assertNothingSent();
+    }
+
+    public function it_does_not_notify_users_with_no_birthday_date(): void
+    {
+        Notification::fake();
+
+        // User with a null birthday
+        User::factory()->create([
+            'birthday_date' => null,
+        ]);
+
+        $this->artisan('notify:upcoming-birthdays')
+            ->assertExitCode(0);
+
+        Notification::assertNothingSent();
     }
 }

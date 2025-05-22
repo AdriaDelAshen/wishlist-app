@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'birthday_date',
         'is_admin',
         'is_active',
         'preferred_locale',
@@ -47,6 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'birthday_date'     => 'date:Y-m-d',
             'is_admin'          => 'boolean',
             'is_active'         => 'boolean',
             'preferred_locale'  => 'string',

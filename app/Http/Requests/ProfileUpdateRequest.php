@@ -25,6 +25,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'birthday_date' => ['sometimes', 'date', 'before:today', 'after:-120 years', 'nullable'],
             'preferred_locale' => ['sometimes', 'string', 'max:2'],
         ];
     }

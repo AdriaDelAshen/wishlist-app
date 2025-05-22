@@ -33,9 +33,10 @@ const { changeLocale } = localesStore;
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
+    birthday_date: props.user.birthday_date,
     preferred_locale: props.user.preferred_locale,
     is_active: props.user?.is_active || false,
-    is_admin: props.user?.is_admin || false,
+    is_admin: props.user?.is_admin || false
 });
 </script>
 
@@ -86,6 +87,17 @@ const form = useForm({
                     autocomplete="username"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="birthday_date" :value="$t('user.birthday_date')" />
+                <TextInput
+                    id="birthday_date"
+                    type="date"
+                    class="mt-1 block w-full"
+                    v-model="form.birthday_date"
+                />
+                <InputError class="mt-2" :message="form.errors.birthday_date" />
             </div>
 
             <div>

@@ -48,6 +48,13 @@ class UserStoreRequest extends FormRequest
                 Password::defaults(),
                 'confirmed'
             ],
+            'birthday_date' => [
+                'sometimes',
+                'date',
+                'before:today',
+                'after:-120 years',
+                'nullable'
+            ],
         ];
     }
 }

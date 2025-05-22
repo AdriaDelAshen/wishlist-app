@@ -5,23 +5,30 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {useForm} from '@inertiajs/vue3';
 import Checkbox from "@/Components/Checkbox.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
 const props = defineProps({
     user: {
         type: Object,
         required: false
     },
+    options: {
+        type: Object,
+        required: true,
+    }
 });
 
 const form = useForm({
     id: props.user?.id || null,
     name: props.user?.name || '',
     email: props.user?.email || '',
+    birthday_date: '',
     setup_password: false,
     is_active: props.user?.is_active || false,
     is_admin: props.user?.is_admin || false,
     password: '',
     password_confirmation: '',
+    preferred_locale: ''
 });
 </script>
 
@@ -52,6 +59,30 @@ const form = useForm({
                     required
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="birthday_date" :value="$t('user.birthday_date')" />
+                <TextInput
+                    id="birthday_date"
+                    type="date"
+                    class="mt-1 block w-full"
+                    v-model="form.birthday_date"
+                />
+                <InputError class="mt-2" :message="form.errors.birthday_date" />
+            </div>
+
+            <div>
+                <InputLabel for="preferred_locale" :value="$t('user.preferred_locale')" />
+                <SelectInput
+                    id="preferred_locale"
+                    class="mt-1 block w-full"
+                    v-model="form.preferred_locale"
+                    :options="options"
+                    :must-translate-option="true"
+                    :set-default-value="'fr'"
+                />
+                <InputError class="mt-2" :message="form.errors.preferred_locale" />
             </div>
 
             <div>

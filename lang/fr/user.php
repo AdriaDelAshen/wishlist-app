@@ -6,6 +6,7 @@ return [
     'users' => 'Utilisateurs',
     'name' => 'Nom',
     'email_address' => 'Adresse courriel',
+    'birthday_date' => 'Date de naissance',
     'preferred_locale' => 'Langue de préférence',
     'active' => 'Actif',
     'is_active' => 'Est actif',

@@ -42,6 +42,13 @@ class UserUpdateRequest extends FormRequest
                 'sometimes',
                 'boolean',
             ],
+            'birthday_date' => [
+                'sometimes',
+                'date',
+                'before:today',
+                'after:-120 years',
+                'nullable'
+            ],
         ];
     }
 

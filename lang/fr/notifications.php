@@ -14,4 +14,7 @@ return [
     'setup_password' => 'Configurer mot de passe',
     'thank_you_for_showing_interest_in_our_project' => 'Merci de montrer de l\'intérêt pour notre projet.',
     'your_account_needs_to_be_approved' => 'Votre compte doit être approuvé par un administrateur avant que vous puissiez vous connecter.',
+
+    'happy_early_birthday' => 'Bonne fête d\'avance!',
+    'your_birthday_is_coming_up' => 'Votre date d\'anniversaire arrive à grand pas! Ceci est un rappel qu\'il est temps de créer votre liste de souhaits et de la partager avec la famille et amis!',
 ];

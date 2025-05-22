@@ -28,6 +28,7 @@ const { changeLocale } = localesStore;
 const form = useForm({
     name: currentUser.value.name,
     email: currentUser.value.email,
+    birthday_date: currentUser.value.birthday_date,
     preferred_locale: currentUser.value.preferred_locale,
 });
 
@@ -99,6 +100,17 @@ const form = useForm({
                 >
                     {{ $t('profile.a_new_verification_link_has_been_sent') }}
                 </div>
+            </div>
+
+            <div>
+                <InputLabel for="birthday_date" :value="$t('user.birthday_date')" />
+                <TextInput
+                    id="birthday_date"
+                    type="date"
+                    class="mt-1 block w-full"
+                    v-model="form.birthday_date"
+                />
+                <InputError class="mt-2" :message="form.errors.birthday_date" />
             </div>
 
             <div>

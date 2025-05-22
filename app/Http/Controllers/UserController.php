@@ -37,7 +37,9 @@ class UserController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('User/Create');
+        return Inertia::render('User/Create', [
+            'options' => LocaleEnum::getAvailableLocales(),
+        ]);
     }
 
     public function edit(User $user)

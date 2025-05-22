@@ -2,6 +2,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import CreateUserForm from "@/Pages/User/Partials/CreateUserForm.vue";
+
+const props = defineProps({
+    options: {
+        type: Object,
+        required: true,
+    },
+});
 </script>
 
 <template>
@@ -17,7 +24,7 @@ import CreateUserForm from "@/Pages/User/Partials/CreateUserForm.vue";
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <CreateUserForm class="max-w-xl"/>
+                    <CreateUserForm class="max-w-xl" :options="options"/>
                 </div>
             </div>
         </div>
