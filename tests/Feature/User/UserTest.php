@@ -176,9 +176,9 @@ class UserTest extends TestCase
         $this->assertCount(1, User::all());
     }
 
-    public function it_sends_birthday_notification_to_users_with_upcoming_birthdays(): void
+    public function test_it_sends_birthday_notification_to_users_with_upcoming_birthdays(): void
     {
-        // Prevent actual notifications
+        // ARRANGE
         Notification::fake();
 
         // Create a user whose birthday is 14 days from now
@@ -186,19 +186,20 @@ class UserTest extends TestCase
             'birthday_date' => now()->subYears(20)->addDays(14)->format('Y-m-d'),
         ]);
 
-        // Run the command
-        $this->artisan('notify:upcoming-birthdays')
+        // ACT
+        $this->artisan('app:notify-users-of-upcoming-birthdays')
             ->assertExitCode(0);
 
-        // Assert notification was sent
+        // ASSERT
         Notification::assertSentTo(
             $user,
             UpcomingBirthdayNotification::class
         );
     }
 
-    public function it_does_not_notify_users_without_upcoming_birthdays(): void
+    public function test_it_does_not_notify_users_without_upcoming_birthdays(): void
     {
+        // ARRANGE
         Notification::fake();
 
         // User with birthday far away
@@ -206,24 +207,48 @@ class UserTest extends TestCase
             'birthday_date' => now()->subYears(20)->addDays(30)->format('Y-m-d'),
         ]);
 
-        $this->artisan('notify:upcoming-birthdays')
+        // ACT
+        $this->artisan('app:notify-users-of-upcoming-birthdays')
             ->assertExitCode(0);
 
+        // ASSERT
         Notification::assertNothingSent();
     }
 
-    public function it_does_not_notify_users_with_no_birthday_date(): void
+    public function test_it_does_not_notify_users_with_no_birthday_date(): void
     {
+        // ARRANGE
         Notification::fake();
 
         // User with a null birthday
-        User::factory()->create([
+        $user = User::factory()->create([
             'birthday_date' => null,
         ]);
 
-        $this->artisan('notify:upcoming-birthdays')
+        // ACT
+        $this->artisan('app:notify-users-of-upcoming-birthdays')
             ->assertExitCode(0);
 
-        Notification::assertNothingSent();
+        // ASSERT
+        Notification::assertNotSentTo($user, UpcomingBirthdayNotification::class);
+    }
+
+    public function test_user_who_opted_out_does_not_receive_birthday_notification(): void
+    {
+        // ARRANGE
+        Notification::fake();
+
+        // Create a user who opted out
+        $user = User::factory()->create([
+            'birthday_date' => now()->subYears(20)->addDays(14)->format('Y-m-d'),
+            'wants_birthday_notifications' => false,
+        ]);
+
+        // ACT
+        $this->artisan('app:notify-users-of-upcoming-birthdays')
+            ->assertExitCode(0);
+
+        // ASSERT
+        Notification::assertNotSentTo($user, UpcomingBirthdayNotification::class);
     }
 }

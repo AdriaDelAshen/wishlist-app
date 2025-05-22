@@ -35,6 +35,10 @@ class UserStoreRequest extends FormRequest
                 'string',
                 'max:2'
             ],
+            'wants_birthday_notifications' => [
+                'sometimes',
+                'boolean',
+            ],
             'is_active' => [
                 'sometimes',
                 'boolean',

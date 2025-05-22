@@ -22,7 +22,8 @@ const form = useForm({
     id: props.user?.id || null,
     name: props.user?.name || '',
     email: props.user?.email || '',
-    birthday_date: '',
+    birthday_date: props.user?.birthday_date || '',
+    wants_birthday_notifications: props.user?.wants_birthday_notifications || true,
     setup_password: false,
     is_active: props.user?.is_active || false,
     is_admin: props.user?.is_admin || false,
@@ -70,6 +71,16 @@ const form = useForm({
                     v-model="form.birthday_date"
                 />
                 <InputError class="mt-2" :message="form.errors.birthday_date" />
+            </div>
+
+            <div>
+                <InputLabel for="wants_birthday_notifications" :value="$t('user.wants_birthday_notifications')" />
+                <Checkbox
+                    id="wants_birthday_notifications"
+                    v-model="form.wants_birthday_notifications"
+                    :checked="form.wants_birthday_notifications"
+                />
+                <InputError class="mt-2" :message="form.errors.wants_birthday_notifications" />
             </div>
 
             <div>

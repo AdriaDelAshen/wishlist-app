@@ -18,6 +18,8 @@ return [
     'are_you_sure_you_want_to_delete_your_account' => 'Are you sure you want to delete your account?',
     'name' => 'Name',
     'email_address' => 'Email address',
+    'birthday_date' => 'Birthday date',
+    'wants_birthday_notifications' => 'Receive birthday notifications',
     'preferred_locale' => 'Preferred locale',
     'your_email_address_is_unverified' => 'Your email address is unverified.',
     'click_here_to_resend_the_verification_email' => 'Click here to re-send the verification email.',

@@ -7,6 +7,7 @@ import { Link, useForm } from '@inertiajs/vue3';
 import SelectInput from "@/Components/SelectInput.vue";
 import { useLocalesStore } from '@/Stores/localesStore.js';
 import { storeToRefs } from "pinia";
+import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
     mustVerifyEmail: {
@@ -30,6 +31,7 @@ const form = useForm({
     email: currentUser.value.email,
     birthday_date: currentUser.value.birthday_date,
     preferred_locale: currentUser.value.preferred_locale,
+    wants_birthday_notifications: currentUser.value.wants_birthday_notifications,
 });
 
 </script>
@@ -103,7 +105,7 @@ const form = useForm({
             </div>
 
             <div>
-                <InputLabel for="birthday_date" :value="$t('user.birthday_date')" />
+                <InputLabel for="birthday_date" :value="$t('profile.birthday_date')" />
                 <TextInput
                     id="birthday_date"
                     type="date"
@@ -111,6 +113,16 @@ const form = useForm({
                     v-model="form.birthday_date"
                 />
                 <InputError class="mt-2" :message="form.errors.birthday_date" />
+            </div>
+
+            <div>
+                <InputLabel for="wants_birthday_notifications" :value="$t('profile.wants_birthday_notifications')" />
+                <Checkbox
+                    id="wants_birthday_notifications"
+                    v-model="form.wants_birthday_notifications"
+                    :checked="form.wants_birthday_notifications"
+                />
+                <InputError class="mt-2" :message="form.errors.wants_birthday_notifications" />
             </div>
 
             <div>

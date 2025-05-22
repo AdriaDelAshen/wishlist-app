@@ -30,13 +30,28 @@ class NotifyUsersOfUpcomingBirthdays extends Command
         $targetDate = now(config('app.timezone'))->addDays(14);
         $monthDay = $targetDate->format('m-d');
 
-        $users = User::query()
+        $userQuery = User::query()
             ->whereNotNull('birthday_date')
-            ->whereRaw("DATE_FORMAT(birthday_date, '%m-%d') = ?", [$monthDay])
-            ->get()
-            ->each(function ($user) {
-                $user->notify(new UpcomingBirthdayNotification());
-            });
+            ->where('wants_birthday_notifications', true);
+
+        if (app()->runningUnitTests()) {
+            //Cannot use DATE_FORMAT() in Sqlite.
+            $users = $userQuery
+                ->get()
+                ->filter(function ($user) use ($monthDay) {
+                    return $user->birthday_date->format('m-d') === $monthDay;
+                })
+                ->each(function ($user) {
+                    $user->notify(new UpcomingBirthdayNotification());
+                });
+        } else {
+            $users = $userQuery
+                ->whereRaw("DATE_FORMAT(birthday_date, '%m-%d') = ?", [$monthDay])
+                ->get()
+                ->each(function ($user) {
+                    $user->notify(new UpcomingBirthdayNotification());
+                });
+        }
 
         $this->info("Notified {$users->count()} user(s) with birthdays on {$targetDate}.");
     }

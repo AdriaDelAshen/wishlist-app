@@ -7,6 +7,7 @@ return [
     'name' => 'Nom',
     'email_address' => 'Adresse courriel',
     'birthday_date' => 'Date de naissance',
+    'wants_birthday_notifications' => 'Recevoir les notifications d\'anniversaires',
     'preferred_locale' => 'Langue de préférence',
     'active' => 'Actif',
     'is_active' => 'Est actif',

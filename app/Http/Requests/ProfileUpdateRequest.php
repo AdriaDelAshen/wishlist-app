@@ -26,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'birthday_date' => ['sometimes', 'date', 'before:today', 'after:-120 years', 'nullable'],
+            'wants_birthday_notifications' => ['sometimes','boolean',],
             'preferred_locale' => ['sometimes', 'string', 'max:2'],
         ];
     }

@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'birthday_date',
+        'wants_birthday_notifications',
         'is_admin',
         'is_active',
         'preferred_locale',
@@ -46,12 +47,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-            'birthday_date'     => 'date:Y-m-d',
-            'is_admin'          => 'boolean',
-            'is_active'         => 'boolean',
-            'preferred_locale'  => 'string',
+            'email_verified_at'            => 'datetime',
+            'password'                     => 'hashed',
+            'birthday_date'                => 'date:Y-m-d',
+            'wants_birthday_notifications' => 'boolean',
+            'is_admin'                     => 'boolean',
+            'is_active'                    => 'boolean',
+            'preferred_locale'             => 'string',
         ];
     }
 

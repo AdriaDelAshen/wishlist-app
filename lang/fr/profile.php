@@ -18,6 +18,8 @@ return [
     'are_you_sure_you_want_to_delete_your_account' => 'Êtes-vous certain de vouloir supprimer votre compte?',
     'name' => 'Nom',
     'email_address' => 'Adresse courriel',
+    'birthday_date' => 'Date de naissance',
+    'wants_birthday_notifications' => 'Recevoir les notifications d\'anniversaires',
     'preferred_locale' => 'Langue de préférence',
     'your_email_address_is_unverified' => 'Votre adresse courriel n\'a pas été vérifié.',
     'click_here_to_resend_the_verification_email' => 'Cliquer ce lien pour ré-envoyer le courriel de vérification.',
