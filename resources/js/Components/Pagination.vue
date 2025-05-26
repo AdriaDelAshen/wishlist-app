@@ -1,6 +1,6 @@
 <script setup>
 
-import {computed, ref, watch} from "vue";
+import {computed} from "vue";
 
 const props = defineProps({
     pagination: {
@@ -12,6 +12,7 @@ const props = defineProps({
 let links = computed(() => {
     if(props.pagination.links) {
         let links = props.pagination.links.map((link) => {
+console.log(link.label)
             if(    link.label === 'Previous'
                 || link.label === 'Next'
                 || link.url === props.pagination.first_page_url

@@ -15,6 +15,8 @@ import NumberInput from "@/Components/NumberInput.vue";
 import * as bootstrap from "bootstrap";
 import NavLink from "@/Components/NavLink.vue";
 import {trans} from "laravel-vue-i18n";
+import usePaginationAndSorting from "@/pagination.js";
+import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
     wishlist: {
@@ -28,6 +30,25 @@ const props = defineProps({
 });
 
 const user = usePage().props.auth.user;
+const headers = [
+    { label: 'wishlist_item.id', column: 'id' },
+    { label: 'wishlist_item.name', column: 'name' },
+    { label: 'wishlist_item.price', column: 'price' },
+    { label: 'wishlist_item.priority', column: 'priority' },
+    { label: 'wishlist_item.is_in_someone_else_shopping_list', column: null},
+    {}, // edit
+    {}, // delete
+];
+
+const {
+    currentData,
+    pagination,
+    sortBy,
+    sortDirection,
+    getCurrentPageData,
+    onPageChange,
+    onSortChanged
+} = usePaginationAndSorting('wishlist_items.get_current_data_page',{wishlist_id: props.wishlist.id});
 
 const wishlistItemForm = useForm({
     id: null,
@@ -70,6 +91,21 @@ const closeModal = () => {
     const modal = bootstrap.Modal.getInstance(myModalEl)
     modal.hide();
 };
+
+const initialUrl = document.URL;
+let initialPage = 1;
+
+if(initialUrl.includes('page=')) {
+    const regex = /page=(\d+)/;
+    const matches = initialUrl.match(regex);
+    if(matches && matches[1] != null) {
+        initialPage = matches[1];
+    }
+} else {
+    window.history.replaceState(null, document.title, '?page='+initialPage)
+}
+
+getCurrentPageData(initialPage);
 </script>
 
 <template>
@@ -92,22 +128,33 @@ const closeModal = () => {
 
         <div class="py-12" style="padding-top:0;">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div style="height: 30px;">
-                    <h3 class="text-xl font-semibold leading-tight text-gray-800" style="float: left;">
-                        Items
-                    </h3>
-                    <PrimaryButton  v-if="user.id == wishlist.user_id && !wishlist.is_shared"
-                             type="button"
-                             data-bs-toggle="modal"
-                             data-bs-target="#wishlist_item_form_modal"
-                             @click="showModalForWishlistItem(null)"
-                             style="float: right;">
-                        {{ $t('wishlist_item.add_item') }}
-                    </PrimaryButton>
+                <h3 class="text-xl font-semibold leading-tight text-gray-800">
+                    Items
+                </h3>
+
+                <div style="display: flex; justify-content: space-between;">
+                    <Pagination
+                        :pagination="pagination"
+                        @pageChanged="onPageChange"
+                    />
+                    <div style="align-content: flex-end;">
+                        <PrimaryButton  v-if="user.id == wishlist.user_id && !wishlist.is_shared"
+                                         type="button"
+                                         data-bs-toggle="modal"
+                                         data-bs-target="#wishlist_item_form_modal"
+                                         @click="showModalForWishlistItem(null)">
+                            {{ $t('wishlist_item.add_item') }}
+                        </PrimaryButton>
+                    </div>
+
                 </div>
 
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="[$t('wishlist_item.id'), $t('wishlist_item.name'), $t('wishlist_item.price'), $t('wishlist_item.priority'), $t('wishlist_item.is_in_someone_else_shopping_list'), null, null]" :data="wishlistItems">
+                    <table-component :headers="headers"
+                                     :data="wishlistItems"
+                                     :currentSortBy="sortBy"
+                                     :currentSortDirection="sortDirection"
+                                     @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
                             <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
                                 {{ entity.id }}

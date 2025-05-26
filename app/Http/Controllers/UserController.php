@@ -109,8 +109,13 @@ class UserController extends Controller
 
     public function getCurrentDataFromPage(Request $request): array
     {
+        $sortBy = $request->get('sortBy', 'id');
+        $sortDirection = $request->get('sortDirection', 'asc');
+
         return [
-            'pagination' => User::query()->paginate($request->perPage, ['*'], 'page', $request->page),
+            'pagination' => User::query()
+                ->orderBy($sortBy, $sortDirection)
+                ->paginate($request->perPage, ['*'], 'page', $request->page),
         ];
     }
 }

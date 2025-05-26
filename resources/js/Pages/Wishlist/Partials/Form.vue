@@ -19,7 +19,7 @@ const props = defineProps({
 
 var tomorrow = new Date(+new Date() + 86400000);
 tomorrow = tomorrow.toISOString().split('T')[0];
-console.log(tomorrow);
+
 const form = useForm({
     name: props.wishlist?.name || '',
     is_shared: props.wishlist?.is_shared || false,

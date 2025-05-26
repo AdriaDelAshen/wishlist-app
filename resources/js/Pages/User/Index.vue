@@ -6,24 +6,27 @@ import NavLink from "@/Components/NavLink.vue";
 import IconBase from "@/Components/Icons/IconBase.vue";
 import IconWrite from "@/Components/Icons/IconWrite.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { ref } from "vue";
+import usePaginationAndSorting from "@/pagination.js";
 
 const user = usePage().props.auth.user;
+const headers = [
+    { label: 'user.id', column: 'id' },
+    { label: 'user.name', column: 'name' },
+    { label: 'user.email_address', column: 'email' },
+    { label: 'user.is_active', column: 'is_active' },
+    { label: 'user.is_admin', column: 'is_admin' },
+    {}, // Edit
+];
 
-//Pagination
-let perPage = ref(5);
-let currentData = ref([]);
-let pagination = ref([]);
-
-const getCurrentPageData = (page) => {
-    axios
-        .get(route('users.get_current_data_page',{ perPage: perPage.value, page: page }))
-        .then((response) => {
-            pagination.value = response.data.pagination;
-            currentData.value = response.data.pagination.data;
-        })
-        .catch((error) => console.log(error))
-};
+const {
+    currentData,
+    pagination,
+    sortBy,
+    sortDirection,
+    getCurrentPageData,
+    onPageChange,
+    onSortChanged
+} = usePaginationAndSorting('users.get_current_data_page');
 
 const initialUrl = document.URL;
 let initialPage = 1;
@@ -39,17 +42,6 @@ if(initialUrl.includes('page=')) {
 }
 
 getCurrentPageData(initialPage);
-
-const onPageChange = (url) => {
-    const regex = /page=(\d+)/;
-    const matches = url.match(regex);
-    if(matches && matches[1] != null) {
-        getCurrentPageData(matches[1]);
-        window.history.replaceState(null, document.title, '?page='+matches[1])
-    }
-};
-
-
 </script>
 
 <template>
@@ -80,7 +72,11 @@ const onPageChange = (url) => {
                     @pageChanged="onPageChange"
                 />
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <table-component :headers="[$t('user.id'), $t('user.name'), $t('user.email_address'), $t('user.is_active'), $t('user.is_admin'), null]" :data="currentData">
+                    <table-component :headers="headers"
+                                     :data="currentData"
+                                     :currentSortBy="sortBy"
+                                     :currentSortDirection="sortDirection"
+                                     @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
                             <NavLink
                                 :href="route('users.show', {user: entity})"

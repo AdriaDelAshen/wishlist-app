@@ -80,6 +80,22 @@ class WishlistController extends Controller
 
     public function getCurrentDataFromPage(Request $request): array
     {
+        $sortBy = $request->get('sortBy', 'id');
+        $sortDirection = $request->get('sortDirection', 'asc');
+
+//        return [
+//            'pagination' => Wishlist::query()
+//                ->where(function ($query) {
+//                    $query->where('user_id', Auth::user()->id)
+//                        ->orWhere('is_shared', true);
+//                })
+//                ->withWhereHas('user', function ($query) {
+//                    $query->where('is_active', true);
+//                })
+//                ->orderBy($sortBy, $sortDirection)
+//                ->paginate($request->perPage, ['*'], 'page', $request->page)
+//        ];
+
         return [
             'pagination' => Wishlist::query()
                 ->where('user_id', Auth::user()->id)
@@ -87,6 +103,7 @@ class WishlistController extends Controller
                 ->withWhereHas('user', function ($query) {
                     $query->where('is_active', true);
                 })
+                ->orderBy($sortBy, $sortDirection)
                 ->paginate($request->perPage, ['*'], 'page', $request->page)
         ];
     }

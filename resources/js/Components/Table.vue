@@ -1,13 +1,12 @@
 <script setup>
 
 defineProps({
-    headers: {
-        type: Array,
-        required: true,
-    },
-    data: {
-        type: Array,
-        required: true,
+    headers: Array,
+    data: Array,
+    currentSortBy: String,
+    currentSortDirection: {
+        type: String,
+        default: 'asc'
     },
 });
 </script>
@@ -20,8 +19,13 @@ defineProps({
                     v-for="(header, i) in headers"
                     :key="`${header}${i}`"
                     class="header-item"
+                    :class="{ 'cursor-pointer': header.column }"
+                    @click="header.column ? $emit('sortChanged', header.column) : null"
                 >
-                    {{ header }}
+                    {{ header.label?$t(header.label):'' }}
+                    <span v-if="header.column && header.column === currentSortBy">
+                        {{ currentSortDirection === 'asc' ? '↑' : '↓' }}
+                    </span>
                 </th>
             </tr>
             <tr

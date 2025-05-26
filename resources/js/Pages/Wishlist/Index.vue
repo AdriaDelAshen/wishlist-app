@@ -7,31 +7,35 @@ import IconBase from "@/Components/Icons/IconBase.vue";
 import IconWrite from "@/Components/Icons/IconWrite.vue";
 import IconTrash from "@/Components/Icons/IconTrash.vue";
 import {trans} from "laravel-vue-i18n";
-import {ref} from "vue";
 import Pagination from "@/Components/Pagination.vue";
+import usePaginationAndSorting from '@/pagination.js';
 
 const user = usePage().props.auth.user;
+const headers = [
+    { label: 'wishlist.id', column: 'id' },
+    { label: 'wishlist.name', column: 'name' },
+    { label: 'wishlist.owner', column: 'user_id' },
+    { label: 'wishlist.is_shared', column: 'is_shared' },
+    { label: 'wishlist.expiration_date', column: 'expiration_date' },
+    {}, // for edit icon
+    {}, // for delete icon
+];
+
+const {
+    currentData,
+    pagination,
+    sortBy,
+    sortDirection,
+    getCurrentPageData,
+    onPageChange,
+    onSortChanged
+} = usePaginationAndSorting('wishlists.get_current_data_page');
 
 const form = useForm({});
 const destroyWishlist = (id) => {
     if(confirm(trans('wishlist.are_you_sure_you_want_to_delete_this_wishlist'))){
         form.delete(route('wishlists.destroy', {wishlist: id}));
     }
-};
-
-//Pagination
-let perPage = ref(5);
-let currentData = ref([]);
-let pagination = ref([]);
-
-const getCurrentPageData = (page) => {
-    axios
-        .get(route('wishlists.get_current_data_page',{ perPage: perPage.value, page: page }))
-        .then((response) => {
-            pagination.value = response.data.pagination;
-            currentData.value = response.data.pagination.data;
-        })
-        .catch((error) => console.log(error))
 };
 
 const initialUrl = document.URL;
@@ -48,16 +52,6 @@ if(initialUrl.includes('page=')) {
 }
 
 getCurrentPageData(initialPage);
-
-const onPageChange = (url) => {
-    const regex = /page=(\d+)/;
-    const matches = url.match(regex);
-    if(matches && matches[1] != null) {
-        getCurrentPageData(matches[1]);
-        window.history.replaceState(null, document.title, '?page='+matches[1])
-    }
-};
-
 </script>
 
 <template>
@@ -90,7 +84,11 @@ const onPageChange = (url) => {
                 <div
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
                 >
-                    <table-component :headers="[$t('wishlist.id'), $t('wishlist.name'), $t('wishlist.owner'), $t('wishlist.is_shared'), $t('wishlist.expiration_date'), null, null]" :data="currentData">
+                    <table-component :headers="headers"
+                                     :data="currentData"
+                                     :currentSortBy="sortBy"
+                                     :currentSortDirection="sortDirection"
+                                     @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
                             <NavLink
                                 :href="route('wishlists.show', {wishlist: entity})"
