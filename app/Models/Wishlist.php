@@ -27,6 +27,7 @@ class Wishlist extends Model
         'name',
         'is_shared',
         'expiration_date',
+        'can_be_duplicated',
         'user_id',
     ];
 
@@ -38,10 +39,11 @@ class Wishlist extends Model
     protected function casts(): array
     {
         return [
-            'name'            => 'string',
-            'is_shared'       => 'boolean',
-            'expiration_date' => 'date:Y-m-d',
-            'user_id'         => 'integer',
+            'name'              => 'string',
+            'is_shared'         => 'boolean',
+            'expiration_date'   => 'date:Y-m-d',
+            'can_be_duplicated' => 'boolean',
+            'user_id'           => 'integer',
         ];
     }
 

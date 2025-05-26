@@ -125,7 +125,7 @@ const onPageChange = (url) => {
                         </template>
                         <template #column6="{ entity }">
                             <button
-                                v-if="user.id == entity.user_id && !entity.is_shared"
+                                v-if="user.id === entity.user_id && !entity.is_shared"
                                 @click="destroyWishlist(entity.id)"
                                 class="nav-button delete">
                                 <icon-base icon-name="write">

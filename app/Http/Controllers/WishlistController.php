@@ -6,6 +6,7 @@ use App\Http\Requests\Wishlist\WishlistDeleteRequest;
 use App\Http\Requests\Wishlist\WishlistStoreRequest;
 use App\Http\Requests\Wishlist\WishlistUpdateRequest;
 use App\Models\Wishlist;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class WishlistController extends Controller
 
     public function __construct()
     {
-        //$this->authorizeResource(Wishlist::class, 'wishlist');
+        $this->authorizeResource(Wishlist::class, 'wishlist');
     }
 
     public function index(): Response
@@ -60,7 +61,7 @@ class WishlistController extends Controller
 
 //        event(new WishlistShared($wishlist));todo send notif to ppl in the same groups
 
-        return redirect('/wishlists');
+        return Redirect::route('wishlists.index');
     }
 
     public function update(WishlistUpdateRequest $request, Wishlist $wishlist): RedirectResponse
@@ -88,5 +89,28 @@ class WishlistController extends Controller
                 })
                 ->paginate($request->perPage, ['*'], 'page', $request->page)
         ];
+    }
+
+    public function duplicate(Wishlist $wishlist)
+    {
+        $this->authorize('duplicate', $wishlist);
+
+        $newWishlist = $wishlist->replicate(['user_id']);
+        $newWishlist->name .= ' (Copy)';
+        $newWishlist->user_id = Auth::user()->id;
+        $newWishlist->expiration_date = Carbon::now()->addDays(30);
+        $newWishlist->is_shared = false;
+        $newWishlist->can_be_duplicated = false;
+        $newWishlist->push();
+
+        // Duplicate items
+        foreach ($wishlist->wishlistItems as $item) {
+            $newItem = $item->replicate(['user_id']);
+            $newItem->in_shopping_list = false;
+            $newItem->is_bought = false;
+            $newWishlist->wishlistItems()->create($newItem->toArray());
+        }
+
+        return redirect()->route('wishlists.show', $newWishlist)->with('success', __('wishlist.duplicated'));
     }
 }

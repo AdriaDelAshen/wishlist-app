@@ -4,6 +4,7 @@ namespace Tests\Feature\Wishlist;
 
 use App\Models\User;
 use App\Models\Wishlist;
+use App\Models\WishlistItem;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -137,8 +138,127 @@ class WishlistTest extends TestCase
             ->delete('/wishlists/' . $wishlist->id);
 
         // ASSERT
-        $response->assertSessionHasErrors('wishlist');
+        $response->assertForbidden();
 
         $this->assertCount(1, Wishlist::all());
+    }
+
+    public function test_user_can_duplicate_own_wishlist_with_items(): void
+    {
+        // ARRANGE
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $originalWishlist = Wishlist::factory()
+            ->for($user)
+            ->create([
+                'name' => 'Birthday Wishlist',
+                'is_shared' => true,
+                'expiration_date' => Carbon::today()->subDay(),
+                'can_be_duplicated' => false,
+            ]);
+        WishlistItem::factory()->for($originalWishlist)->create([
+            'name' => 'Barbie doll',
+            'description' => 'A doll for kid',
+            'url_link' => 'www.google.com',
+            'price' => 14.99,
+            'priority' => 1,
+            'in_shopping_list' => true,
+            'is_bought' => true,
+            'user_id' => $otherUser,
+        ]);
+
+        // ACT
+        $response = $this->actingAs($user)
+            ->post(route('wishlists.duplicate', $originalWishlist));
+
+        // ASSERT
+        $newWishlist = Wishlist::query()->where('name', 'Birthday Wishlist (Copy)')->first();
+        $response->assertRedirect('/wishlists/'.$newWishlist->id);
+        $this->assertDatabaseHas('wishlists', [
+            'name' => 'Birthday Wishlist (Copy)',
+            'user_id' => $user->id,
+        ]);
+
+        // Ensure new wishlist is not null and has same number of items
+        $this->assertNotNull($newWishlist);
+        $this->assertFalse($newWishlist->is_shared);
+        $this->assertFalse($newWishlist->can_be_duplicated);
+        $this->assertEquals(Carbon::now()->addDays(30)->toDateString(), $newWishlist->expiration_date->toDateString());
+        $this->assertCount(1, $newWishlist->wishlistItems);
+
+        $newWishlistItem = $newWishlist->wishlistItems->first();
+        $this->assertEquals('Barbie doll', $newWishlistItem->name);
+        $this->assertEquals('A doll for kid', $newWishlistItem->description);
+        $this->assertEquals('www.google.com', $newWishlistItem->url_link);
+        $this->assertEquals(14.99, $newWishlistItem->price);
+        $this->assertEquals(1, $newWishlistItem->priority);
+        $this->assertFalse($newWishlistItem->in_shopping_list);
+        $this->assertFalse($newWishlistItem->is_bought);
+        $this->assertNull($newWishlistItem->user_id);
+    }
+
+    public function test_user_cannot_duplicate_someone_wishlist_that_cannot_be_duplicated(): void
+    {
+        // ARRANGE
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $originalWishlist = Wishlist::factory()
+            ->for($otherUser)
+            ->create([
+                'name' => 'Birthday Wishlist',
+                'is_shared' => true,
+                'expiration_date' => Carbon::today()->subDay(),
+                'can_be_duplicated' => false,
+            ]);
+        WishlistItem::factory()->for($originalWishlist)->create([
+            'name' => 'Barbie doll',
+            'description' => 'A doll for kid',
+            'url_link' => 'www.google.com',
+            'price' => 14.99,
+            'priority' => 1,
+            'in_shopping_list' => true,
+            'is_bought' => true,
+            'user_id' => $user,
+        ]);
+
+        // ACT
+        $response = $this->actingAs($user)
+            ->post(route('wishlists.duplicate', $originalWishlist));
+
+        $response->assertForbidden(); // Or assertStatus(403) depending on policy
+    }
+
+    public function test_user_can_duplicate_someone_wishlist_if_it_can_be_duplicated(): void
+    {
+        // ARRANGE
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $originalWishlist = Wishlist::factory()
+            ->for($otherUser)
+            ->create([
+                'name' => 'Birthday Wishlist',
+                'can_be_duplicated' => true,
+            ]);
+        WishlistItem::factory()->for($originalWishlist)->create();
+
+        // ACT
+        $response = $this->actingAs($user)
+            ->post(route('wishlists.duplicate', $originalWishlist));
+
+        // ASSERT
+        $newWishlist = Wishlist::query()->where('name', 'Birthday Wishlist (Copy)')->first();
+        $response->assertRedirect('/wishlists/'.$newWishlist->id);
+        $this->assertDatabaseHas('wishlists', [
+            'name' => 'Birthday Wishlist (Copy)',
+            'user_id' => $user->id,
+        ]);
+
+        // Ensure new wishlist is not null and has same number of items
+        $this->assertNotNull($newWishlist);
+        $this->assertCount(1, $newWishlist->wishlistItems);
     }
 }

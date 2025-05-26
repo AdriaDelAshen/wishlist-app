@@ -35,6 +35,9 @@ Route::middleware(['auth', ActiveUserRequests::class, LocaleMiddleware::class])-
     Route::patch('/wishlist_item_state_has_changed/{wishlist_item}', [WishlistItemController::class, 'itemStateHasChanged'])->name('wishlist_items.state_has_changed');
     Route::resource('/wishlist_items', WishlistItemController::class);
     Route::get('/current_wishlist_items', [WishlistItemController::class, 'getCurrentDataFromPage'])->name('wishlist_items.get_current_data_page');
+
+    Route::post('/wishlists/{wishlist}/duplicate', [WishlistController::class, 'duplicate'])->name('wishlists.duplicate');
+
 });
 
 require __DIR__.'/auth.php';

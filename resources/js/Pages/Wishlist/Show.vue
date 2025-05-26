@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import {Head, router, usePage} from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import TableComponent from "@/Components/Table.vue";
 import NavLink from "@/Components/NavLink.vue";
@@ -49,7 +49,7 @@ let pagination = ref([]);
 
 const getCurrentPageData = (page) => {
     axios
-        .get(route('wishlist_items.get_current_data_page',{ perPage: perPage.value, page: page }))
+        .get(route('wishlist_items.get_current_data_page',{ wishlist_id: props.wishlist.id, perPage: perPage.value, page: page }))
         .then((response) => {
             pagination.value = response.data.pagination;
             currentData.value = response.data.pagination.data;
@@ -80,6 +80,16 @@ const onPageChange = (url) => {
         window.history.replaceState(null, document.title, '?page='+matches[1])
     }
 };
+
+const duplicateWishlist = (id) => {
+    if (confirm(trans('wishlist.are_you_sure_you_want_to_duplicate_this_wishlist'))) {
+        router.post(route('wishlists.duplicate', { wishlist: id }), {}, {
+            onSuccess: () => {
+                // notifySuccess('Wishlist duplicated!');
+            }
+        });
+    }
+}
 </script>
 
 <template>
@@ -94,29 +104,40 @@ const onPageChange = (url) => {
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <button
+                    v-if="wishlist.can_be_duplicated || wishlist.user_id === user.id"
+                    @click="duplicateWishlist(wishlist.id)"
+                    class="nav-button">
+                    {{ $t('wishlist.duplicate') }}
+                </button>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>
                             <InputLabel for="name" :value="$t('wishlist.name')" />
-                            <p
-                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input"
-                            >{{ wishlist.name }}</p>
+                            <p class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input">
+                                {{ wishlist.name }}
+                            </p>
                         </div>
 
                         <div>
                             <InputLabel for="expiration_date" :value="$t('wishlist.expiration_date')" />
+                            <p class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input">
+                                {{ wishlist.expiration_date }}
+                            </p>
+                        </div>
 
-                            <p
-                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full disabled-input"
-                            >{{ wishlist.expiration_date }}</p>
+                        <div>
+                            <InputLabel for="can_be_duplicated" :value="$t('wishlist.can_be_duplicated')" />
+                            <p class="disabled-input">
+                                {{ wishlist.can_be_duplicated?$t('messages.yes'):$t('messages.no') }}
+                            </p>
                         </div>
 
                         <div v-if="user.id == wishlist.user_id">
                             <InputLabel for="is_shared" :value="$t('wishlist.is_shared')" />
-
-                            <p
-                                class="disabled-input"
-                            >{{ wishlist.is_shared?$t('messages.yes'):$t('messages.no') }}</p>
+                            <p class="disabled-input">
+                                {{ wishlist.is_shared?$t('messages.yes'):$t('messages.no') }}
+                            </p>
                         </div>
                     </div>
                 </div>

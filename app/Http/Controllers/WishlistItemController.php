@@ -85,7 +85,9 @@ class WishlistItemController extends Controller
     public function getCurrentDataFromPage(Request $request): array
     {
         return [
-            'pagination' => WishlistItem::query()->paginate($request->perPage, ['*'], 'page', $request->page)
+            'pagination' => WishlistItem::query()
+                ->where('wishlist_id', $request->wishlist_id)
+                ->paginate($request->perPage, ['*'], 'page', $request->page)
         ];
     }
 }

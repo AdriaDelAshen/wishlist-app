@@ -24,6 +24,7 @@ const form = useForm({
     name: props.wishlist?.name || '',
     is_shared: props.wishlist?.is_shared || false,
     expiration_date: props.wishlist?.expiration_date || '',
+    can_be_duplicated: props.wishlist?.can_be_duplicated || false,
 });
 </script>
 
@@ -54,6 +55,15 @@ const form = useForm({
                     required
                 />
                 <InputError class="mt-2" :message="form.errors.expiration_date" />
+            </div>
+
+            <div>
+                <InputLabel for="can_be_duplicated" :value="$t('wishlist.can_be_duplicated')" />
+                <Checkbox
+                    id="can_be_duplicated"
+                    v-model="form.can_be_duplicated"
+                    :checked="form.can_be_duplicated"
+                />
             </div>
 
             <div v-if="wishlistItems && wishlistItems.length">
