@@ -9,6 +9,7 @@ use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
 use App\Notifications\SendAccountStateChangedNotification;
+use App\Notifications\UserMadeAdminNotification;
 use App\Notifications\SendNewAccountNotification;
 use App\Notifications\SendNewAccountSetupPasswordNotification;
 use App\Utils\StringUtils;
@@ -84,6 +85,10 @@ class UserController extends Controller
 
         if ($user->isDirty('is_active')) {
             $user->notify(new SendAccountStateChangedNotification());
+        }
+
+        if ($user->isDirty('is_admin') && $user->is_admin) {
+            $user->notify(new UserMadeAdminNotification());
         }
 
         $user->save();

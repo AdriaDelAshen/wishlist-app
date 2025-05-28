@@ -17,4 +17,7 @@ return [
 
     'happy_early_birthday' => 'Happy early birthday!',
     'your_birthday_is_coming_up' => 'Your birthday is coming up soon! Just a reminder that it’s time to create your wishlist and share among family and friends!',
+
+    'your_status_changed_to_admin_subject' => 'Your account status has changed',
+    'you_are_now_admin_line' => 'You have been granted administrator privileges.',
 ];

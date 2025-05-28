@@ -17,4 +17,7 @@ return [
 
     'happy_early_birthday' => 'Bonne fête d\'avance!',
     'your_birthday_is_coming_up' => 'Votre date d\'anniversaire arrive à grand pas! Ceci est un rappel qu\'il est temps de créer votre liste de souhaits et de la partager avec la famille et amis!',
+
+    'your_status_changed_to_admin_subject' => 'Votre statut de compte a changé',
+    'you_are_now_admin_line' => 'Des privilèges d\'administrateur vous ont été accordés.',
 ];

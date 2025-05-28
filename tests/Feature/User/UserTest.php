@@ -4,6 +4,7 @@ namespace Tests\Feature\User;
 
 use App\Models\User;
 use App\Notifications\SendAccountStateChangedNotification;
+use App\Notifications\UserMadeAdminNotification;
 use App\Notifications\UpcomingBirthdayNotification;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -250,5 +251,84 @@ class UserTest extends TestCase
 
         // ASSERT
         Notification::assertNotSentTo($user, UpcomingBirthdayNotification::class);
+    }
+
+    public function test_sends_notification_when_user_becomes_admin(): void
+    {
+        // SCENARIO 1: User becomes admin
+        Notification::fake();
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $regularUser = User::factory()->create([
+            'name' => 'Regular User',
+            'email' => 'regular@example.com',
+            'is_admin' => false,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($adminUser)
+            ->put(route('users.update', $regularUser), [
+                'name' => $regularUser->name,
+                'email' => $regularUser->email,
+                'is_active' => $regularUser->is_active,
+                'is_admin' => true, // Changed to admin
+                'preferred_locale' => $regularUser->preferred_locale,
+                'birthday_date' => $regularUser->birthday_date ? $regularUser->birthday_date->format('Y-m-d') : null,
+            ]);
+
+        Notification::assertSentTo(
+            $regularUser,
+            UserMadeAdminNotification::class,
+            function ($notification, $channels, $notifiable) use ($regularUser) {
+                return $notifiable->id === $regularUser->id;
+            }
+        );
+        // Ensure it's sent only once for this specific scenario
+        $this->assertEquals(1, Notification::notificationsSent($regularUser, UserMadeAdminNotification::class)->count());
+
+
+        // SCENARIO 2: User was already admin, no notification should be sent
+        Notification::fake(); // Reset notifications for the new scenario
+
+        $alreadyAdminUser = User::factory()->create([
+            'name' => 'Already Admin',
+            'email' => 'alreadyadmin@example.com',
+            'is_admin' => true,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($adminUser)
+            ->put(route('users.update', $alreadyAdminUser), [
+                'name' => 'Already Admin Updated Name', // Changing name, not admin status
+                'email' => $alreadyAdminUser->email,
+                'is_active' => $alreadyAdminUser->is_active,
+                'is_admin' => true, // Remains admin
+                'preferred_locale' => $alreadyAdminUser->preferred_locale,
+                'birthday_date' => $alreadyAdminUser->birthday_date ? $alreadyAdminUser->birthday_date->format('Y-m-d') : null,
+            ]);
+
+        Notification::assertNotSentTo($alreadyAdminUser, UserMadeAdminNotification::class);
+
+        // SCENARIO 3: User is demoted from admin, no notification should be sent
+        Notification::fake(); // Reset notifications for the new scenario
+
+        $demotedAdminUser = User::factory()->create([
+            'name' => 'Demoted Admin',
+            'email' => 'demoted@example.com',
+            'is_admin' => true, // Starts as admin
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($adminUser)
+            ->put(route('users.update', $demotedAdminUser), [
+                'name' => $demotedAdminUser->name,
+                'email' => $demotedAdminUser->email,
+                'is_active' => $demotedAdminUser->is_active,
+                'is_admin' => false, // Changed to not admin
+                'preferred_locale' => $demotedAdminUser->preferred_locale,
+                'birthday_date' => $demotedAdminUser->birthday_date ? $demotedAdminUser->birthday_date->format('Y-m-d') : null,
+            ]);
+
+        Notification::assertNotSentTo($demotedAdminUser, UserMadeAdminNotification::class);
     }
 }
