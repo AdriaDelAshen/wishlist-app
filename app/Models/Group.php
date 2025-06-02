@@ -2,18 +2,15 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @property Carbon $expiration_date
- */
-class Wishlist extends Model
+class Group extends Model
 {
-    /** @use HasFactory<\Database\Factories\WishlistFactory> */
+    /** @use HasFactory<\Database\Factories\GroupFactory> */
     use HasFactory;
 
     /**
@@ -23,9 +20,9 @@ class Wishlist extends Model
      */
     protected $fillable = [
         'name',
-        'is_shared',
-        'expiration_date',
-        'can_be_duplicated',
+        'description',
+        'is_private',
+        'is_active',
         'user_id',
     ];
 
@@ -37,11 +34,11 @@ class Wishlist extends Model
     protected function casts(): array
     {
         return [
-            'name'              => 'string',
-            'is_shared'         => 'boolean',
-            'expiration_date'   => 'date:Y-m-d',
-            'can_be_duplicated' => 'boolean',
-            'user_id'           => 'integer',
+            'name'        => 'string',
+            'description' => 'string',
+            'is_private'  => 'boolean',
+            'is_active'   => 'boolean',
+            'user_id'     => 'integer',
         ];
     }
 
@@ -50,8 +47,15 @@ class Wishlist extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function wishlistItems(): HasMany
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(WishlistItem::class);
+        return $this->belongsToMany(User::class)
+//            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(GroupInvitation::class);
     }
 }

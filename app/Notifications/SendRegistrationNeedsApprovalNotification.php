@@ -38,7 +38,7 @@ class SendRegistrationNeedsApprovalNotification extends Notification
             ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
             ->line(__('notifications.thank_you_for_showing_interest_in_our_project'))
             ->line(__('notifications.your_account_needs_to_be_approved'))
-            ->from('yzi_ger@hotmail.com');
+            ->from(config('mail.from.address'));
     }
 
     /**

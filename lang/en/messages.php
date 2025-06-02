@@ -12,6 +12,8 @@ return [
     'close' => 'Close',
     'confirm' => 'Confirm',
     'cancel' => 'Cancel',
+    'thank_you' => 'Thank you',
+    'none' => 'None',
 
     //Dashboard
     'dashboard' => 'Dashboard',

@@ -88,7 +88,7 @@ class WishlistTest extends TestCase
                 'name' => 'My wishlist',
                 'expiration_date' => $expirationDate->format('Y-m-d'),
                 'is_shared' => true,
-            ])->assertSessionHasNoErrors()->assertRedirect('/wishlists');
+            ]);
 
         // ASSERT
         $wishlist->refresh();

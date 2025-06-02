@@ -44,7 +44,7 @@ class SendNewAccountSetupPasswordNotification extends Notification
                 'token' => $token,
                 'email' => $notifiable->email,
             ]))
-            ->from('yzi_ger@hotmail.com');
+            ->from(config('mail.from.address'));
     }
 
     /**

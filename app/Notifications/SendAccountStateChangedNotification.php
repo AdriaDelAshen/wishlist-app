@@ -40,7 +40,7 @@ class SendAccountStateChangedNotification extends Notification
             ->subject(__('notifications.your_account_has_been', ['state' => $state]))
             ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
             ->line(__('notifications.your_account_has_been', ['state' => $state]).'.')
-            ->from('yzi_ger@hotmail.com');
+            ->from(config('mail.from.address'));
     }
 
     /**

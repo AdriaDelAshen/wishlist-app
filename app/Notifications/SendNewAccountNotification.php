@@ -38,7 +38,7 @@ class SendNewAccountNotification extends Notification
             ->greeting(__('notifications.greetings_with_name',['name' => $notifiable->name]). ',')
             ->line(__('notifications.an_admin_has_created_your_account'))
             ->action(__('notifications.go_to_website'), route('login'))
-            ->from('yzi_ger@hotmail.com');
+            ->from(config('mail.from.address'));
     }
 
     /**

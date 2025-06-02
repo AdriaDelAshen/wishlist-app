@@ -11,10 +11,6 @@ class WishlistDeleteRequest extends FormRequest
             if(!$this->wishlist) {
                 $validator->errors()->add('wishlist', __('validation.custom.generic.an_error_occurred'));
             }
-
-            if($this->user()->id != $this->wishlist->user_id) {
-                $validator->errors()->add('wishlist', __('validation.custom.wishlist.cannot_be_deleted'));
-            }
         });
     }
 }

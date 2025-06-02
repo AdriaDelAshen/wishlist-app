@@ -57,6 +57,12 @@ const { changeLocale } = localesStore;
                                     {{ $t('user.users') }}
                                 </NavLink>
                                 <NavLink
+                                    :href="route('groups.index')"
+                                    :active="route().current('groups.index')"
+                                >
+                                    {{ $t('group.groups') }}
+                                </NavLink>
+                                <NavLink
                                     :href="route('wishlists.index')"
                                     :active="route().current('wishlists.index')"
                                 >

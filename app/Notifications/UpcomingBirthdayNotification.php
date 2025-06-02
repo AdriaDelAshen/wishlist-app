@@ -36,7 +36,8 @@ class UpcomingBirthdayNotification extends Notification
     {
         return (new MailMessage)
                 ->subject(__('notifications.happy_early_birthday').' 🎉')
-                ->line(__('notifications.your_birthday_is_coming_up'));
+                ->line(__('notifications.your_birthday_is_coming_up'))
+                ->from(config('mail.from.address'));
     }
 
     /**

@@ -179,6 +179,10 @@ return [
         'generic' => [
             'an_error_occurred' => 'Une erreur est survenue.',
         ],
+        'group_invitation' => [
+            'already_in_group' => 'Ce courriel est déjà dans le groupe.',
+            'is_still_pending' => 'L\'invitation est en attente.',
+        ],
         'user' => [
             'does_not_exist' => 'Le compte n\'existe pas.',
             'cannot_delete_own_account' => 'Vous ne pouvez pas supprimer votre propre compte.',
