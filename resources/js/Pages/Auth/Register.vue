@@ -8,13 +8,20 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { useLocalesStore } from "@/Stores/localesStore.js";
 import {watch} from "vue";
 
+const props = defineProps({
+    email: {
+        type: String,
+        required: false
+    }
+});
+
 const localesStore = useLocalesStore();
 
 watch(() => localesStore.locale, (newLocale) => form.preferred_locale = newLocale);
 
 const form = useForm({
     name: '',
-    email: '',
+    email: props.email?props.email:'',
     password: '',
     password_confirmation: '',
     preferred_locale: localesStore.locale,
@@ -55,6 +62,7 @@ const submit = () => {
                     v-model="form.email"
                     required
                     autocomplete="username"
+                    :readonly="email"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>

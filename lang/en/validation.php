@@ -179,6 +179,10 @@ return [
         'generic' => [
             'an_error_occurred' => 'An error occurred.',
         ],
+        'group_invitation' => [
+            'already_in_group' => 'This email is already in the group.',
+            'is_still_pending' => 'An invitation is already pending for this email.',
+        ],
         'user' => [
             'does_not_exist' => 'Account does not exist.',
             'cannot_delete_own_account' => 'You cannot delete your own account.',

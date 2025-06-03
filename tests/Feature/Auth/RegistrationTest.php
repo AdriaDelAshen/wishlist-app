@@ -28,12 +28,12 @@ class RegistrationTest extends TestCase
         ]);
 
         //$this->assertAuthenticated();
-        $response->assertRedirect(route('login', absolute: false));
+        $response->assertRedirect(route('dashboard', absolute: false));
 
         $users = User::all();
         $user = $users->first();
         $this->assertCount(1, $users);
-        $this->assertFalse($user->is_active);
+        $this->assertTrue($user->is_active);
         $this->assertEquals('test@example.com', $user->email);
         $this->assertEquals('fr', $user->preferred_locale);
     }

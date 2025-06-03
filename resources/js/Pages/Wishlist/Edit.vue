@@ -17,6 +17,7 @@ import NavLink from "@/Components/NavLink.vue";
 import {trans} from "laravel-vue-i18n";
 import usePaginationAndSorting from "@/pagination.js";
 import Pagination from "@/Components/Pagination.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
     wishlist: {
@@ -138,7 +139,7 @@ getCurrentPageData(initialPage);
                         @pageChanged="onPageChange"
                     />
                     <div style="align-content: flex-end;">
-                        <PrimaryButton  v-if="user.id == wishlist.user_id && !wishlist.is_shared"
+                        <PrimaryButton  v-if="user.id === wishlist.user_id && !wishlist.is_shared"
                                          type="button"
                                          data-bs-toggle="modal"
                                          data-bs-target="#wishlist_item_form_modal"
@@ -269,7 +270,7 @@ getCurrentPageData(initialPage);
 
                         </div>
                         <div class="modal-footer">
-                            <PrimaryButton data-bs-dismiss="modal">{{ $t('messages.close') }}</PrimaryButton>
+                            <SecondaryButton type="button" data-bs-dismiss="modal">{{ $t('messages.close') }}</SecondaryButton>
                             <div class="flex items-center gap-4">
                                 <PrimaryButton :disabled="wishlistItemForm.processing">
                                     {{ wishlistItemForm.id?$t('messages.save'):$t('messages.add') }}

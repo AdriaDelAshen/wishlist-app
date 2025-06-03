@@ -12,6 +12,8 @@ return [
     'close' => 'Fermer',
     'confirm' => 'Confirmer',
     'cancel' => 'Annuler',
+    'thank_you' => 'Merci',
+    'none' => 'Aucun(e)',
 
     //Dashboard
     'dashboard' => 'Tableau de bord',

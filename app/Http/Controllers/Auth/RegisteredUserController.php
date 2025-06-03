@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\GroupInvitation;
 use App\Models\User;
 use App\Notifications\SendRegistrationNeedsApprovalNotification;
 use Illuminate\Auth\Events\Registered;
@@ -21,7 +22,18 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $email = null;
+
+        if (session()->has('group_invite_token')) {
+            $token = session('group_invite_token');
+            $invitation = GroupInvitation::query()->where('token', $token)->first();
+
+            if ($invitation) {
+                $email = $invitation->email;
+            }
+        }
+
+        return Inertia::render('Auth/Register', ['email' => $email]);
     }
 
     /**
@@ -31,6 +43,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $token = session('group_invite_token');
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -43,14 +56,24 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'preferred_locale' => $request->preferred_locale,
+            'is_active' => true
         ]);
 
         if($user->is_active) {
             event(new Registered($user));
             Auth::login($user);
-            return redirect(route('dashboard', absolute: false));
+            if ($token) {
+                $invitation = GroupInvitation::QUERY()->where('token', $token)->first();
+                if ($invitation && !$invitation->isAccepted()) {
+                    $invitation->update(['accepted_at' => now()]);
+                    $invitation->group->users()->attach($user->id, ['role' => 'member']);
+                    return redirect(route('groups.show', ['group' => $invitation->group->load('user')]));
+                }
+            }
 
+            return redirect(route('dashboard', absolute: false));
         } else {
+            //todo remove or keep as possible usable feature?
             $user->notify(new SendRegistrationNeedsApprovalNotification());
         }
         return redirect(route('login'))->with(['email' => __('messages.new_account_must_be_approved')]);
