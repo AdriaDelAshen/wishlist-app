@@ -4,6 +4,7 @@ namespace Tests\Feature\User;
 
 use App\Models\User;
 use App\Notifications\SendAccountStateChangedNotification;
+use App\Notifications\UserMadeAdminNotification;
 use App\Notifications\UpcomingBirthdayNotification;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -250,5 +251,84 @@ class UserTest extends TestCase
 
         // ASSERT
         Notification::assertNotSentTo($user, UpcomingBirthdayNotification::class);
+    }
+
+    public function test_sends_notification_when_user_becomes_admin(): void
+    {
+        // ARRANGE
+        Notification::fake();
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $regularUser = User::factory()->create([
+            'name' => 'Regular User',
+            'is_admin' => false,
+            'is_active' => true,
+        ]);
+
+        // ACT
+        $this->actingAs($adminUser)
+            ->put(route('users.update', $regularUser), [
+                'is_admin' => true, // Changed to admin
+            ]);
+
+        // ASSERT
+        Notification::assertSentTo(
+            $regularUser,
+            UserMadeAdminNotification::class,
+            function ($notification, $channels, $notifiable) use ($regularUser) {
+                return $notifiable->id === $regularUser->id;
+            }
+        );
+        // Ensure it's sent only once
+        $this->assertEquals(1, Notification::sent($regularUser, UserMadeAdminNotification::class)->count());
+    }
+
+
+    public function test_notification_not_sent_if_user_is_already_admin(): void
+    {
+        //ARRANGE
+        //SCENARIO: User was already admin, no notification should be sent
+        Notification::fake();
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+
+        $alreadyAdminUser = User::factory()->create([
+            'name' => 'Already Admin',
+            'is_admin' => true,
+            'is_active' => true,
+        ]);
+
+        //ACT
+        $this->actingAs($adminUser)
+            ->put(route('users.update', $alreadyAdminUser), [
+                'name' => 'Already Admin Updated Name', // Changing name, not admin status
+                'is_admin' => true, // Remains admin
+            ]);
+
+        //ASSERT
+        Notification::assertNotSentTo($alreadyAdminUser, UserMadeAdminNotification::class);
+    }
+
+    public function test_notification_not_sent_when_user_is_demoted_from_admin_privileges(): void
+    {
+        //ARRANGE
+        //SCENARIO: User is demoted from admin, no notification should be sent
+        Notification::fake();
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+
+        $demotedAdminUser = User::factory()->create([
+            'is_admin' => true, // Starts as admin
+            'is_active' => true,
+        ]);
+
+        // ACT
+        $this->actingAs($adminUser)
+            ->put(route('users.update', $demotedAdminUser), [
+                'is_admin' => false, // Changed to not admin
+            ]);
+
+        //ASSERT
+        Notification::assertNotSentTo($demotedAdminUser, UserMadeAdminNotification::class);
     }
 }
