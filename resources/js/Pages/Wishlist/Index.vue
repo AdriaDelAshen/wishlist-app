@@ -1,4 +1,5 @@
 <script setup>
+import { ref, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TableComponent from '@/Components/Table.vue'
 import {Head, useForm, usePage} from '@inertiajs/vue3';
@@ -9,6 +10,9 @@ import IconTrash from "@/Components/Icons/IconTrash.vue";
 import {trans} from "laravel-vue-i18n";
 import Pagination from "@/Components/Pagination.vue";
 import usePaginationAndSorting from '@/pagination.js';
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
 const user = usePage().props.auth.user;
 const headers = [
@@ -28,8 +32,22 @@ const {
     sortDirection,
     getCurrentPageData,
     onPageChange,
-    onSortChanged
-} = usePaginationAndSorting('wishlists.get_current_data_page');
+    onSortChanged,
+    updateFilters
+} = usePaginationAndSorting('wishlists.get_current_data_page', {}, 5, 'id', {
+    after_expiration_date: '',
+    wishlist_scope: 'all'
+});
+
+const afterExpirationDateFilter = ref('');
+const wishlistScopeFilter = ref('all');
+
+watch([afterExpirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
+    updateFilters({
+        after_expiration_date: newExpirationDate,
+        wishlist_scope: newWishlistScope
+    });
+});
 
 const form = useForm({});
 const destroyWishlist = (id) => {
@@ -65,18 +83,54 @@ getCurrentPageData(initialPage);
                 {{ $t('wishlist.wishlists') }}
             </h2>
         </template>
-        <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
-            <NavLink
-                class="nav-button"
-                :href="route('wishlists.create')"
-                :active="route().current('wishlists.index')"
-                style="float:right;"
-            >
-                {{ $t('messages.create') }}
-            </NavLink>
-        </div>
         <div class="py-12">
+            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
+                <NavLink
+                    class="nav-button"
+                    :href="route('wishlists.create')"
+                    :active="route().current('wishlists.index')"
+                    style="float:right;"
+                >
+                    {{ $t('messages.create') }}
+                </NavLink>
+            </div>
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div class="flex space-x-4 mb-4">
+                    <div>
+                        <InputLabel for="after_expiration_date_filter" :value="$t('wishlist.filter_after_expiration_date')" />
+                        <div class="relative">
+                            <TextInput
+                                id="after_expiration_date_filter"
+                                type="date"
+                                class="mt-1 block w-full"
+                                :style="'padding-right: 30px;'"
+                                v-model="afterExpirationDateFilter"
+                            />
+                            <button
+                                v-if="afterExpirationDateFilter"
+                                @click="afterExpirationDateFilter = ''"
+                                type="button"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <InputLabel for="wishlist_scope_filter" :value="$t('wishlist.show_wishlists')" />
+                        <SelectInput
+                            id="wishlist_scope_filter"
+                            class="mt-1 block w-full"
+                            v-model="wishlistScopeFilter"
+                            :options="{
+                                'all': trans('wishlist.all_wishlists'),
+                                'mine': trans('wishlist.my_wishlists')
+                            }"
+                            :must-translate-option="false"
+                            :set-default-value="'all'"
+                        />
+                    </div>
+                </div>
                 <Pagination
                     :pagination="pagination"
                     @pageChanged="onPageChange"

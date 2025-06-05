@@ -14,4 +14,8 @@ return [
     'editing_wishlist' => 'Modification de la liste de souhaits',
     'duplicate' => 'Dupliquer',
     'are_you_sure_you_want_to_duplicate_this_wishlist' => 'Êtes-vous certain de vouloir dupliquer cette liste de souhaits?',
+    'filter_after_expiration_date' => 'Après la date d\'expiration',
+    'show_wishlists' => 'Voir les liste de souhaits',
+    'all_wishlists' => 'Toutes les listes de souhaits',
+    'my_wishlists' => 'Mes listes de souhaits',
 ];

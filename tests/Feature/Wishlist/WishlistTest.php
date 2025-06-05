@@ -27,6 +27,77 @@ class WishlistTest extends TestCase
         $response->assertOk();
     }
 
+
+    public static function filtersProvider(): array
+    {
+        $dateInTheFuture = new Carbon();
+        $dateInTheFuture->addDay();
+        $dateInThePast = new Carbon();
+        $dateInThePast->subDay();
+        //after_expiration_date, wishlist_scope, count, ids of current wishlists
+        return [
+            ['', 'all', 4, [1,2,3,4]],
+            [$dateInTheFuture->toDateString(), 'all', 1, [1]],
+            [$dateInThePast->toDateString(), 'all', 3, [1,2,4]],
+            ['', 'mine', 2, [1,2]],
+            [$dateInTheFuture->toDateString(), 'mine', 1, [1,2]],
+            [$dateInThePast->toDateString(), 'mine', 2, [1,2]],
+        ];
+    }
+
+    /**
+     * @dataProvider filtersProvider
+     */
+    public function test_wishlists_can_be_filtered(string $afterExpirationDate, string $wishlistScope, int $count, array $ids): void
+    {
+        // ARRANGE
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $dateInTheFuture = new Carbon();
+        $dateInTheFuture->addYear();
+        $dateInThePast = new Carbon();
+        $dateInThePast->subYear();
+
+        Wishlist::factory()->create([
+            'id' => 1,
+            'user_id' => $user->id,
+            'expiration_date' => $dateInTheFuture,
+        ]);
+        Wishlist::factory()->create([
+            'id' => 2,
+            'user_id' => $user->id,
+            'is_shared' => false,
+            'expiration_date' => new Carbon(),
+        ]);
+        Wishlist::factory()->create([
+            'id' => 3,
+            'is_shared' => true,
+            'expiration_date' => $dateInThePast,
+        ]);
+        Wishlist::factory()->create([
+            'id' => 4,
+            'is_shared' => true,
+            'expiration_date' => new Carbon(),
+        ]);
+
+        // ACT
+        $responseFiltered = $this->getJson(route('wishlists.get_current_data_page', [
+            'after_expiration_date' => $afterExpirationDate,
+            'wishlist_scope' => $wishlistScope,
+            'page' => 1,
+            'perPage' => 10
+        ]));
+
+        // ASSERT
+        $responseFiltered->assertOk();
+        $responseFiltered->assertJsonCount($count, 'pagination.data');
+
+        foreach ($responseFiltered->json('pagination.data') as $wishlistData) {
+            $this->assertContains($wishlistData['id'], $ids);
+        }
+    }
+
     public function test_user_can_create_a_wishlist(): void
     {
         // ARRANGE

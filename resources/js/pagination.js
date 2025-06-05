@@ -1,10 +1,11 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-export default function usePaginationAndSorting(routeName, parameters = {}, perPage = 5, defaultSort = 'id') {
+export default function usePaginationAndSorting(routeName, parameters = {}, perPage = 5, defaultSort = 'id', initialFilters = {}) {
     const currentData = ref([]);
     const pagination = ref([]);
     const sortBy = ref(defaultSort);
+    const filters = ref(initialFilters);
     const sortDirection = ref('asc');
 
     const getCurrentPageData = (page = 1) => {
@@ -12,6 +13,7 @@ export default function usePaginationAndSorting(routeName, parameters = {}, perP
             .get(route(routeName), {
                 params: {
                     ...parameters,
+                    ...filters.value,
                     perPage: perPage,
                     page,
                     sortBy: sortBy.value,
@@ -43,14 +45,21 @@ export default function usePaginationAndSorting(routeName, parameters = {}, perP
         getCurrentPageData(1);
     };
 
+    const updateFilters = (newFilters) => {
+        filters.value = newFilters;
+        getCurrentPageData(1);
+    };
+
     return {
         perPage,
         currentData,
         pagination,
         sortBy,
         sortDirection,
+        filters,
         getCurrentPageData,
         onPageChange,
-        onSortChanged
+        onSortChanged,
+        updateFilters
     };
 }
