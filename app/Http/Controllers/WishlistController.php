@@ -82,19 +82,30 @@ class WishlistController extends Controller
     {
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
+        $expirationDate = $request->get('expiration_date');
+        $wishlistScope = $request->get('wishlist_scope', 'all');
 
-        return [
-            'pagination' => Wishlist::query()
-                ->where(function ($query) {
-                    $query->where('user_id', Auth::user()->id)
-                        ->orWhere('is_shared', true);
-                })
-                ->withWhereHas('user', function ($query) {
-                    $query->where('is_active', true);
-                })
-                ->orderBy($sortBy, $sortDirection)
-                ->paginate($request->perPage, ['*'], 'page', $request->page)
-        ];
+        $query = Wishlist::query();
+
+        if ($wishlistScope === 'mine') {
+            $query->where('user_id', Auth::user()->id);
+        } else { // 'all'
+            $query->where(function ($subQuery) {
+                $subQuery->where('user_id', Auth::user()->id)
+                         ->orWhere('is_shared', true);
+            });
+        }
+
+        $pagination = $query->withWhereHas('user', function ($userQuery) {
+                $userQuery->where('is_active', true);
+            })
+            ->when($expirationDate, function ($q, $date) {
+                return $q->whereDate('expiration_date', $date);
+            })
+            ->orderBy($sortBy, $sortDirection)
+            ->paginate($request->perPage, ['*'], 'page', $request->page);
+
+        return ['pagination' => $pagination];
     }
 
     public function duplicate(Wishlist $wishlist)

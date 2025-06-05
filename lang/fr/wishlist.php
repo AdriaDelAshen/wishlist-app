@@ -14,4 +14,6 @@ return [
     'editing_wishlist' => 'Modification de la liste de souhaits',
     'duplicate' => 'Dupliquer',
     'are_you_sure_you_want_to_duplicate_this_wishlist' => 'Êtes-vous certain de vouloir dupliquer cette liste de souhaits?',
+    'all_wishlists' => 'Toutes les listes',
+    'my_wishlists' => 'Mes listes',
 ];

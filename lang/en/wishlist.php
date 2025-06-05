@@ -14,4 +14,6 @@ return [
     'editing_wishlist' => 'Editing wishlist',
     'duplicate' => 'Duplicate',
     'are_you_sure_you_want_to_duplicate_this_wishlist' => 'Are you sure you want to duplicate this wishlist?',
+    'all_wishlists' => 'All wishlists',
+    'my_wishlists' => 'My wishlists',
 ];

@@ -1,4 +1,5 @@
 <script setup>
+import { ref, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TableComponent from '@/Components/Table.vue'
 import {Head, useForm, usePage} from '@inertiajs/vue3';
@@ -28,8 +29,22 @@ const {
     sortDirection,
     getCurrentPageData,
     onPageChange,
-    onSortChanged
-} = usePaginationAndSorting('wishlists.get_current_data_page');
+    onSortChanged,
+    updateFilters
+} = usePaginationAndSorting('wishlists.get_current_data_page', {}, 5, 'id', {
+    expiration_date: '',
+    wishlist_scope: 'all'
+});
+
+const expirationDateFilter = ref('');
+const wishlistScopeFilter = ref('all');
+
+watch([expirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
+    updateFilters({
+        expiration_date: newExpirationDate,
+        wishlist_scope: newWishlistScope
+    });
+});
 
 const form = useForm({});
 const destroyWishlist = (id) => {
@@ -77,6 +92,19 @@ getCurrentPageData(initialPage);
         </div>
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div class="flex space-x-4 mb-4">
+                    <div>
+                        <label for="expiration_date_filter" class="block text-sm font-medium text-gray-700">{{ $t('wishlist.filter_by_expiration_date') }}:</label>
+                        <input type="date" id="expiration_date_filter" v-model="expirationDateFilter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    </div>
+                    <div>
+                        <label for="wishlist_scope_filter" class="block text-sm font-medium text-gray-700">{{ $t('wishlist.show_wishlists') }}:</label>
+                        <select id="wishlist_scope_filter" v-model="wishlistScopeFilter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="all">{{ $t('wishlist.all_wishlists') }}</option>
+                            <option value="mine">{{ $t('wishlist.my_wishlists') }}</option>
+                        </select>
+                    </div>
+                </div>
                 <Pagination
                     :pagination="pagination"
                     @pageChanged="onPageChange"
