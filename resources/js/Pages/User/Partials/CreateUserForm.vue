@@ -64,12 +64,23 @@ const form = useForm({
 
             <div>
                 <InputLabel for="birthday_date" :value="$t('user.birthday_date')" />
-                <TextInput
-                    id="birthday_date"
-                    type="date"
-                    class="mt-1 block w-full"
-                    v-model="form.birthday_date"
-                />
+                <div class="relative">
+                    <TextInput
+                        id="birthday_date"
+                        type="date"
+                        class="mt-1 block w-full"
+                        :style="'padding-right: 30px;'"
+                        v-model="form.birthday_date"
+                    />
+                    <button
+                        v-if="form.birthday_date"
+                        @click="form.birthday_date = ''"
+                        type="button"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    >
+                        ✕
+                    </button>
+                </div>
                 <InputError class="mt-2" :message="form.errors.birthday_date" />
             </div>
 

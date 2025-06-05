@@ -55,17 +55,18 @@ getCurrentPageData(initialPage);
                 {{ $t('user.users') }}
             </h2>
         </template>
-        <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
-            <NavLink
-                class="nav-button"
-                :href="route('users.create')"
-                :active="route().current('users.index')"
-                style="float:right;"
-            >
-                {{ $t('messages.create') }}
-            </NavLink>
-        </div>
+
         <div class="py-12">
+            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
+                <NavLink
+                    class="nav-button"
+                    :href="route('users.create')"
+                    :active="route().current('users.index')"
+                    style="float:right;"
+                >
+                    {{ $t('messages.create') }}
+                </NavLink>
+            </div>
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <Pagination
                     :pagination="pagination"

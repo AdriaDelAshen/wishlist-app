@@ -27,135 +27,75 @@ class WishlistTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_wishlists_can_be_filtered_by_expiration_date(): void
+
+    public static function filtersProvider(): array
+    {
+        $dateInTheFuture = new Carbon();
+        $dateInTheFuture->addDay();
+        $dateInThePast = new Carbon();
+        $dateInThePast->subDay();
+        //after_expiration_date, wishlist_scope, count, ids of current wishlists
+        return [
+            ['', 'all', 4, [1,2,3,4]],
+            [$dateInTheFuture->toDateString(), 'all', 1, [1]],
+            [$dateInThePast->toDateString(), 'all', 3, [1,2,4]],
+            ['', 'mine', 2, [1,2]],
+            [$dateInTheFuture->toDateString(), 'mine', 1, [1,2]],
+            [$dateInThePast->toDateString(), 'mine', 2, [1,2]],
+        ];
+    }
+
+    /**
+     * @dataProvider filtersProvider
+     */
+    public function test_wishlists_can_be_filtered(string $afterExpirationDate, string $wishlistScope, int $count, array $ids): void
     {
         // ARRANGE
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $date1 = '2024-12-25';
-        $date2 = '2025-01-10';
+        $dateInTheFuture = new Carbon();
+        $dateInTheFuture->addYear();
+        $dateInThePast = new Carbon();
+        $dateInThePast->subYear();
 
-        $wishlistsDate1 = Wishlist::factory()->count(2)->create([
+        Wishlist::factory()->create([
+            'id' => 1,
             'user_id' => $user->id,
-            'expiration_date' => $date1,
+            'expiration_date' => $dateInTheFuture,
         ]);
         Wishlist::factory()->create([
+            'id' => 2,
             'user_id' => $user->id,
-            'expiration_date' => $date2,
-        ]);
-
-        // ACT & ASSERT for filtered request
-        $responseFiltered = $this->getJson(route('wishlists.get_current_data_page', [
-            'expiration_date' => $date1,
-            'page' => 1,
-            'perPage' => 10
-        ]));
-
-        $responseFiltered->assertOk();
-        $responseFiltered->assertJsonCount(2, 'pagination.data');
-
-        $expectedIdsDate1 = $wishlistsDate1->pluck('id')->toArray();
-        foreach ($responseFiltered->json('pagination.data') as $wishlistData) {
-            $this->assertContains($wishlistData['id'], $expectedIdsDate1);
-            $this->assertEquals($date1, Carbon::parse($wishlistData['expiration_date'])->toDateString());
-        }
-
-        // ACT & ASSERT for unfiltered request
-        $responseUnfiltered = $this->getJson(route('wishlists.get_current_data_page', [
-            'page' => 1,
-            'perPage' => 10
-        ]));
-
-        $responseUnfiltered->assertOk();
-        $responseUnfiltered->assertJsonCount(3, 'pagination.data'); // All wishlists for the user
-        $responseUnfiltered->assertJsonPath('pagination.total', 3);
-    }
-
-    public function test_wishlists_can_be_filtered_by_scope_and_date(): void
-    {
-        // ARRANGE
-        $user1 = User::factory()->create();
-        $user2 = User::factory()->create();
-
-        $date1 = '2024-12-01';
-        $date2 = '2024-12-25';
-
-        // Wishlists for $user1
-        $w1_user1_mine_date1 = Wishlist::factory()->create([
-            'user_id' => $user1->id,
-            'name' => 'User1 Mine Date1',
             'is_shared' => false,
-            'expiration_date' => $date1,
+            'expiration_date' => new Carbon(),
         ]);
-        $w2_user1_mine_date2 = Wishlist::factory()->create([
-            'user_id' => $user1->id,
-            'name' => 'User1 Mine Date2',
-            'is_shared' => false,
-            'expiration_date' => $date2,
-        ]);
-
-        // Wishlists for $user2
-        $w3_user2_shared_date1 = Wishlist::factory()->create([
-            'user_id' => $user2->id,
-            'name' => 'User2 Shared Date1',
+        Wishlist::factory()->create([
+            'id' => 3,
             'is_shared' => true,
-            'expiration_date' => $date1,
+            'expiration_date' => $dateInThePast,
         ]);
-        $w4_user2_mine_date2 = Wishlist::factory()->create([
-            'user_id' => $user2->id,
-            'name' => 'User2 Mine Date2',
-            'is_shared' => false,
-            'expiration_date' => $date2,
+        Wishlist::factory()->create([
+            'id' => 4,
+            'is_shared' => true,
+            'expiration_date' => new Carbon(),
         ]);
 
-        // --- Test Case: Scope 'mine' ---
-        $responseMine = $this->actingAs($user1)->getJson(route('wishlists.get_current_data_page', [
-            'wishlist_scope' => 'mine',
-            'page' => 1, 'perPage' => 10
+        // ACT
+        $responseFiltered = $this->getJson(route('wishlists.get_current_data_page', [
+            'after_expiration_date' => $afterExpirationDate,
+            'wishlist_scope' => $wishlistScope,
+            'page' => 1,
+            'perPage' => 10
         ]));
-        $responseMine->assertOk();
-        $responseMine->assertJsonPath('pagination.total', 2);
-        $responseMine->assertJsonFragment(['id' => $w1_user1_mine_date1->id]);
-        $responseMine->assertJsonFragment(['id' => $w2_user1_mine_date2->id]);
-        $responseMine->assertJsonMissing(['id' => $w3_user2_shared_date1->id]);
-        $responseMine->assertJsonMissing(['id' => $w4_user2_mine_date2->id]);
 
-        // --- Test Case: Scope 'all' ---
-        $responseAll = $this->actingAs($user1)->getJson(route('wishlists.get_current_data_page', [
-            'wishlist_scope' => 'all',
-            'page' => 1, 'perPage' => 10
-        ]));
-        $responseAll->assertOk();
-        $responseAll->assertJsonPath('pagination.total', 3);
-        $responseAll->assertJsonFragment(['id' => $w1_user1_mine_date1->id]);
-        $responseAll->assertJsonFragment(['id' => $w2_user1_mine_date2->id]);
-        $responseAll->assertJsonFragment(['id' => $w3_user2_shared_date1->id]); // Shared by user2, visible to user1
-        $responseAll->assertJsonMissing(['id' => $w4_user2_mine_date2->id]); // Private to user2
+        // ASSERT
+        $responseFiltered->assertOk();
+        $responseFiltered->assertJsonCount($count, 'pagination.data');
 
-        // --- Test Case: Scope 'mine' with expiration_date filter ---
-        $responseMineDate = $this->actingAs($user1)->getJson(route('wishlists.get_current_data_page', [
-            'wishlist_scope' => 'mine',
-            'expiration_date' => $date1,
-            'page' => 1, 'perPage' => 10
-        ]));
-        $responseMineDate->assertOk();
-        $responseMineDate->assertJsonPath('pagination.total', 1);
-        $responseMineDate->assertJsonFragment(['id' => $w1_user1_mine_date1->id]);
-        $responseMineDate->assertJsonMissing(['id' => $w2_user1_mine_date2->id]);
-
-        // --- Test Case: Scope 'all' with expiration_date filter ---
-        $responseAllDate = $this->actingAs($user1)->getJson(route('wishlists.get_current_data_page', [
-            'wishlist_scope' => 'all',
-            'expiration_date' => $date1,
-            'page' => 1, 'perPage' => 10
-        ]));
-        $responseAllDate->assertOk();
-        $responseAllDate->assertJsonPath('pagination.total', 2);
-        $responseAllDate->assertJsonFragment(['id' => $w1_user1_mine_date1->id]);
-        $responseAllDate->assertJsonFragment(['id' => $w3_user2_shared_date1->id]);
-        $responseAllDate->assertJsonMissing(['id' => $w2_user1_mine_date2->id]);
-        $responseAllDate->assertJsonMissing(['id' => $w4_user2_mine_date2->id]);
+        foreach ($responseFiltered->json('pagination.data') as $wishlistData) {
+            $this->assertContains($wishlistData['id'], $ids);
+        }
     }
 
     public function test_user_can_create_a_wishlist(): void

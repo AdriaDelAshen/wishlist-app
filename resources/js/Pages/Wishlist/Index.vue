@@ -10,6 +10,9 @@ import IconTrash from "@/Components/Icons/IconTrash.vue";
 import {trans} from "laravel-vue-i18n";
 import Pagination from "@/Components/Pagination.vue";
 import usePaginationAndSorting from '@/pagination.js';
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
 const user = usePage().props.auth.user;
 const headers = [
@@ -32,16 +35,16 @@ const {
     onSortChanged,
     updateFilters
 } = usePaginationAndSorting('wishlists.get_current_data_page', {}, 5, 'id', {
-    expiration_date: '',
+    after_expiration_date: '',
     wishlist_scope: 'all'
 });
 
-const expirationDateFilter = ref('');
+const afterExpirationDateFilter = ref('');
 const wishlistScopeFilter = ref('all');
 
-watch([expirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
+watch([afterExpirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
     updateFilters({
-        expiration_date: newExpirationDate,
+        after_expiration_date: newExpirationDate,
         wishlist_scope: newWishlistScope
     });
 });
@@ -80,29 +83,52 @@ getCurrentPageData(initialPage);
                 {{ $t('wishlist.wishlists') }}
             </h2>
         </template>
-        <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
-            <NavLink
-                class="nav-button"
-                :href="route('wishlists.create')"
-                :active="route().current('wishlists.index')"
-                style="float:right;"
-            >
-                {{ $t('messages.create') }}
-            </NavLink>
-        </div>
         <div class="py-12">
+            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
+                <NavLink
+                    class="nav-button"
+                    :href="route('wishlists.create')"
+                    :active="route().current('wishlists.index')"
+                    style="float:right;"
+                >
+                    {{ $t('messages.create') }}
+                </NavLink>
+            </div>
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div class="flex space-x-4 mb-4">
                     <div>
-                        <label for="expiration_date_filter" class="block text-sm font-medium text-gray-700">{{ $t('wishlist.filter_by_expiration_date') }}:</label>
-                        <input type="date" id="expiration_date_filter" v-model="expirationDateFilter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <InputLabel for="after_expiration_date_filter" :value="$t('wishlist.filter_after_expiration_date')" />
+                        <div class="relative">
+                            <TextInput
+                                id="after_expiration_date_filter"
+                                type="date"
+                                class="mt-1 block w-full"
+                                :style="'padding-right: 30px;'"
+                                v-model="afterExpirationDateFilter"
+                            />
+                            <button
+                                v-if="afterExpirationDateFilter"
+                                @click="afterExpirationDateFilter = ''"
+                                type="button"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                            >
+                                ✕
+                            </button>
+                        </div>
                     </div>
                     <div>
-                        <label for="wishlist_scope_filter" class="block text-sm font-medium text-gray-700">{{ $t('wishlist.show_wishlists') }}:</label>
-                        <select id="wishlist_scope_filter" v-model="wishlistScopeFilter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            <option value="all">{{ $t('wishlist.all_wishlists') }}</option>
-                            <option value="mine">{{ $t('wishlist.my_wishlists') }}</option>
-                        </select>
+                        <InputLabel for="wishlist_scope_filter" :value="$t('wishlist.show_wishlists')" />
+                        <SelectInput
+                            id="wishlist_scope_filter"
+                            class="mt-1 block w-full"
+                            v-model="wishlistScopeFilter"
+                            :options="{
+                                'all': trans('wishlist.all_wishlists'),
+                                'mine': trans('wishlist.my_wishlists')
+                            }"
+                            :must-translate-option="false"
+                            :set-default-value="'all'"
+                        />
                     </div>
                 </div>
                 <Pagination

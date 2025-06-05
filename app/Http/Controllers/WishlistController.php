@@ -82,7 +82,7 @@ class WishlistController extends Controller
     {
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
-        $expirationDate = $request->get('expiration_date');
+        $expirationDate = $request->get('after_expiration_date');
         $wishlistScope = $request->get('wishlist_scope', 'all');
 
         $query = Wishlist::query();
@@ -100,7 +100,7 @@ class WishlistController extends Controller
                 $userQuery->where('is_active', true);
             })
             ->when($expirationDate, function ($q, $date) {
-                return $q->whereDate('expiration_date', $date);
+                return $q->whereDate('expiration_date', '>=', $date);
             })
             ->orderBy($sortBy, $sortDirection)
             ->paginate($request->perPage, ['*'], 'page', $request->page);

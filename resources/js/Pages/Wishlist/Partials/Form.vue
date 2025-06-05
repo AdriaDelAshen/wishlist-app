@@ -46,14 +46,25 @@ const form = useForm({
 
             <div>
                 <InputLabel for="expiration_date" :value="$t('wishlist.expiration_date')" />
-                <TextInput
-                    id="expiration_date"
-                    type="date"
-                    class="mt-1 block w-full"
-                    v-model="form.expiration_date"
-                    :min="tomorrow"
-                    required
-                />
+                <div class="relative">
+                    <TextInput
+                        id="expiration_date"
+                        type="date"
+                        class="mt-1 block w-full"
+                        :style="'padding-right: 30px;'"
+                        v-model="form.expiration_date"
+                        :min="tomorrow"
+                        required
+                    />
+                    <button
+                        v-if="form.expiration_date"
+                        @click="form.expiration_date = ''"
+                        type="button"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    >
+                        ✕
+                    </button>
+                </div>
                 <InputError class="mt-2" :message="form.errors.expiration_date" />
             </div>
 
