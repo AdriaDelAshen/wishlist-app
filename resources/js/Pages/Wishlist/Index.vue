@@ -13,6 +13,7 @@ import usePaginationAndSorting from '@/pagination.js';
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
+import AccordionPanel from "@/Components/AccordionPanel.vue";
 
 const user = usePage().props.auth.user;
 const headers = [
@@ -41,6 +42,7 @@ const {
 
 const afterExpirationDateFilter = ref('');
 const wishlistScopeFilter = ref('all');
+const showFiltersPanel = ref(false);
 
 watch([afterExpirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
     updateFilters({
@@ -95,42 +97,50 @@ getCurrentPageData(initialPage);
                 </NavLink>
             </div>
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div class="flex space-x-4 mb-4">
-                    <div>
-                        <InputLabel for="after_expiration_date_filter" :value="$t('wishlist.filter_after_expiration_date')" />
-                        <div class="relative">
-                            <TextInput
-                                id="after_expiration_date_filter"
-                                type="date"
+                <AccordionPanel>
+                    <template #toggle="{ isOpen }">
+                        {{ isOpen ? $t('wishlist.hide_filters') : $t('wishlist.show_filters') }}
+                    </template>
+                    <div class="flex space-x-4">
+                        <div>
+                            <InputLabel for="after_expiration_date_filter" :value="$t('wishlist.filter_after_expiration_date')" />
+                            <div class="relative">
+                                <TextInput
+                                    id="after_expiration_date_filter"
+                                    type="date"
+                                    class="mt-1 block w-full"
+                                    :style="'padding-right: 30px;'"
+                                    v-model="afterExpirationDateFilter"
+                                />
+                                <button
+                                    v-if="afterExpirationDateFilter"
+                                    @click="afterExpirationDateFilter = ''"
+                                    type="button"
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <InputLabel for="wishlist_scope_filter" :value="$t('wishlist.show_wishlists')" />
+                            <SelectInput
+                                id="wishlist_scope_filter"
                                 class="mt-1 block w-full"
-                                :style="'padding-right: 30px;'"
-                                v-model="afterExpirationDateFilter"
+                                v-model="wishlistScopeFilter"
+                                :options="{
+                                    'all': trans('wishlist.all_wishlists'),
+                                    'mine': trans('wishlist.my_wishlists')
+                                }"
+                                :must-translate-option="false"
+                                :set-default-value="'all'"
                             />
-                            <button
-                                v-if="afterExpirationDateFilter"
-                                @click="afterExpirationDateFilter = ''"
-                                type="button"
-                                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-                            >
-                                ✕
-                            </button>
                         </div>
                     </div>
-                    <div>
-                        <InputLabel for="wishlist_scope_filter" :value="$t('wishlist.show_wishlists')" />
-                        <SelectInput
-                            id="wishlist_scope_filter"
-                            class="mt-1 block w-full"
-                            v-model="wishlistScopeFilter"
-                            :options="{
-                                'all': trans('wishlist.all_wishlists'),
-                                'mine': trans('wishlist.my_wishlists')
-                            }"
-                            :must-translate-option="false"
-                            :set-default-value="'all'"
-                        />
-                    </div>
-                </div>
+                </AccordionPanel>
+
+
+
                 <Pagination
                     :pagination="pagination"
                     @pageChanged="onPageChange"
@@ -194,4 +204,5 @@ getCurrentPageData(initialPage);
 </template>
 
 <style scoped>
+
 </style>

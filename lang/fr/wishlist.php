@@ -18,4 +18,6 @@ return [
     'show_wishlists' => 'Voir les liste de souhaits',
     'all_wishlists' => 'Toutes les listes de souhaits',
     'my_wishlists' => 'Mes listes de souhaits',
+    'show_filters' => 'Afficher les filtres',
+    'hide_filters' => 'Masquer les filtres',
 ];
