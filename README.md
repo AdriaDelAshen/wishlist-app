@@ -1,6 +1,6 @@
 # Application Features
 
-This document outlines the key features of the application, categorized by functionality.
+This document outlines the key features of the Laravel application, categorized by functionality.
 
 ## I. Core User Account & Authentication
 
@@ -183,3 +183,6 @@ These features are typically accessible only to users with administrative privil
 
 ### E. Frontend Technology
 *   The user interface is built using Vue.js components, rendered server-side via Inertia.js, providing a responsive and modern single-page application experience.
+
+## License
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
