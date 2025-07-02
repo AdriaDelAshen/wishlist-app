@@ -7,6 +7,7 @@ return [
     'saved' => 'Sauvegardé.',
     'add' => 'Ajouter',
     'hidden' => 'Caché',
+    'all' => 'Tous',
     'yes' => 'Oui',
     'no' => 'Non',
     'close' => 'Fermer',
@@ -14,6 +15,10 @@ return [
     'cancel' => 'Annuler',
     'thank_you' => 'Merci',
     'none' => 'Aucun(e)',
+    'show_filters' => 'Afficher les filtres',
+    'hide_filters' => 'Masquer les filtres',
+    'clear' => 'Réinitialiser',
+    'apply' => 'Appliquer',
 
     //Dashboard
     'dashboard' => 'Tableau de bord',

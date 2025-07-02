@@ -39,6 +39,6 @@ defineExpose({ focus: () => input.value.focus() });
         v-model="model"
         ref="input"
     >
-        <option v-for="(option, index) in options" :key="index" :value="index">{{ mustTranslateOption? $t('options.'+option): option }}</option>
+        <option v-for="(option, index) in options" :key="index" :value="option.value">{{ mustTranslateOption? $t('options.'+option.label): option.label }}</option>
     </select>
 </template>

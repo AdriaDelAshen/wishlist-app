@@ -23,4 +23,6 @@ return [
     'are_you_sure_you_want_to_remove_this_item' => 'Êtes-vous certain de vouloir retirer cet item de votre liste d\'achats?',
     'are_you_sure_you_want_to_add_this_item' => 'Êtes-vous certain de vouloir ajouter cet item de votre liste d\'achats?',
     'from_wishlist_owner' => 'Provenant de la liste de souhaits (Propriétaire)',
+    'price_greater_than' => 'Prix plus grand que',
+    'price_lesser_than' => 'Prix plus petit que',
 ];

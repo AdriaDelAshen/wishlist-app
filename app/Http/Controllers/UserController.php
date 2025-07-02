@@ -116,9 +116,25 @@ class UserController extends Controller
     {
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
+        $nameFilter = $request->get('name');
+        $emailFilter = $request->get('email');
+        $isAdminFilter = $request->get('is_admin');
+        $isActiveFilter = $request->get('is_active');
 
         return [
             'pagination' => User::query()
+                ->when($nameFilter, function ($query, $name) {
+                    return $query->where('name', 'like', "%{$name}%");
+                })
+                ->when($emailFilter, function ($query, $email) {
+                    return $query->where('email', 'like', "%{$email}%");
+                })
+                ->when($isAdminFilter !== null && $isAdminFilter !== '', function ($query) use ($isAdminFilter) {
+                    return $query->where('is_admin', $isAdminFilter === '1');
+                })
+                ->when($isActiveFilter !== null && $isActiveFilter !== '', function ($query) use ($isActiveFilter) {
+                    return $query->where('is_active', $isActiveFilter === '1');
+                })
                 ->orderBy($sortBy, $sortDirection)
                 ->paginate($request->perPage, ['*'], 'page', $request->page),
         ];

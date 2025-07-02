@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 
 const props = defineProps({
     modelValue:{
-        type: Number,
+        type: [Number, null],
         required: true,
     }
 });

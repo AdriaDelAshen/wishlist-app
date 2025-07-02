@@ -86,10 +86,22 @@ class WishlistItemController extends Controller
     {
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
+        $nameFilter = $request->get('name');
+        $priceGreaterThanFilter = $request->get('price_greater_than');
+        $priceLesserThanFilter = $request->get('price_lesser_than');
 
         return [
             'pagination' => WishlistItem::query()
-                ->where('wishlist_id', $request->wishlist_id)
+                ->where('wishlist_id', $request->wishlist_id) // Existing filter
+                ->when($nameFilter, function ($query, $name) {
+                    return $query->where('name', 'like', "%{$name}%");
+                })
+                ->when($priceGreaterThanFilter, function ($query, $price) {
+                    return $query->where('price', '>=', $price);
+                })
+                ->when($priceLesserThanFilter, function ($query, $price) {
+                    return $query->where('price', '<=', $price);
+                })
                 ->orderBy($sortBy, $sortDirection)
                 ->paginate($request->perPage, ['*'], 'page', $request->page)
         ];
