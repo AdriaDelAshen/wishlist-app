@@ -18,6 +18,4 @@ return [
     'show_wishlists' => 'Show wishlists',
     'all_wishlists' => 'All wishlists',
     'my_wishlists' => 'My wishlists',
-    'show_filters' => 'Show Filters',
-    'hide_filters' => 'Hide Filters',
 ];

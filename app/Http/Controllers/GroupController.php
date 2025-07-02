@@ -98,12 +98,24 @@ class GroupController extends Controller
     {
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
+        $nameFilter = $request->get('name');
+        $isPrivateFilter = $request->get('is_private');
+        $isActiveFilter = $request->get('is_active');
 
         return [
             'pagination' => Group::query()
                 ->where(function ($query) {
                     $query->where('user_id', Auth::user()->id)
                         ->orWhere('is_private', false);
+                })
+                ->when($nameFilter, function ($query, $name) {
+                    return $query->where('name', 'like', "%{$name}%");
+                })
+                ->when($isPrivateFilter !== null && $isPrivateFilter !== '', function ($query) use ($isPrivateFilter) {
+                    return $query->where('is_private', $isPrivateFilter === '1');
+                })
+                ->when($isActiveFilter !== null && $isActiveFilter !== '', function ($query) use ($isActiveFilter) {
+                    return $query->where('is_active', $isActiveFilter === '1');
                 })
                 ->with('user')
                 ->orderBy($sortBy, $sortDirection)

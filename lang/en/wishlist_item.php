@@ -23,4 +23,6 @@ return [
     'are_you_sure_you_want_to_remove_this_item' => 'Are you sure you want to remove this item from your shopping list?',
     'are_you_sure_you_want_to_add_this_item' => 'Are you sure you want to add this item from your shopping list?',
     'from_wishlist_owner' => 'From wishlist (Owner)',
+    'price_greater_than' => 'Price greater than',
+    'price_lesser_than' => 'Price lesser than',
 ];
