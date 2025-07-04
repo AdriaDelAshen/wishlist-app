@@ -22,7 +22,9 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
-            'options' => LocaleEnum::getAvailableLocales(),
+            'options' => LocaleEnum::getAvailableLocales()->map(function($locale, $key){
+                return ['value'=>$key, 'label'=>$locale];
+            }),
         ]);
     }
 

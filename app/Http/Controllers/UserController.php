@@ -39,7 +39,9 @@ class UserController extends Controller
     public function create(): Response
     {
         return Inertia::render('User/Create', [
-            'options' => LocaleEnum::getAvailableLocales(),
+            'options' => LocaleEnum::getAvailableLocales()->map(function($locale, $key){
+                return ['value'=>$key, 'label'=>$locale];
+            }),
         ]);
     }
 
@@ -49,7 +51,9 @@ class UserController extends Controller
             'user' => $user,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
-            'options' => LocaleEnum::getAvailableLocales(),
+            'options' => LocaleEnum::getAvailableLocales()->map(function($locale, $key){
+                return ['value'=>$key, 'label'=>$locale];
+            }),
         ]);
     }
 

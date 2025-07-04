@@ -2,14 +2,16 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Collection;
+
 enum LocaleEnum
 {
     public const FR = 'fr';
     public const EN = 'en';
 
-    public static function getAvailableLocales(): array
+    public static function getAvailableLocales(): Collection
     {
-        return [self::FR => 'french', self::EN => 'english'];
+        return collect([self::FR => 'french', self::EN => 'english']);
     }
 
     public static function getDefaultLocale(): string

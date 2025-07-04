@@ -59,7 +59,7 @@ class GroupController extends Controller
                     $query->where('groups.id', $group->id);
                 })
                 ->get()
-                ->mapWithKeys(fn($user) => [$user->id => $user->name . ' (' . $user->email.')'])
+                ->mapWithKeys(fn($user) => [ 'value' => $user->id, 'label' => $user->name . ' (' . $user->email.')'])
         ]);
     }
 
@@ -188,7 +188,7 @@ class GroupController extends Controller
                     $query->where('groups.id', $groupId);
                 })
                 ->get()
-                ->mapWithKeys(fn($user) => [$user->id => $user->name . ' (' . $user->email.')'])
+                ->mapWithKeys(fn($user) => ['value' => $user->id, 'label' => $user->name . ' (' . $user->email.')'])
         ];
     }
 
