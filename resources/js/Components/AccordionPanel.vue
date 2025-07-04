@@ -29,16 +29,17 @@ const isOpen = ref(false);
 <style scoped>
 .accordion-enter-active,
 .accordion-leave-active {
-    transition: max-height 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform-origin: top;
 }
 .accordion-enter-from,
 .accordion-leave-to {
-    max-height: 0;
+    transform: scaleY(0);
     opacity: 0;
 }
 .accordion-enter-to,
 .accordion-leave-from {
-    max-height: 500px;
+    transform: scaleY(1);
     opacity: 1;
 }
 </style>
