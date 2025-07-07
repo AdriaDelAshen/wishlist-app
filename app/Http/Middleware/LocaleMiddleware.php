@@ -15,7 +15,7 @@ class LocaleMiddleware
 
         $user = Auth::user();
 
-        if (session()->has('locale') && in_array(session()->get('locale'), array_keys(LocaleEnum::getAvailableLocales()))) {
+        if (session()->has('locale') && in_array(session()->get('locale'), LocaleEnum::getAvailableLocales()->keys())) {
             $locale = session()->get('locale');
         } elseif ($user) {
             $locale = $user->preferred_locale;
