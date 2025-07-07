@@ -21,6 +21,7 @@ class GroupFactory extends Factory
         return [
             'name' => fake()->randomElement(['Family', 'Friends', 'Work', 'Event']),
             'description' => fake()->text,
+            'is_private' => fake()->boolean,
             'user_id' => User::factory(),
         ];
     }

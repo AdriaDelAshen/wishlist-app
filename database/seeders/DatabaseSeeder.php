@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
+use App\Models\GroupInvitation;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Wishlist;
+use App\Models\WishlistItem;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +17,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::truncate();
+        Wishlist::truncate();
+        WishlistItem::truncate();
+        Group::truncate();
+        GroupInvitation::truncate();
+        DB::table('group_user')->truncate();
+        $this->call([
+            WishlistSeeder::class,
+            GroupSeeder::class,
         ]);
     }
 }

@@ -32,7 +32,7 @@ class GroupInvitationFactory extends Factory
             'email' => $email,
             'type' => fake()->randomElement(['email', 'link']),
             'token' => Str::uuid()->toString(),
-            'accepted_at' => fake()->randomElement([false, now()->addMinutes(3)]),
+            'accepted_at' => fake()->randomElement([null, now()->addMinutes(3)]),
             'expires_at' => $expiresAt,
             'group_id' => Group::factory(),
         ];
