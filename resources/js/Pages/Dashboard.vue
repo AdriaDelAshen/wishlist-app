@@ -133,7 +133,7 @@ const handleIsBoughtChange = (newValue, entity) => {
                                 :id="'is_bought_' + entity.id"
                                 class="mt-1 block"
                                 v-model="entity.is_bought"
-                                :options="{'true':$t('options.yes'), 'false':$t('options.no')}"
+                                :options="[{'value':'true', 'label': $t('options.yes')}, {'value':'false','label': $t('options.no')}]"
                                 @update:modelValue="(value) => handleIsBoughtChange(value, entity)"
                             />
                         </template>
