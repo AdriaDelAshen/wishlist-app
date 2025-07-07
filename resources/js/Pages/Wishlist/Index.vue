@@ -40,24 +40,7 @@ const {
     wishlist_scope: 'all'
 });
 
-const afterExpirationDateFilter = ref('');
-const wishlistScopeFilter = ref('all');
-const showFiltersPanel = ref(false);
-
-watch([afterExpirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
-    updateFilters({
-        after_expiration_date: newExpirationDate,
-        wishlist_scope: newWishlistScope
-    });
-});
-
-const form = useForm({});
-const destroyWishlist = (id) => {
-    if(confirm(trans('wishlist.are_you_sure_you_want_to_delete_this_wishlist'))){
-        form.delete(route('wishlists.destroy', {wishlist: id}));
-    }
-};
-
+//Fetching initial wishlist data
 const initialUrl = document.URL;
 let initialPage = 1;
 
@@ -72,6 +55,35 @@ if(initialUrl.includes('page=')) {
 }
 
 getCurrentPageData(initialPage);
+
+//Form
+const form = useForm({});
+const destroyWishlist = (id) => {
+    if(confirm(trans('wishlist.are_you_sure_you_want_to_delete_this_wishlist'))){
+        form.delete(route('wishlists.destroy', {wishlist: id}));
+    }
+};
+
+//Filters
+let afterExpirationDateFilter = ref('');
+let wishlistScopeFilter = ref('all');
+
+watch([afterExpirationDateFilter, wishlistScopeFilter], ([newExpirationDate, newWishlistScope]) => {
+    updateFilters({
+        after_expiration_date: newExpirationDate,
+        wishlist_scope: newWishlistScope
+    });
+});
+const filterOptions = {
+    wishlist_scope: [
+        { value: 'all', label: trans('wishlist.all_wishlists') },
+        { value: 'mine', label: trans('wishlist.my_wishlists') },
+    ],
+};
+const clearFilters = () => {
+    afterExpirationDateFilter.value = '';
+    wishlistScopeFilter.value = 'all';
+};
 </script>
 
 <template>
@@ -99,7 +111,7 @@ getCurrentPageData(initialPage);
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <AccordionPanel>
                     <template #toggle="{ isOpen }">
-                        {{ isOpen ? $t('wishlist.hide_filters') : $t('wishlist.show_filters') }}
+                        {{ isOpen ? $t('messages.hide_filters') : $t('messages.show_filters') }}
                     </template>
                     <div class="flex space-x-4">
                         <div>
@@ -128,18 +140,18 @@ getCurrentPageData(initialPage);
                                 id="wishlist_scope_filter"
                                 class="mt-1 block w-full"
                                 v-model="wishlistScopeFilter"
-                                :options="{
-                                    'all': trans('wishlist.all_wishlists'),
-                                    'mine': trans('wishlist.my_wishlists')
-                                }"
+                                :options="filterOptions.wishlist_scope"
                                 :must-translate-option="false"
                                 :set-default-value="'all'"
                             />
                         </div>
                     </div>
+                    <div class="mt-4 flex justify-end space-x-2">
+                        <button type="button" @click="clearFilters" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                            {{ $t('messages.clear') }}
+                        </button>
+                    </div>
                 </AccordionPanel>
-
-
 
                 <Pagination
                     :pagination="pagination"

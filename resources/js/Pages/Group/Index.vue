@@ -1,6 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TableComponent from '@/Components/Table.vue'
+import AccordionPanel from '@/Components/AccordionPanel.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
+import SelectInput from '@/Components/SelectInput.vue';
 import {Head, useForm, usePage} from '@inertiajs/vue3';
 import NavLink from "@/Components/NavLink.vue";
 import IconBase from "@/Components/Icons/IconBase.vue";
@@ -9,6 +13,7 @@ import IconTrash from "@/Components/Icons/IconTrash.vue";
 import {trans} from "laravel-vue-i18n";
 import Pagination from "@/Components/Pagination.vue";
 import usePaginationAndSorting from '@/pagination.js';
+import {ref, watch} from "vue";
 
 const user = usePage().props.auth.user;
 const headers = [
@@ -26,18 +31,14 @@ const {
     pagination,
     sortBy,
     sortDirection,
+    filters,
     getCurrentPageData,
     onPageChange,
-    onSortChanged
-} = usePaginationAndSorting('groups.get_current_data_page');
+    onSortChanged,
+    updateFilters
+} = usePaginationAndSorting('groups.get_current_data_page', {}, 5, 'id', { name: '', is_private: '', is_active: '' });
 
-const form = useForm({});
-const destroyGroup = (id) => {
-    if(confirm(trans('group.are_you_sure_you_want_to_delete_this_group'))){
-        form.delete(route('groups.destroy', {group: id}));
-    }
-};
-
+//Fetching initial groups data
 const initialUrl = document.URL;
 let initialPage = 1;
 
@@ -52,6 +53,45 @@ if(initialUrl.includes('page=')) {
 }
 
 getCurrentPageData(initialPage);
+
+//Form
+const form = useForm({});
+const destroyGroup = (id) => {
+    if(confirm(trans('group.are_you_sure_you_want_to_delete_this_group'))){
+        form.delete(route('groups.destroy', {group: id}));
+    }
+};
+
+//Filters
+let nameFilter = ref('');
+let isPrivateScopeFilter = ref('');
+let isActiveScopeFilter = ref('');
+
+watch([nameFilter, isPrivateScopeFilter, isActiveScopeFilter], ([newName, newIsPrivateScope, newIsActiveScope]) => {
+    updateFilters({
+        name: newName,
+        is_private: newIsPrivateScope,
+        is_active: newIsActiveScope
+    });
+});
+const filterOptions = {
+    is_private: [
+        { value: '', label: 'all' },
+        { value: '1', label: 'yes' },
+        { value: '0', label: 'no' },
+    ],
+    is_active: [
+        { value: '', label: 'all' },
+        { value: '1', label: 'yes' },
+        { value: '0', label: 'no' },
+    ],
+};
+
+const clearFilters = () => {
+    nameFilter.value = '';
+    isPrivateScopeFilter.value = '';
+    isActiveScopeFilter.value = '';
+};
 </script>
 
 <template>
@@ -77,6 +117,49 @@ getCurrentPageData(initialPage);
                 </NavLink>
             </div>
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <AccordionPanel :title="$t('group.filters')">
+                    <template #toggle="{ isOpen }">
+                        {{ isOpen ? $t('messages.hide_filters') : $t('messages.show_filters') }}
+                    </template>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <InputLabel for="filter_name" :value="$t('group.name')" />
+                            <TextInput
+                                id="filter_name"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="nameFilter"
+                            />
+                        </div>
+                        <div>
+                            <InputLabel for="filter_is_private" :value="$t('group.is_private')" />
+                            <SelectInput
+                                id="filter_is_private"
+                                class="mt-1 block w-full"
+                                v-model="isPrivateScopeFilter"
+                                :must-translate-option="true"
+                                :options="filterOptions.is_private"
+                            />
+                        </div>
+                        <div>
+                            <InputLabel for="filter_is_active" :value="$t('group.is_active')" />
+                            <SelectInput
+                                id="filter_is_active"
+                                class="mt-1 block w-full"
+                                v-model="isActiveScopeFilter"
+                                :must-translate-option="true"
+                                :options="filterOptions.is_active"
+                            />
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-2">
+                        <button type="button" @click="clearFilters" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                            {{ $t('messages.clear') }}
+                        </button>
+                    </div>
+                </AccordionPanel>
+            </div>
+            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="margin-top: 20px;">
                 <Pagination
                     :pagination="pagination"
                     @pageChanged="onPageChange"

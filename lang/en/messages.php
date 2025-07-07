@@ -7,6 +7,7 @@ return [
     'saved' => 'Saved.',
     'add' => 'Add',
     'hidden' => 'Hidden',
+    'all' => 'All',
     'yes' => 'Yes',
     'no' => 'No',
     'close' => 'Close',
@@ -14,6 +15,10 @@ return [
     'cancel' => 'Cancel',
     'thank_you' => 'Thank you',
     'none' => 'None',
+    'show_filters' => 'Show Filters',
+    'hide_filters' => 'Hide Filters',
+    'clear' => 'Clear',
+    'apply' => 'Apply',
 
     //Dashboard
     'dashboard' => 'Dashboard',
