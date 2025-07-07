@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,9 +19,9 @@ class WishlistFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word(),
-            'is_shared' => false,
-            'expiration_date' => fake()->dateTime(),
+            'name' => fake()->words(3, true),
+            'is_shared' => fake()->boolean,
+            'expiration_date' => Carbon::now()->addDays(rand(10, 365)),
             'user_id' => User::factory(),
         ];
     }

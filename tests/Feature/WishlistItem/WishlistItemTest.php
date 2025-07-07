@@ -184,6 +184,7 @@ class WishlistItemTest extends TestCase
         $wishlistItem = WishlistItem::factory()->create([
             'wishlist_id' => $wishlist->id,
             'in_shopping_list' => true,
+            'is_bought' => false,
             'user_id' => $user->id,
         ]);
 
