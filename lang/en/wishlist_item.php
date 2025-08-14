@@ -28,4 +28,5 @@ return [
     'from_wishlist_owner' => 'From wishlist (Owner)',
     'price_greater_than' => 'Price greater than',
     'price_lesser_than' => 'Price lesser than',
+    'group' => 'Groupe',
 ];

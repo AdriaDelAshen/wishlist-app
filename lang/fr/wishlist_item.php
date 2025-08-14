@@ -28,4 +28,5 @@ return [
     'from_wishlist_owner' => 'Provenant de la liste de souhaits (Propriétaire)',
     'price_greater_than' => 'Prix plus grand que',
     'price_lesser_than' => 'Prix plus petit que',
+    'group' => 'Groupe',
 ];

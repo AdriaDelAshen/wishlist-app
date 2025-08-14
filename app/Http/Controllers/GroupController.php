@@ -44,7 +44,7 @@ class GroupController extends Controller
                     'owner',
                     'wishlistItem.wishlist' => fn ($query) => $query->select('id', 'name')
                 ]),
-            'currentUserPersonalContribution' => (float) Auth::user()->groups()->firstWhere('group_id', $group->id)->pivot->contribution_amount,
+            'currentUserPersonalContribution' => (float) Auth::user()->groups()->firstWhere('group_id', $group->id)?->pivot->contribution_amount,
         ]);
     }
 
