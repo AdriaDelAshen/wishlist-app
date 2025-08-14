@@ -4,12 +4,13 @@ import {Head, usePage} from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import {ref} from "vue";
 import {trans} from "laravel-vue-i18n";
+import NavLink from "@/Components/NavLink.vue";
 
 const props = defineProps({
     wishlistItem: {
         type: Object,
-        required: false
-    },
+        required: true
+    }
 });
 
 const user = usePage().props.auth.user;
@@ -85,14 +86,27 @@ window.Echo.private("wishlistItem")
                             v-if="user.id != item.wishlist.user_id && item.wishlist.is_shared && !item.user_id"
                             @click="addToShoppingList(wishlistItem)"
                             class="nav-button">
-                            {{ $t('messages.add_to_my_shopping_list') }}
+                            {{ $t('wishlist_item.add_to_my_shopping_list') }}
                         </button>
                         <button
                             v-if="user.id != item.wishlist.user_id && item.wishlist.is_shared && user.id == item.user_id"
                             @click="removeFromShoppingList(wishlistItem)"
                             class="nav-button">
-                            {{ $t('messages.remove_from_my_shopping_list') }}
+                            {{ $t('wishlist_item.remove_from_my_shopping_list') }}
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="item.group" class="py-12" style="padding-top:0;">
+            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <h3 class="text-xl font-semibold leading-tight text-gray-800">
+                        {{ $t('wishlist_item.group') }}
+                    </h3>
+                    <div>
+                        {{ $t('group.name') }}: <NavLink :href="route('groups.show', {group: item.group.id})">{{ item.group.name }}</NavLink>
                     </div>
                 </div>
             </div>

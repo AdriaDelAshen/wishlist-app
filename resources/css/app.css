@@ -7,3 +7,9 @@
 .table-rows td {
     text-align: left;
 }
+
+input:disabled,
+input.disabled {
+    background-color: lightgrey;
+    cursor: not-allowed;
+}

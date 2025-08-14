@@ -75,6 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class)
+            ->withPivot('contribution_amount')
 //            ->withPivot('role')
             ->withTimestamps();
     }

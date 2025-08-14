@@ -33,4 +33,5 @@ return [
     'invitation_expired_or_invalid' => 'Invitation expired or invalid.',
     'add_existing_user' => 'Link existing user',
     'add_user_to_group' => 'Add user to group',
+    'members' => 'Members',
 ];

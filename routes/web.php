@@ -25,7 +25,7 @@ Route::middleware(['auth', ActiveUserRequests::class])->group(function () {
     Route::get('/current_wishlists', [WishlistController::class, 'getCurrentDataFromPage'])->name('wishlists.get_current_data_page');
     Route::get('/current_wishlist_items', [WishlistItemController::class, 'getCurrentDataFromPage'])->name('wishlist_items.get_current_data_page');
     Route::get('/current_groups', [GroupController::class, 'getCurrentDataFromPage'])->name('groups.get_current_data_page');
-    Route::get('/current_group_users', [GroupController::class, 'getCurrentUsersDataFromPage'])->name('groups.get_current_users_data_page');
+    Route::get('/current_group_users', [GroupController::class, 'getCurrentGroupUsersDataFromPage'])->name('groups.get_current_group_users_data_page');
 
     Route::middleware([OnlyForAdminRequests::class])->group(function () {
         Route::get('/current_users', [UserController::class, 'getCurrentDataFromPage'])->name('users.get_current_data_page');
@@ -50,6 +50,7 @@ Route::middleware(['auth', ActiveUserRequests::class])->group(function () {
         Route::patch('/wishlist_item_unlink_item_user/{wishlist_item}', [WishlistItemController::class, 'unlinkItemToUser'])->name('wishlist_items.unlink_item_to_user');
         Route::patch('/wishlist_item_state_has_changed/{wishlist_item}', [WishlistItemController::class, 'itemStateHasChanged'])->name('wishlist_items.state_has_changed');
         Route::resource('/wishlist_items', WishlistItemController::class);
+        Route::patch('/wishlist_items/{wishlist_item}/contribution', [WishlistItemController::class, 'updateContribution'])->name('wishlist_items.update_contribution');
 
         //Users
         Route::middleware(OnlyForAdminRequests::class)->group(function () {

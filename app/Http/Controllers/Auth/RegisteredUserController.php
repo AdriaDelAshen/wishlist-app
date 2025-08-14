@@ -66,7 +66,7 @@ class RegisteredUserController extends Controller
                 $invitation = GroupInvitation::QUERY()->where('token', $token)->first();
                 if ($invitation && !$invitation->isAccepted()) {
                     $invitation->update(['accepted_at' => now()]);
-                    $invitation->group->users()->attach($user->id, ['role' => 'member']);
+                    $invitation->group->members()->attach($user->id, ['role' => 'member']);
                     return redirect(route('groups.show', ['group' => $invitation->group->load('user')]));
                 }
             }

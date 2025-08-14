@@ -29,4 +29,5 @@ return [
     'are_you_sure_you_want_to_delete_this_user' => 'Are you sure you want to delete this user?',
     'ensure_to_use_a_secure_password' => 'Ensure your account is using a long, random password to stay secure.',
     'delete_user_warning' => 'Once this user is deleted, all of its resources and data will be permanently deleted. Before deleting it, please download any data or information that you wish to retain.',
+    'contribution_amount' => 'Contribution amount',
 ];

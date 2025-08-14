@@ -2,8 +2,10 @@
 
 namespace Group;
 
+use App\Enums\WishlistItemTypeEnum;
 use App\Models\Group;
 use App\Models\User;
+use App\Models\WishlistItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use JsonException;
 use Tests\TestCase;
@@ -90,7 +92,7 @@ class GroupTest extends TestCase
     /**
      * @throws JsonException
      */
-    public function test_user_can_delete_their_group(): void
+    public function test_owner_can_delete_their_group(): void
     {
         // ARRANGE
         $user = User::factory()->create();
