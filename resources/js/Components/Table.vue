@@ -14,32 +14,36 @@ defineProps({
 <template>
     <div>
         <table>
-            <tr>
-                <th
-                    v-for="(header, i) in headers"
-                    :key="`${header}${i}`"
-                    class="header-item"
-                    :class="{ 'cursor-pointer': header.column }"
-                    @click="header.column ? $emit('sortChanged', header.column) : null"
+            <thead>
+                <tr>
+                    <th
+                        v-for="(header, i) in headers"
+                        :key="`${header}${i}`"
+                        class="header-item"
+                        :class="{ 'cursor-pointer': header.column }"
+                        @click="header.column ? $emit('sortChanged', header.column) : null"
+                    >
+                        {{ header.label?$t(header.label):'' }}
+                        <span v-if="header.column && header.column === currentSortBy">
+                            {{ currentSortDirection === 'asc' ? '↑' : '↓' }}
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    v-for="entity in data"
+                    :key="`entity-${entity.id}`"
+                    class="table-rows"
                 >
-                    {{ header.label?$t(header.label):'' }}
-                    <span v-if="header.column && header.column === currentSortBy">
-                        {{ currentSortDirection === 'asc' ? '↑' : '↓' }}
-                    </span>
-                </th>
-            </tr>
-            <tr
-                v-for="entity in data"
-                :key="`entity-${entity.id}`"
-                class="table-rows"
-            >
-                <td
-                    v-for="(header, i) in headers"
-                    :key="`${header}-${i}`"
-                >
-                    <slot :name="`column${i}`" :entity="entity"></slot>
-                </td>
-            </tr>
+                    <td
+                        v-for="(header, i) in headers"
+                        :key="`${header}-${i}`"
+                    >
+                        <slot :name="`column${i}`" :entity="entity"></slot>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </template>

@@ -46,7 +46,7 @@ const {
     getCurrentPageData,
     onPageChange,
     onSortChanged
-} = usePaginationAndSorting('groups.get_current_users_data_page',{group_id: props.group.id});
+} = usePaginationAndSorting('groups.get_current_group_users_data_page',{group_id: props.group.id});
 //
 const userForm = useForm({
     id: null,
@@ -187,10 +187,23 @@ getCurrentPageData(initialPage);
             </div>
         </div>
 
+        <div v-if="group.wishlist_item" class="py-12" style="padding-top:0;">
+            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <h3 class="text-xl font-semibold leading-tight text-gray-800">
+                        Item
+                    </h3>
+                    <div>
+                        Name: {{ group.wishlist_item.name }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="py-12" style="padding-top:0;">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <h3 class="text-xl font-semibold leading-tight text-gray-800">
-                    Items
+                    {{ $t('group.members') }}
                 </h3>
 
                 <div style="display: flex; justify-content: space-between;">
@@ -198,7 +211,7 @@ getCurrentPageData(initialPage);
                         :pagination="pagination"
                         @pageChanged="onPageChange"
                     />
-                    <div style="align-content: flex-end;">
+                    <div v-show="!group.wishlist_item" style="align-content: flex-end;">
                         <PrimaryButton
                             v-if="user.is_admin"
                             type="button"

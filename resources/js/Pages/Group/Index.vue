@@ -184,7 +184,7 @@ const clearFilters = () => {
                             {{ entity.name }}
                         </template>
                         <template #column2="{ entity }">
-                            {{ entity.user.name }}
+                            {{ entity.owner?entity.owner.name:'-' }}
                         </template>
                         <template #column3="{ entity }">
                             {{ entity.is_private?$t('messages.yes'):$t('messages.no') }}

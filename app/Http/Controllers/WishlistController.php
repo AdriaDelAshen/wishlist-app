@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\WishlistItemTypeEnum;
 use App\Http\Requests\Wishlist\WishlistDeleteRequest;
 use App\Http\Requests\Wishlist\WishlistStoreRequest;
 use App\Http\Requests\Wishlist\WishlistUpdateRequest;
@@ -49,6 +50,9 @@ class WishlistController extends Controller
         return Inertia::render('Wishlist/Edit', [
             'wishlist' => $wishlist,
             'wishlistItems' => $wishlist->wishlistItems()->orderBy('priority')->get(),
+            'typeOptions' => WishlistItemTypeEnum::getAvailableTypes()->map(function($option, $key){
+                return ['value'=>$key, 'label'=>$option];
+            }),
         ]);
     }
 

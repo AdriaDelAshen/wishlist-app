@@ -24,8 +24,8 @@ class GroupSeeder extends Seeder
         // For each group, link a user
         foreach ($groups as $group) {
             $otherUser = $users->where('id', '!=', $group->user_id)->values()->random();
-            $group->users()->attach($group->user_id);
-            $group->users()->attach($otherUser->id);
+            $group->members()->attach($group->user_id);
+            $group->members()->attach($otherUser->id);
             GroupInvitation::factory()
                 ->count(rand(1, 3))
                 ->create([

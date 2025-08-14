@@ -39,7 +39,12 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         return Inertia::render('Group/Show', [
-            'group' => $group->load('user'),
+            'group' => $group
+                ->load([
+                    'owner',
+                    'wishlistItem.wishlist' => fn ($query) => $query->select('id', 'name')
+                ]),
+            'currentUserPersonalContribution' => (float) Auth::user()->groups()->firstWhere('group_id', $group->id)?->pivot->contribution_amount,
         ]);
     }
 
@@ -52,7 +57,7 @@ class GroupController extends Controller
     {
         Gate::authorize('update', $group);
         return Inertia::render('Group/Edit', [
-            'group' => $group,
+            'group' => $group->load('wishlistItem'),
             'activeUsersNotInCurrentGroup' => User::query()
                 ->where('is_active', true)
                 ->whereDoesntHave('groups', function ($query) use ($group) {
@@ -71,7 +76,7 @@ class GroupController extends Controller
             'user_id' => $userId
         ]);
 
-        $group->users()->attach($userId, ['role' => 'owner']);
+        $group->members()->attach($userId, ['role' => 'owner']);
 
         return Redirect::route('groups.index');
     }
@@ -106,6 +111,9 @@ class GroupController extends Controller
             'pagination' => Group::query()
                 ->where(function ($query) {
                     $query->where('user_id', Auth::user()->id)
+                        ->orWhereHas('members', function ($q) {
+                            $q->where('users.id', Auth::id());
+                        })
                         ->orWhere('is_private', false);
                 })
                 ->when($nameFilter, function ($query, $name) {
@@ -117,13 +125,13 @@ class GroupController extends Controller
                 ->when($isActiveFilter !== null && $isActiveFilter !== '', function ($query) use ($isActiveFilter) {
                     return $query->where('is_active', $isActiveFilter === '1');
                 })
-                ->with('user')
+                ->with('owner')
                 ->orderBy($sortBy, $sortDirection)
                 ->paginate($request->perPage, ['*'], 'page', $request->page)
         ];
     }
 
-    public function getCurrentUsersDataFromPage(Request $request): array
+    public function getCurrentGroupUsersDataFromPage(Request $request): array
     {
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
@@ -133,9 +141,9 @@ class GroupController extends Controller
 
         // Fetch Users in group
         $users = User::query()
-            ->whereHas('groups', function ($query) use ($groupId) {
-                $query->where('groups.id', $groupId);
-            })
+            ->join('group_user', 'users.id', '=', 'group_user.user_id')
+            ->where('group_user.group_id', $groupId)
+            ->select('users.*', 'group_user.contribution_amount')
             ->get()
             ->map(function ($user) {
                 $user->type = 'user';
@@ -251,7 +259,7 @@ class GroupController extends Controller
         } else if (!$invitation->isAccepted()) {
             $invitation->update(['accepted_at' => now()]);
 
-            $invitation->group->users()->syncWithoutDetaching([Auth::id() => ['role' => 'member']]);
+            $invitation->group->members()->syncWithoutDetaching([Auth::id() => ['role' => 'member']]);
         }
 
         return redirect()->route('groups.show', ['group' => $invitation->group->load('user')]);
@@ -271,7 +279,7 @@ class GroupController extends Controller
     public function addUserToGroup(Request $request, Group $group): RedirectResponse
     {
 //        Gate::authorize('update', $group); //TODO authorize only for admin
-        $group->users()->attach($request->user_id, ['role' => 'member']);
+        $group->members()->attach($request->user_id, ['role' => 'member']);
 
         return back();
     }
@@ -279,7 +287,7 @@ class GroupController extends Controller
     public function removeUserFromGroup(Request $request, Group $group): RedirectResponse
     {
         Gate::authorize('update', $group);
-        $group->users()->detach($request->user_id);
+        $group->members()->detach($request->user_id);
 
         return back();
     }

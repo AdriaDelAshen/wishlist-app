@@ -29,4 +29,5 @@ return [
     'are_you_sure_you_want_to_delete_this_user' => 'Êtes-vous certain de vouloir supprimer cet utilisateur?',
     'ensure_to_use_a_secure_password' => 'Assurez-vous d\'utiliser un mot de passe long et aléatoire pour rester sécuritaire.',
     'delete_user_warning' => 'Dès que l\'utilisateur est supprimé, toutes les données vont être supprimées permanemment. Avant de le supprimer, vérifier les données que vous voulez garder.',
+    'contribution_amount' => 'Montant contribué',
 ];

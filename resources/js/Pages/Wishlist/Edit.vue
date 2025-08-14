@@ -18,15 +18,18 @@ import {trans} from "laravel-vue-i18n";
 import usePaginationAndSorting from "@/pagination.js";
 import Pagination from "@/Components/Pagination.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
 const props = defineProps({
     wishlist: {
         type: Object,
-        required: false
     },
     wishlistItems: {
         type: Array,
         required: false
+    },
+    typeOptions: {
+        type: Array,
     }
 });
 
@@ -35,6 +38,7 @@ const headers = [
     { label: 'wishlist_item.id', column: 'id' },
     { label: 'wishlist_item.name', column: 'name' },
     { label: 'wishlist_item.price', column: 'price' },
+    { label: 'wishlist_item.type', column: 'type' },
     { label: 'wishlist_item.priority', column: 'priority' },
     { label: 'wishlist_item.is_in_someone_else_shopping_list', column: null},
     {}, // edit
@@ -57,6 +61,7 @@ const wishlistItemForm = useForm({
     description: '',
     url_link: '',
     price: 0,
+    type: '',
     priority: 0,
     wishlist_id: props.wishlist.id,
 });
@@ -68,6 +73,7 @@ const showModalForWishlistItem = (entity) => {
         wishlistItemForm.description = entity.description?entity.description:'';
         wishlistItemForm.url_link = entity.url_link?entity.url_link:'';
         wishlistItemForm.price = entity.price;
+        wishlistItemForm.type = entity.type;
         wishlistItemForm.priority = entity.priority;
     } else {
         wishlistItemForm.id = null;
@@ -75,6 +81,7 @@ const showModalForWishlistItem = (entity) => {
         wishlistItemForm.description = '';
         wishlistItemForm.url_link = '';
         wishlistItemForm.price = 0;
+        wishlistItemForm.type = '';
         wishlistItemForm.priority = 0;
     }
 };
@@ -168,12 +175,15 @@ getCurrentPageData(initialPage);
                             {{ entity.price }}$
                         </template>
                         <template #column3="{ entity }">
-                            {{ entity.priority }}
+                            {{ $t('options.'+entity.type) }}
                         </template>
                         <template #column4="{ entity }">
-                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.in_shopping_list?$t('messages.yes'):$t('messages.no') }}
+                            {{ entity.priority }}
                         </template>
                         <template #column5="{ entity }">
+                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.in_shopping_list?$t('messages.yes'):$t('messages.no') }}
+                        </template>
+                        <template #column6="{ entity }">
                             <button v-if="user.id == wishlist.user_id && !wishlist.is_shared"
                                     type="button"
                                     class="nav-button"
@@ -185,7 +195,7 @@ getCurrentPageData(initialPage);
                                 </icon-base>
                             </button>
                         </template>
-                        <template #column6="{ entity }">
+                        <template #column7="{ entity }">
                             <button
                                 v-if="user.id == wishlist.user_id && !wishlist.is_shared"
                                 @click="destroyWishlistItem(entity.id)"
@@ -255,6 +265,19 @@ getCurrentPageData(initialPage);
                                         v-model="wishlistItemForm.price"
                                     />
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.price" />
+                                </div>
+
+                                <div>
+                                    <InputLabel for="type" :value="$t('wishlist_item.type')" />
+                                    <SelectInput
+                                        id="type"
+                                        class="mt-1 block w-full"
+                                        v-model="wishlistItemForm.type"
+                                        :options="typeOptions"
+                                        :must-translate-option="true"
+                                        :set-default-value="'fr'"
+                                    />
+                                    <InputError class="mt-2" :message="wishlistItemForm.errors.type" />
                                 </div>
 
                                 <div>

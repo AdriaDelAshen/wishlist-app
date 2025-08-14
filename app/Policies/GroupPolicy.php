@@ -21,7 +21,7 @@ class GroupPolicy
      */
     public function view(User $user, Group $group): bool
     {
-        return $group->users->contains($user) || !$group->is_private;
+        return $group->members->contains($user) || !$group->is_private;
     }
 
     /**

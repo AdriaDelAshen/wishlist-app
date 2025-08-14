@@ -9,6 +9,9 @@ return [
     'description' => 'Description',
     'url_link' => 'URL link',
     'price' => 'Price',
+    'contributed_amount' => 'Total contributed amount',
+    'personal_contribution' => 'Personal contribution',
+    'type' => 'Type',
     'priority' => 'Priority',
     'wishlist_owner' => 'Wishlist owner',
     'is_bought' => 'Bought',
@@ -25,4 +28,5 @@ return [
     'from_wishlist_owner' => 'From wishlist (Owner)',
     'price_greater_than' => 'Price greater than',
     'price_lesser_than' => 'Price lesser than',
+    'group' => 'Groupe',
 ];

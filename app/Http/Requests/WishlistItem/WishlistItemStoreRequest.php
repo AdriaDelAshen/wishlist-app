@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\WishlistItem;
 
+use App\Enums\WishlistItemTypeEnum;
 use App\Models\Wishlist;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class WishlistItemStoreRequest extends FormRequest
 {
@@ -34,6 +36,10 @@ class WishlistItemStoreRequest extends FormRequest
                 'nullable',
                 'decimal:2',
             ],
+            'type' => [
+                'required',
+                new Enum(WishlistItemTypeEnum::class)
+            ],
             'priority' => [
                 'required',
                 'integer',
@@ -41,6 +47,7 @@ class WishlistItemStoreRequest extends FormRequest
             'wishlist_id' => [
                 'required',
                 'integer',
+                'exists:wishlists,id',
             ],
         ];
     }
@@ -48,8 +55,9 @@ class WishlistItemStoreRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             if($this->wishlist_id) {
-                if($this->user()->id != Wishlist::find($this->wishlist_id)->user_id) {
-                    $validator->errors()->add('wishlist_item', __('validation.custom.wishlist_item.cannot_be_created'));
+                $wishlist = Wishlist::find($this->wishlist_id);
+                if(!$wishlist || $this->user()->id != $wishlist->user_id) {
+                    $validator->errors()->add('wishlist_id', __('validation.custom.wishlist_item.cannot_be_created_in_wishlist'));
                 }
             }
         });

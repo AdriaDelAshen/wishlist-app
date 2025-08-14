@@ -9,6 +9,9 @@ return [
     'description' => 'Description',
     'url_link' => 'Lien URL',
     'price' => 'Prix',
+    'contributed_amount' => 'Montant total contribué',
+    'personal_contribution' => 'Montant contribué personnel',
+    'type' => 'Type',
     'priority' => 'Priorité',
     'wishlist_owner' => 'Propriétaire de la liste de souhaits',
     'is_bought' => 'Acheté',
@@ -25,4 +28,5 @@ return [
     'from_wishlist_owner' => 'Provenant de la liste de souhaits (Propriétaire)',
     'price_greater_than' => 'Prix plus grand que',
     'price_lesser_than' => 'Prix plus petit que',
+    'group' => 'Groupe',
 ];

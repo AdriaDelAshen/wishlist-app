@@ -33,7 +33,7 @@ class GroupInvitationStoreRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             foreach ($this->emails as $index => $email) {
-                if($this->group->users()->firstWhere('email', $email)) {
+                if($this->group->members()->firstWhere('email', $email)) {
                     $validator->errors()->add("emails.$index", __('validation.custom.group_invitation.already_in_group'));
                 } elseif($this->group->invitations()->notExpired()->notAccepted()->firstWhere('email', $email) && !$this->force_send_email_to_pending_invites) {
                     $validator->errors()->add("emails.$index", __('validation.custom.group_invitation.is_still_pending'));

@@ -33,6 +33,7 @@ const form = useForm({
                     v-model="form.name"
                     required
                     autocomplete="name"
+                    :disabled="group && !!group.wishlist_item"
                 />
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
@@ -48,7 +49,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.description" />
             </div>
 
-            <div>
+            <div v-show="group && !!group.wishlist_item">
                 <InputLabel for="is_private" :value="$t('group.is_private')" />
                 <Checkbox
                     id="is_private"
@@ -57,7 +58,7 @@ const form = useForm({
                 />
             </div>
 
-            <div v-if="group">
+            <div v-show="group && !!group.wishlist_item">
                 <InputLabel for="is_active" :value="$t('group.is_active')" />
                 <Checkbox
                     id="is_active"

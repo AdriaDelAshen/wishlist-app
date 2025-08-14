@@ -122,7 +122,7 @@ class GroupInvitationTest extends TestCase
             'email' => 'already_in_group@example.com',
         ]);
         $group = Group::factory()->create(['user_id' => $user->id]);
-        $group->users()->attach($userAlreadyInGroup);
+        $group->members()->attach($userAlreadyInGroup);
 
         // ACT
         $response = $this->actingAs($user)
