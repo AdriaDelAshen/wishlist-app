@@ -126,10 +126,17 @@ This document outlines the key features of the Laravel application, categorized 
     *   A scheduled background task (`app:clean-up-old-unaccepted-group-invitations`) automatically removes expired and unaccepted invitations from the system.
     *   Users can view a list of invitations they have personally received.
 
+### F. Group Gifts
+*   **Member contribution**:
+    *   Authorized group members can contribute to the gift amount once they added the gift to their "Shopping List".
+    *   If they remove the item from their "Shopping List", they are removed from the group.
+    *   Last member to remove the item from their list will also delete the group.
+    *   First user to add the item will create the group automatically.
+
 ## IV. Dashboard
 
 *   A personalized dashboard is available for all logged-in and email-verified users.
-*   The dashboard primarily displays a paginated list of wishlist items that the user has "claimed" (i.e., items they intend to purchase from various wishlists, marked as `in_shopping_list` and linked to their `user_id`).
+*   The dashboard primarily displays a paginated list of wishlist items that the user has "claimed" (i.e., items they intend to purchase from various wishlists, marked as `in_shopping_list` and linked to their `user_id`), and it also works for group gifts.
 *   Sorting options are available for the dashboard items (e.g., sort by wishlist owner's name, wishlist name, or other item properties).
 
 ## V. User-Specific Features & Notifications

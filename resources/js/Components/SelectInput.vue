@@ -30,14 +30,14 @@ onMounted(() => {
     }
 });
 
-defineExpose({ focus: () => input.value.focus() });
+defineExpose({ focus: () => select.value.focus() });
 </script>
 
 <template>
     <select
         class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         v-model="model"
-        ref="input"
+        ref="select"
     >
         <option v-for="(option, index) in options" :key="index" :value="option.value">{{ mustTranslateOption? $t('options.'+option.label): option.label }}</option>
     </select>

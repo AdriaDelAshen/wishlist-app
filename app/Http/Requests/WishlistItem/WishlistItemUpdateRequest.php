@@ -37,7 +37,9 @@ class WishlistItemUpdateRequest extends FormRequest
             ],
             'price' => [
                 'nullable',
-                'decimal:2',
+                'numeric',
+                'min:0',
+                'regex:/^\d+(\.\d{1,2})?$/',
             ],
             'priority' => [
                 'nullable',
