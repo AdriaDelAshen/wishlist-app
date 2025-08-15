@@ -29,7 +29,7 @@ const props = defineProps({
         required: false
     },
     typeOptions: {
-        type: Array,
+        type: Object,
     }
 });
 
@@ -61,7 +61,7 @@ const wishlistItemForm = useForm({
     description: '',
     url_link: '',
     price: 0,
-    type: '',
+    type: 'one_person_gift',
     priority: 0,
     wishlist_id: props.wishlist.id,
 });
@@ -81,7 +81,7 @@ const showModalForWishlistItem = (entity) => {
         wishlistItemForm.description = '';
         wishlistItemForm.url_link = '';
         wishlistItemForm.price = 0;
-        wishlistItemForm.type = '';
+        wishlistItemForm.type = 'one_person_gift';
         wishlistItemForm.priority = 0;
     }
 };
@@ -181,10 +181,10 @@ getCurrentPageData(initialPage);
                             {{ entity.priority }}
                         </template>
                         <template #column5="{ entity }">
-                            {{ user.id == wishlist.user_id?$t('messages.hidden'):entity.in_shopping_list?$t('messages.yes'):$t('messages.no') }}
+                            {{ user.id === wishlist.user_id?$t('messages.hidden'):entity.in_shopping_list?$t('messages.yes'):$t('messages.no') }}
                         </template>
                         <template #column6="{ entity }">
-                            <button v-if="user.id == wishlist.user_id && !wishlist.is_shared"
+                            <button v-if="user.id === wishlist.user_id && !wishlist.is_shared"
                                     type="button"
                                     class="nav-button"
                                     data-bs-toggle="modal"
@@ -197,7 +197,7 @@ getCurrentPageData(initialPage);
                         </template>
                         <template #column7="{ entity }">
                             <button
-                                v-if="user.id == wishlist.user_id && !wishlist.is_shared"
+                                v-if="user.id === wishlist.user_id && !wishlist.is_shared"
                                 @click="destroyWishlistItem(entity.id)"
                                 class="nav-button delete">
                                 <icon-base icon-name="trash">
@@ -214,7 +214,7 @@ getCurrentPageData(initialPage);
         <div class="modal fade" id="wishlist_item_form_modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form @submit.prevent="wishlistItemForm.item_id?wishlistItemForm.put(route('wishlist_items.update', {wishlist_item: wishlistItemForm.item_id}),{onSuccess: () => closeModal(),preserveScroll: true}):wishlistItemForm.post(route('wishlist_items.store'),{onSuccess: () => closeModal()})" class="mt-6 space-y-6">
+                    <form @submit.prevent="wishlistItemForm.id?wishlistItemForm.put(route('wishlist_items.update', {wishlist_item: wishlistItemForm.id}),{onSuccess: () => closeModal(),preserveScroll: true}):wishlistItemForm.post(route('wishlist_items.store'),{onSuccess: () => closeModal()})" class="mt-6 space-y-6">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalLabel">{{ $t('wishlist_item.add_a_wishlist_item') }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -275,7 +275,6 @@ getCurrentPageData(initialPage);
                                         v-model="wishlistItemForm.type"
                                         :options="typeOptions"
                                         :must-translate-option="true"
-                                        :set-default-value="'fr'"
                                     />
                                     <InputError class="mt-2" :message="wishlistItemForm.errors.type" />
                                 </div>
