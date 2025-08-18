@@ -120,6 +120,16 @@ getCurrentPageData(initialPage);
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div class="top-div">
+                    <NavLink
+                        v-if="group.user_id === user.id"
+                        class="nav-button"
+                        :href="route('groups.edit', {group: group})"
+                        :active="route().current('groups.index')"
+                    >
+                        {{ $t('messages.edit') }}
+                    </NavLink>
+                </div>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>

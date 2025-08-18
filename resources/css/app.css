@@ -13,3 +13,14 @@ input.disabled {
     background-color: lightgrey;
     cursor: not-allowed;
 }
+
+.top-div {
+    padding-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+}
+
+.top-div button {
+    margin-right: 15px;
+}

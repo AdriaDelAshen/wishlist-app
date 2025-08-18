@@ -126,12 +126,22 @@ window.Echo.private("wishlistItem")
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <button
-                    v-if="wishlist.can_be_duplicated || wishlist.user_id === user.id"
-                    @click="duplicateWishlist(wishlist.id)"
-                    class="nav-button">
-                    {{ $t('wishlist.duplicate') }}
-                </button>
+                <div class="top-div">
+                    <button
+                        v-if="wishlist.can_be_duplicated || wishlist.user_id === user.id"
+                        @click="duplicateWishlist(wishlist.id)"
+                        class="nav-button">
+                        {{ $t('wishlist.duplicate') }}
+                    </button>
+                    <NavLink
+                        v-if="wishlist.user_id === user.id"
+                        class="nav-button"
+                        :href="route('wishlists.edit', {wishlist: wishlist})"
+                        :active="route().current('wishlists.index')"
+                    >
+                        {{ $t('messages.edit') }}
+                    </NavLink>
+                </div>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>

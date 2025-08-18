@@ -1,8 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head} from '@inertiajs/vue3';
+import {Head, usePage} from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
+import NavLink from "@/Components/NavLink.vue";
 
+
+const authenticatedUser = usePage().props.auth.user;
 const props = defineProps({
     user: {
         type: Object,
@@ -24,6 +27,16 @@ const props = defineProps({
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div class="top-div">
+                    <NavLink
+                        v-if="authenticatedUser.id === user.id || authenticatedUser.is_admin"
+                        class="nav-button"
+                        :href="route('users.edit', {user: user})"
+                        :active="route().current('users.index')"
+                    >
+                        {{ $t('messages.edit') }}
+                    </NavLink>
+                </div>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div class="mt-6 space-y-6">
                         <div>
