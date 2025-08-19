@@ -167,7 +167,7 @@ const clearFilters = () => {
                                      @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
                             <NavLink
-                                :href="route('wishlists.show', {wishlist: entity})"
+                                :href="route('wishlists.show', {wishlist: entity.id})"
                                 :active="route().current('wishlists.index')"
                             >
                                 {{ entity.id }}
@@ -188,8 +188,8 @@ const clearFilters = () => {
                         <template #column5="{ entity }">
                             <NavLink
                                 class="nav-button"
-                                v-if="user.id == entity.user_id"
-                                :href="route('wishlists.edit', {wishlist: entity})"
+                                v-if="user.id === entity.user_id"
+                                :href="route('wishlists.edit', {wishlist: entity.id})"
                                 :active="route().current('wishlists.index')"
                             >
                                 <icon-base icon-name="write">

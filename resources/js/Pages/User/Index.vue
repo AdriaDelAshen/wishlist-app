@@ -14,7 +14,7 @@ import usePaginationAndSorting from "@/pagination.js";
 import { trans } from "laravel-vue-i18n";
 import {ref, watch} from "vue";
 
-const user = usePage().props.auth.user;
+const authenticatedUser = usePage().props.auth.user;
 const headers = [
     { label: 'user.id', column: 'id' },
     { label: 'user.name', column: 'name' },
@@ -101,6 +101,7 @@ const clearFilters = () => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8" style="padding-top: 15px;">
                 <NavLink
+                    v-if="authenticatedUser.is_admin"
                     class="nav-button"
                     :href="route('users.create')"
                     :active="route().current('users.index')"
@@ -174,7 +175,7 @@ const clearFilters = () => {
                                      @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
                             <NavLink
-                                :href="route('users.show', {user: entity})"
+                                :href="route('users.show', {user: entity.id})"
                                 :active="route().current('users.index')"
                             >
                                 {{ entity.id }}
@@ -194,8 +195,9 @@ const clearFilters = () => {
                         </template>
                         <template #column5="{ entity }">
                             <NavLink
+                                v-if="authenticatedUser.is_admin"
                                 class="nav-button"
-                                :href="route('users.edit', {user: entity})"
+                                :href="route('users.edit', {user: entity.id})"
                                 :active="route().current('users.index')"
                             >
                                 <icon-base icon-name="write">

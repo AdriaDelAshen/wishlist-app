@@ -37,7 +37,7 @@ const form = useForm({
 
 
     <section>
-        <form @submit.prevent="user?form.put(route('users.update',{user: user})):form.post(route('users.store'))" class="mt-6 space-y-6">
+        <form @submit.prevent="user?form.put(route('users.update',{user: user.id})):form.post(route('users.store'))" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" :value="$t('user.name')" />
                 <TextInput

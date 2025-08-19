@@ -3,6 +3,7 @@
 return [
     'name' => 'Nom',
     'create' => 'Créer',
+    'edit' => 'Modifier',
     'save' => 'Sauvegarder',
     'saved' => 'Sauvegardé.',
     'add' => 'Ajouter',
