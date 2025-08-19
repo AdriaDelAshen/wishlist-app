@@ -23,7 +23,7 @@ const form = useForm({
 
 <template>
     <section>
-        <form @submit.prevent="group?form.put(route('groups.update',{group: group})):form.post(route('groups.store'))" class="mt-6 space-y-6">
+        <form @submit.prevent="group?form.put(route('groups.update',{group: group.id})):form.post(route('groups.store'))" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" :value="$t('group.name')" />
                 <TextInput

@@ -31,7 +31,7 @@ const props = defineProps({
                     <NavLink
                         v-if="authenticatedUser.id === user.id || authenticatedUser.is_admin"
                         class="nav-button"
-                        :href="route('users.edit', {user: user})"
+                        :href="route('users.edit', {user: user.id})"
                         :active="route().current('users.index')"
                     >
                         {{ $t('messages.edit') }}

@@ -132,7 +132,7 @@ const getActiveUsersNotInCurrentGroup = () => {
 
 const removeUserFromGroup = (id) => {
     if(confirm(trans('group.are_you_sure_you_want_to_remove_this_user_from_this_group'))){
-        userForm.delete(route('groups.remove_user_from_group', {group: props.group, user_id: id}),
+        userForm.delete(route('groups.remove_user_from_group', {group: props.group.id, user_id: id}),
             {
                 preserveScroll: true,
             });
@@ -286,7 +286,7 @@ getCurrentPageData(initialPage);
         <div class="modal fade" id="send_invitation_to_users_for_group_form_modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form @submit.prevent="invitationForm.post(route('groups.send_invitations', { group: group }), {
+                    <form @submit.prevent="invitationForm.post(route('groups.send_invitations', { group: group.id }), {
                         onBefore: () => {
                             invitationForm.emails = invitationForm.emails.filter(e => e.trim() !== '');
                         },
@@ -348,7 +348,7 @@ getCurrentPageData(initialPage);
         <div class="modal fade" id="manage_user_for_group_form_modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form @submit.prevent="userForm.post(route('groups.add_user_to_group', {group: group, user_id: userForm.user}),{
+                    <form @submit.prevent="userForm.post(route('groups.add_user_to_group', {group: group.id, user_id: userForm.user.id}),{
                         onSuccess: () => {
                                 closeModal('manage_user_for_group_form_modal');
                                 getCurrentPageData(1);

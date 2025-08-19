@@ -136,7 +136,7 @@ window.Echo.private("wishlistItem")
                     <NavLink
                         v-if="wishlist.user_id === user.id"
                         class="nav-button"
-                        :href="route('wishlists.edit', {wishlist: wishlist})"
+                        :href="route('wishlists.edit', {wishlist: wishlist.id})"
                         :active="route().current('wishlists.index')"
                     >
                         {{ $t('messages.edit') }}
@@ -232,7 +232,7 @@ window.Echo.private("wishlistItem")
                                      :currentSortDirection="sortDirection"
                                      @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
-                            <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
+                            <NavLink :href="route('wishlist_items.show', {wishlist_item: entity.id})">
                                 {{ entity.id }}
                             </NavLink>
                         </template>

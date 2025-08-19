@@ -73,7 +73,7 @@ const updateContribution = async () => {
 
     try {
         const { data } = await axios.patch(
-            route('wishlist_items.update_contribution', { wishlist_item: props.group.wishlist_item }),
+            route('wishlist_items.update_contribution', { wishlist_item: props.group.wishlist_item.id }),
             { contribution_amount: contributionAmount.value }
         )
 
@@ -124,7 +124,7 @@ getCurrentPageData(initialPage);
                     <NavLink
                         v-if="group.user_id === user.id"
                         class="nav-button"
-                        :href="route('groups.edit', {group: group})"
+                        :href="route('groups.edit', {group: group.id})"
                         :active="route().current('groups.index')"
                     >
                         {{ $t('messages.edit') }}

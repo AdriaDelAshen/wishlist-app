@@ -175,7 +175,7 @@ const clearFilters = () => {
                                      @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
                             <NavLink
-                                :href="route('users.show', {user: entity})"
+                                :href="route('users.show', {user: entity.id})"
                                 :active="route().current('users.index')"
                             >
                                 {{ entity.id }}
@@ -197,7 +197,7 @@ const clearFilters = () => {
                             <NavLink
                                 v-if="authenticatedUser.is_admin"
                                 class="nav-button"
-                                :href="route('users.edit', {user: entity})"
+                                :href="route('users.edit', {user: entity.id})"
                                 :active="route().current('users.index')"
                             >
                                 <icon-base icon-name="write">

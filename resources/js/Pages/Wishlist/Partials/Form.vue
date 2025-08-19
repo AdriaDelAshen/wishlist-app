@@ -30,7 +30,7 @@ const form = useForm({
 
 <template>
     <section>
-        <form @submit.prevent="wishlist?form.put(route('wishlists.update',{wishlist: wishlist})):form.post(route('wishlists.store'))" class="mt-6 space-y-6">
+        <form @submit.prevent="wishlist?form.put(route('wishlists.update',{wishlist: wishlist.id})):form.post(route('wishlists.store'))" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" :value="$t('wishlist.name')" />
                 <TextInput

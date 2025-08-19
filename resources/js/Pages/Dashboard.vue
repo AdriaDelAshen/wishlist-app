@@ -109,7 +109,7 @@ const handleIsBoughtChange = (newValue, entity) => {
                                      :currentSortDirection="sortDirection"
                                      @sortChanged="onSortChanged">
                         <template #column0="{ entity }">
-                            <NavLink :href="route('wishlist_items.show', {wishlist_item: entity})">
+                            <NavLink :href="route('wishlist_items.show', {wishlist_item: entity.id})">
                                 {{ entity.id }}
                             </NavLink>
                         </template>
